@@ -8,6 +8,7 @@
   import {Badge, Container} from "@svelteuidev/core";
   import {constants} from "./lib/constants.js";
   import {Rocket} from "radix-icons-svelte";
+  import {isDark} from "./lib/theme.ts";
 
   export let data
 
@@ -30,7 +31,7 @@
      timeLeftCol.renderer = (root: Element, grid, {item}) => {
        const dueDate = item.accounts.next_due
        const daysLeft = Math.round((new Date(dueDate) - new Date() )/1000/86400)
-       const badgeStyle = daysLeft > 30 ? 'success' : 'error'
+       const badgeStyle = daysLeft > 30 ? 'success' : daysLeft > 0 ?'warn':'error'
        root.innerHTML = `<span theme="badge ${badgeStyle}">${daysLeft} days</span>`;
      }
      accTypeCol.renderer = (root: Element, grid, {item}) => {
@@ -54,7 +55,7 @@
 
 <main>
 <Container size="xl">
-    <vaadin-grid bind:this={grid} column-reordering-allowed multi-sort>
+    <vaadin-grid bind:this={grid} column-reordering-allowed multi-sort theme={$isDark ? 'dark' : 'light'}>
 
         <vaadin-grid-column auto-width path={'company_name'} header="Company"></vaadin-grid-column>
         <vaadin-grid-column auto-width path={'company_number'} header="Reg number"></vaadin-grid-column>
