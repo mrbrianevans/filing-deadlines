@@ -1,0 +1,30 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.1",
+    "@tsconfig/svelte": "^3.0.0",
+    "svelte": "^3.49.0",
+    "svelte-check": "^2.8.0",
+    "svelte-preprocess": "^4.10.7",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.7"
+  },
+  "dependencies": {
+    "@svelteuidev/composables": "^0.7.3",
+    "@svelteuidev/core": "^0.7.3",
+    "@vaadin/grid": "^23.2.0",
+    "@vaadin/vaadin-lumo-styles": "^23.2.0",
+    "radix-icons-svelte": "^1.2.1",
+    "yaml": "^2.1.1"
+  }
+}
