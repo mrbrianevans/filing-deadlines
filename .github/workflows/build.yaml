@@ -23,7 +23,7 @@ jobs:
       - name: Build server typescript
         run: pnpm run build
         working-directory: server
-      - name: Build server typescript
+      - name: Build worker typescript
         run: pnpm run build
         working-directory: worker
   build-client:

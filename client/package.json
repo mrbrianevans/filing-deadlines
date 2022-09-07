@@ -25,6 +25,7 @@
     "@vaadin/grid": "^23.2.0",
     "@vaadin/vaadin-lumo-styles": "^23.2.0",
     "radix-icons-svelte": "^1.2.1",
+    "svelte-navigator": "^3.2.2",
     "yaml": "^2.1.1"
   }
 }
