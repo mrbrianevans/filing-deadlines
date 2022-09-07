@@ -22,7 +22,7 @@ export interface IdToken {
   given_name: string,
   family_name: string,
   name: string,
-  amr: [ string ]
+  amr: string[]
 }
 
 export interface AccessToken {

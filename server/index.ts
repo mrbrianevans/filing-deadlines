@@ -7,24 +7,22 @@ const fastify = Fastify({logger: {level: 'trace'}})
 
 //register any third party plugins here
 {
-  // @ts-ignore
-  fastify.register(import('@fastify/cookie'))
-  // @ts-ignore
-  fastify.register(import('@fastify/session'), {
+  await fastify.register(import('@fastify/cookie'))
+  await fastify.register(import('@fastify/session'), {
     secret: getEnv('SESSION_SECRET'),
     cookie: {
       secure: false // for testing on http://localhost
     }
   })
   const redisUrl = new URL(getEnv('REDIS_URL'))
-  fastify.register(import('@fastify/redis'), {host: redisUrl.hostname, port: parseInt(redisUrl.port, 10) || undefined })
+  await fastify.register(import('@fastify/redis'), {host: redisUrl.hostname, port: parseInt(redisUrl.port, 10) || undefined, closeClient:true })
 }
 
 
-fastify.register(async (fastify, opts)=>{
+await fastify.register(async (fastify, opts)=>{
   // register endpoints here
-  fastify.register(import('./auth/SignInWithXeroPlugin.js'), {prefix: 'sign-in/xero'})
-  fastify.register(import('./auth/UserPlugin.js'), {prefix: 'user'})
+  await fastify.register(import('./auth/SignInWithXeroPlugin.js'), {prefix: 'sign-in/xero'})
+  await fastify.register(import('./auth/UserPlugin.js'), {prefix: 'user'})
 }, {prefix: 'api'})
 
 await fastify.listen({port, host: '::'})

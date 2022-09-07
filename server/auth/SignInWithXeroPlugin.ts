@@ -30,11 +30,13 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   fastify.get('/callback', async function(request,reply){
     const {token} = await this.xeroOauth.getAccessTokenFromAuthorizationCodeFlow(request)
-    const {access_token, id_token} = token
+    const {access_token, id_token,refresh_token} = token
     const decodedAccessToken = jwtDecode(access_token) as AccessToken
     const decodedIdToken = jwtDecode(id_token) as IdToken
     request.session.userId = decodedIdToken.xero_userid
-    //todo: store user details in redis
+    await fastify.redis.set('user:'+request.session.userId+':id', id_token)
+    await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
+    if(refresh_token) await fastify.redis.set('user:'+request.session.userId+':refresh_token', refresh_token)
     reply.redirect('/') // back home after signing in
   })
 
