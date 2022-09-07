@@ -2,7 +2,7 @@
 
 import {Link} from "svelte-navigator";
 import {toggleTheme,isDark} from "../lib/theme.js";
-import {Center, SimpleGrid, Switch} from "@svelteuidev/core";
+import {Anchor, Center, SimpleGrid, Switch} from "@svelteuidev/core";
 </script>
 
 <div>
@@ -11,9 +11,9 @@ import {Center, SimpleGrid, Switch} from "@svelteuidev/core";
         <Center >
 
             <nav>
-                <Link to="/">Home</Link>
-                <Link to="/login">Login</Link>
-                <Link to="/clients">Client list</Link>
+                <Anchor root={Link} to="/">Home</Anchor>
+                <Anchor root={Link} to="/login">Login</Anchor>
+                <Anchor root={Link} to="/clients">Client list</Anchor>
             </nav>
         </Center>
         <Switch on:change={toggleTheme} label={$isDark ? 'Change to light':'Change to dark'} />
