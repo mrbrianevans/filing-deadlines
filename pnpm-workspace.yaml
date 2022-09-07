@@ -1,0 +1,6 @@
+packages:
+  - './backend-shared'
+  - './client'
+  - './fs-shared'
+  - './server'
+  - './worker'

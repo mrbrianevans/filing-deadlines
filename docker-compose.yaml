@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  caddy:
+    build: caddy
+    restart: on-failure
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - client_dist:/client
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      SERVER_PORT: 3000
+      SITE_ADDRESS: localhost:80
+  redis:
+    build: redis
+    volumes:
+      - redisdata:/data
+  client:
+    build:
+      dockerfile: Client.Dockerfile
+    volumes:
+      - client_dist:/client/dist # this MUST match the workdir set in the Dockerfile
+  worker:
+    build:
+      dockerfile: Worker.Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379
+    env_file:
+      - .api.env
+  server:
+    build:
+      dockerfile: Server.Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+    env_file:
+      - .api.env
+volumes:
+  redisdata:
+  caddy_data:
+  caddy_config:
+  client_dist:

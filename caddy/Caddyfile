@@ -1,0 +1,14 @@
+{$SITE_ADDRESS} {
+
+        log {
+            output stdout
+            format console
+        }
+
+
+        root * /client
+        reverse_proxy /api/* server:{$SERVER_PORT}
+        #try_files {path} /index.html
+        file_server
+
+}
