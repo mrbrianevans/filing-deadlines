@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
   import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell} from '@svelteuidev/core';
-  import Dashboard from "./Dashboard.svelte";
+  import Dashboard from "./pages/Dashboard.svelte";
   import {isDark} from "./lib/theme.ts";
   import Auth from "./pages/Auth.svelte";
   import NavBar from "./components/NavBar.svelte";

@@ -1,0 +1,970 @@
+[
+  {
+    "company_number": "08462916",
+    "company_name": "OTTERSBROOK LIMITED",
+    "accounting_reference_date": {
+      "month": 8,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-08-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-05-31",
+    "company_status": "active",
+    "date_of_creation": "2013-03-26",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-26",
+      "next_due": "2017-04-23"
+    }
+  },
+  {
+    "company_number": "04801733",
+    "company_name": "A A PIKE CONSTRUCTION LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2003-06-17",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-06-17",
+      "next_due": "2017-07-15"
+    }
+  },
+  {
+    "company_number": "12558401",
+    "company_name": "AB1 GROUP LIMITED",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2020-04-16",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "03847312",
+    "company_name": "STRATASYS LIMITED",
+    "accounting_reference_date": {
+      "month": 9,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-09-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-06-30",
+    "company_status": "active",
+    "date_of_creation": "1999-09-23",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-09-23",
+      "next_due": "2016-10-21"
+    }
+  },
+  {
+    "company_number": "12960375",
+    "company_name": "STRAVER INVESTMENTS LTD",
+    "accounting_reference_date": {
+      "month": 10,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-10-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-07-31",
+    "company_status": "active",
+    "date_of_creation": "2020-10-19",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "07866624",
+    "company_name": "CHIVERS AND CO LIMITED",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "2011-11-30",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-11-30",
+      "next_due": "2016-12-28"
+    }
+  },
+  {
+    "company_number": "09813890",
+    "company_name": "SUDHA COMMUNICATIONS LIMITED",
+    "accounting_reference_date": {
+      "month": 2,
+      "day": 29
+    },
+    "last_accounts": {
+      "made_up_to": "2020-02-29",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2021-11-30",
+    "company_status": "active",
+    "date_of_creation": "2015-10-07",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "07690631",
+    "company_name": "LIGHTWORK ENERGY SYSTEMS LIMITED",
+    "accounting_reference_date": {
+      "month": 7,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-07-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-04-30",
+    "company_status": "active",
+    "date_of_creation": "2011-07-04",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-07-04",
+      "next_due": "2016-08-01"
+    }
+  },
+  {
+    "company_number": "04609237",
+    "company_name": "ADVENTURE CAFE LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2002-12-05",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-12-05",
+      "next_due": "2017-01-02"
+    }
+  },
+  {
+    "company_number": "05497014",
+    "company_name": "CLEARWAY MOTORHOMES LIMITED",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "2005-07-01",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-07-01",
+      "next_due": "2016-07-29"
+    }
+  },
+  {
+    "company_number": "12499758",
+    "company_name": "AJM CONTRACTORS (SW) LIMITED",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2020-03-05",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "08836535",
+    "company_name": "AJM ELECTRICAL SERVICES (SW) LTD",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2014-01-08",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-08",
+      "next_due": "2017-02-05"
+    }
+  },
+  {
+    "company_number": "11444760",
+    "company_name": "ALPHA MACKAY LIMITED",
+    "accounting_reference_date": {
+      "month": 7,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-07-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-04-30",
+    "company_status": "active",
+    "date_of_creation": "2018-07-03",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "11328117",
+    "company_name": "LUX PAPILLON LIMITED",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2020-12-31",
+      "type": "micro-entity"
+    },
+    "next_due_accounts": "2022-09-30",
+    "company_status": "active",
+    "date_of_creation": "2018-04-25",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "09216240",
+    "company_name": "GREEN GRASS GARDENERS LTD",
+    "accounting_reference_date": {
+      "month": 9,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-09-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-06-30",
+    "company_status": "active",
+    "date_of_creation": "2014-09-12",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-09-12",
+      "next_due": "2016-10-10"
+    }
+  },
+  {
+    "company_number": "06762076",
+    "company_name": "M A PARSONS LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2008-12-01",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-12-01",
+      "next_due": "2016-12-29"
+    }
+  },
+  {
+    "company_number": "03529962",
+    "company_name": "CORNFIELD DEVELOPMENTS LIMITED",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2020-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-09-30",
+    "company_status": "active",
+    "date_of_creation": "1998-03-18",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-18",
+      "next_due": "2017-04-15"
+    }
+  },
+  {
+    "company_number": "08660824",
+    "company_name": "AMPLIO TENDER SERVICES LIMITED",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "2013-08-22",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-08-22",
+      "next_due": "2016-09-19"
+    }
+  },
+  {
+    "company_number": "07907405",
+    "company_name": "COUNTRY GLAMPING HOLIDAYS LTD",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2012-01-12",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-12",
+      "next_due": "2017-02-09"
+    }
+  },
+  {
+    "company_number": "12560679",
+    "company_name": "GTWI LIMITED",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2020-04-16",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "12535241",
+    "company_name": "QA INVESTMENTS LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2020-03-26",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "09474393",
+    "company_name": "THE NATTERJACK INN LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2015-03-06",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-06",
+      "next_due": "2017-04-03"
+    }
+  },
+  {
+    "company_number": "05439461",
+    "company_name": "D N RUDDLE CIVIL ENGINEERING LIMITED",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2005-04-28",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-04-28",
+      "next_due": "2017-05-26"
+    }
+  },
+  {
+    "company_number": "12145573",
+    "company_name": "MERIDIAN RESEARCH LTD",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2019-08-08",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "10059138",
+    "company_name": "RISK & ASSURANCE INTELLIGENCE LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2016-03-12",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "12874688",
+    "company_name": "RJS DEVELOPMENT MANAGEMENT LIMITED",
+    "accounting_reference_date": {
+      "month": 9,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-09-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-06-30",
+    "company_status": "active",
+    "date_of_creation": "2020-09-12",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "09492492",
+    "company_name": "BATH & WESSEX NEURO-PHYSIOTHERAPY CLINIC LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2022-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-12-31",
+    "company_status": "active",
+    "date_of_creation": "2015-03-16",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-16",
+      "next_due": "2017-04-13"
+    }
+  },
+  {
+    "company_number": "06843751",
+    "company_name": "RONIN VENTURES LTD",
+    "accounting_reference_date": {
+      "month": 8,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-08-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-05-31",
+    "company_status": "active",
+    "date_of_creation": "2009-03-11",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-11",
+      "next_due": "2017-04-08"
+    }
+  },
+  {
+    "company_number": "09566495",
+    "company_name": "DR DIGITAL LIMITED",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "micro-entity"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2015-04-29",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-04-29",
+      "next_due": "2017-05-27"
+    }
+  },
+  {
+    "company_number": "11172884",
+    "company_name": "MOOR DIGITAL CONSULTING LIMITED",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2018-01-26",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "08307298",
+    "company_name": "UPWEY INVESTMENTS LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "micro-entity"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2012-11-26",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-11-26",
+      "next_due": "2016-12-24"
+    }
+  },
+  {
+    "company_number": "11034975",
+    "company_name": "J & J PLUMBING & CONSTRUCTION LIMITED",
+    "accounting_reference_date": {
+      "month": 10,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-10-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-07-31",
+    "company_status": "active",
+    "date_of_creation": "2017-10-27",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "08835372",
+    "company_name": "VIVAPERSONA LIMITED",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2022-01-31",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2023-10-31",
+    "company_status": "active",
+    "date_of_creation": "2014-01-07",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-07",
+      "next_due": "2017-02-04"
+    }
+  },
+  {
+    "company_number": "05327104",
+    "company_name": "SHELFBAR LIMITED",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2005-01-07",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-07",
+      "next_due": "2017-02-04"
+    }
+  },
+  {
+    "company_number": "07209146",
+    "company_name": "BUILDING SERVICES CONSULTANTS LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2010-03-31",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-31",
+      "next_due": "2017-04-28"
+    }
+  },
+  {
+    "company_number": "07104787",
+    "company_name": "WHEALPHOENIX LTD",
+    "accounting_reference_date": {
+      "month": 9,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-09-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-06-30",
+    "company_status": "active",
+    "date_of_creation": "2009-12-15",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-12-15",
+      "next_due": "2017-01-12"
+    }
+  },
+  {
+    "company_number": "08711661",
+    "company_name": "C & C CARPETS (UK) LTD",
+    "accounting_reference_date": {
+      "month": 9,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-09-30",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-06-30",
+    "company_status": "active",
+    "date_of_creation": "2013-09-30",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-09-30",
+      "next_due": "2016-10-28"
+    }
+  },
+  {
+    "company_number": "07044446",
+    "company_name": "C K A DEVELOPMENTS LIMITED",
+    "accounting_reference_date": {
+      "month": 10,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-10-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-07-31",
+    "company_status": "active",
+    "date_of_creation": "2009-10-15",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-10-15",
+      "next_due": "2016-11-12"
+    }
+  },
+  {
+    "company_number": "12529107",
+    "company_name": "SINDERS CLEANING SERVICES LTD",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2020-03-20",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "10587592",
+    "company_name": "CALENDARI PROPERTY LIMITED",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2022-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-10-31",
+    "company_status": "active",
+    "date_of_creation": "2017-01-27",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "12543797",
+    "company_name": "KAJENO LTD",
+    "accounting_reference_date": {
+      "month": 4,
+      "day": 30
+    },
+    "last_accounts": {
+      "made_up_to": "2021-04-30",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2023-01-31",
+    "company_status": "active",
+    "date_of_creation": "2020-04-02",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "04269670",
+    "company_name": "SKYLINE EVENTS LTD",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "2001-08-14",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-08-14",
+      "next_due": "2016-09-11"
+    }
+  },
+  {
+    "company_number": "03177212",
+    "company_name": "SKYLINE PROMOTIONS LTD.",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "1996-03-25",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-25",
+      "next_due": "2017-04-22"
+    }
+  },
+  {
+    "company_number": "06798781",
+    "company_name": "SKYLINE TOUR OPERATIONS LTD",
+    "accounting_reference_date": {
+      "month": 12,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-12-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-09-30",
+    "company_status": "active",
+    "date_of_creation": "2009-01-22",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-22",
+      "next_due": "2017-02-19"
+    }
+  },
+  {
+    "company_number": "08360975",
+    "company_name": "WOODFLOORING ENGINEERED LTD",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2013-01-15",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-01-15",
+      "next_due": "2017-02-12"
+    }
+  },
+  {
+    "company_number": "12660544",
+    "company_name": "WOODSMITH WOOD LTD",
+    "accounting_reference_date": {
+      "month": 10,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-10-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-07-31",
+    "company_status": "active",
+    "date_of_creation": "2020-06-10",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "02431830",
+    "company_name": "WOOKEY TAXIS (CONSORTIUM) LIMITED",
+    "accounting_reference_date": {
+      "month": 10,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-10-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-07-31",
+    "company_status": "active",
+    "date_of_creation": "1989-10-12",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-10-12",
+      "next_due": "2016-11-09"
+    }
+  },
+  {
+    "company_number": "07402243",
+    "company_name": "ONEFATHOM LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2010-10-11",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-10-11",
+      "next_due": "2016-11-08"
+    }
+  },
+  {
+    "company_number": "09512453",
+    "company_name": "WORKS BETTER LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "dormant"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2015-03-26",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2016-03-26",
+      "next_due": "2017-04-23"
+    }
+  },
+  {
+    "company_number": "12321700",
+    "company_name": "WORSDALE FABRICATION LIMITED",
+    "accounting_reference_date": {
+      "month": 3,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-03-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-12-31",
+    "company_status": "active",
+    "date_of_creation": "2019-11-19",
+    "company_type": "ltd"
+  },
+  {
+    "company_number": "04483112",
+    "company_name": "SOMERSET ACCOUNTANCY SERVICES LTD",
+    "accounting_reference_date": {
+      "month": 1,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-01-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2022-10-31",
+    "company_status": "active",
+    "date_of_creation": "2002-07-11",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-07-01",
+      "next_due": "2016-07-29"
+    }
+  },
+  {
+    "company_number": "09160294",
+    "company_name": "SP TACKLE LTD",
+    "accounting_reference_date": {
+      "month": 8,
+      "day": 31
+    },
+    "last_accounts": {
+      "made_up_to": "2021-08-31",
+      "type": "unaudited-abridged"
+    },
+    "next_due_accounts": "2023-05-31",
+    "company_status": "active",
+    "date_of_creation": "2014-08-04",
+    "company_type": "ltd",
+    "annual_return": {
+      "last_made_up_to": "2015-08-04",
+      "next_due": "2016-09-01"
+    }
+  }
+]

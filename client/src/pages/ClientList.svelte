@@ -1,7 +1,7 @@
 <script lang="ts">
   import {Box, Button, CloseButton, Container, Divider, Group, InputWrapper, Text, TextInput} from "@svelteuidev/core";
 import SvelteTable from "svelte-table";
-import {Temporal} from '@js-temporal/polyfill'
+// import {Temporal} from '@js-temporal/polyfill'
 import type {TableColumns} from "svelte-table/src/types.js";
 import type {ClientListItem} from "../../../fs-shared/ClientList.js";
   import {clientList, importClientListCsv} from "../lib/clientList.js";
@@ -23,7 +23,7 @@ const columns: TableColumns<ClientListItem> = [
   {
     key: 'date_added',
     title: "Added on",
-    value: v => Temporal.PlainDate.from(v.date_added).toLocaleString(),
+    value: v => v.date_added, // this needs to be formatted with Temporal, but Temporal MUST be imported dynamically
   },
   {
     key: 'remove',
