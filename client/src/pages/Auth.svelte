@@ -15,7 +15,6 @@
     <TextInput label="Your full name" description="So that we know who's logged in"/>
     <Space h="md"/>
     <Button>Register</Button>
-
 </Container>
 
 

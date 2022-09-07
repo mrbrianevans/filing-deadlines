@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/papaparse": "^5.3.5",
     "svelte": "3.47.0",
     "svelte-check": "^2.8.0",
     "svelte-preprocess": "^4.10.7",
@@ -20,12 +21,15 @@
     "vite": "^3.0.7"
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.2",
     "@svelteuidev/composables": "^0.7.3",
     "@svelteuidev/core": "^0.7.3",
-    "@vaadin/grid": "^23.2.0",
-    "@vaadin/vaadin-lumo-styles": "^23.2.0",
+    "camelcase": "^7.0.0",
+    "papaparse": "^5.3.2",
     "radix-icons-svelte": "^1.2.1",
     "svelte-navigator": "^3.2.2",
+    "svelte-table": "^0.5.0",
+    "sveltefileuploadcomponent": "^0.1.0",
     "yaml": "^2.1.1"
   }
 }

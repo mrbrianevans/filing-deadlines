@@ -1,5 +1,4 @@
 import './app.css'
-import {badge} from '@vaadin/vaadin-lumo-styles/badge.js'
 import App from './App.svelte'
 
 
