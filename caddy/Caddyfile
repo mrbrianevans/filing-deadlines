@@ -1,14 +1,20 @@
 {$SITE_ADDRESS} {
 
-        log {
-            output stdout
-            format console
-        }
+    log {
+        output stdout
+        format console
+    }
+
+	handle /api/* {
+		reverse_proxy server:{$SERVER_PORT}
+	}
 
 
+	handle {
         root * /client
-        reverse_proxy /api/* server:{$SERVER_PORT}
-        #try_files {path} /index.html
+	    encode gzip
+        try_files {path} /index.html
         file_server
+    }
 
 }

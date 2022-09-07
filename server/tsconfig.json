@@ -4,13 +4,15 @@
     "target": "ES2021",
     "sourceMap": true,
     "moduleResolution": "node",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "skipLibCheck": true // to fix fastify session errors
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "types/*.d.ts"
   ],
   "references": [
     {

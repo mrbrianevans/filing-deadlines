@@ -21,7 +21,7 @@ services:
     build:
       dockerfile: Client.Dockerfile
     volumes:
-      - client_dist:/client/dist # this MUST match the workdir set in the Dockerfile
+      - client_dist:/filing-deadlines/client/dist # this MUST match the workdir set in the Dockerfile
   worker:
     build:
       dockerfile: Worker.Dockerfile
@@ -37,6 +37,8 @@ services:
       PORT: 3000
     env_file:
       - .api.env
+      - .xero.env
+      - .server.env
 volumes:
   redisdata:
   caddy_data:

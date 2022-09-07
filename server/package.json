@@ -10,7 +10,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "fastify": "^4.5.3"
+    "@fastify/cookie": "^8.1.0",
+    "@fastify/oauth2": "^6.0.0",
+    "@fastify/redis": "^6.0.0",
+    "@fastify/session": "^9.0.0",
+    "fastify": "^4.5.3",
+    "jwt-decode": "^3.1.2"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
