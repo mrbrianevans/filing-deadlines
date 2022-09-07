@@ -16,6 +16,8 @@ importers:
   client:
     specifiers:
       '@js-temporal/polyfill': ^0.4.2
+      '@svelte-drama/suspense': ^0.3.9
+      '@svelte-drama/swr': ^0.2.6
       '@sveltejs/vite-plugin-svelte': ^1.0.1
       '@svelteuidev/composables': ^0.7.3
       '@svelteuidev/core': ^0.7.3
@@ -36,6 +38,8 @@ importers:
       vite: ^3.0.7
     dependencies:
       '@js-temporal/polyfill': 0.4.2
+      '@svelte-drama/suspense': 0.3.9_svelte@3.47.0
+      '@svelte-drama/swr': 0.2.6_5qlakxj5rn4j2nvepvfepse7xu
       '@svelteuidev/composables': 0.7.3
       '@svelteuidev/core': 0.7.3_s7a5qlaoep2wvmc7uxxljm2tkm
       camelcase: 7.0.0
@@ -319,6 +323,24 @@ packages:
 
   /@stitches/core/1.2.8:
     resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
+    dev: false
+
+  /@svelte-drama/suspense/0.3.9_svelte@3.47.0:
+    resolution: {integrity: sha512-nVd0Yt9WWyxAvHjc+raMy6AfGS3VTVkhzHblZUMox7UZWFHM4K3DPKtObrJE8VWlPsw6YaTStWch+ycqsN9Qmw==}
+    peerDependencies:
+      svelte: ^3.44.0
+    dependencies:
+      svelte: 3.47.0
+    dev: false
+
+  /@svelte-drama/swr/0.2.6_5qlakxj5rn4j2nvepvfepse7xu:
+    resolution: {integrity: sha512-HWRoFvouhNsKudriMsVIW1sLhqki65Zw+j4Z6uUj0k38wnH5nYyfZ13VQryXoylfeZS1laXONIHVQHAVl/MvVA==}
+    peerDependencies:
+      '@svelte-drama/suspense': ^0.3.5
+      svelte: ^3.44.3
+    dependencies:
+      '@svelte-drama/suspense': 0.3.9_svelte@3.47.0
+      svelte: 3.47.0
     dev: false
 
   /@sveltejs/vite-plugin-svelte/1.0.5_svelte@3.47.0+vite@3.1.0:

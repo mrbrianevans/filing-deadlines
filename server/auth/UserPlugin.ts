@@ -36,7 +36,7 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
         name: decodedIdToken.name,
         email: decodedIdToken.email
       }
-      return {user}
+      return user
     }
   })
 

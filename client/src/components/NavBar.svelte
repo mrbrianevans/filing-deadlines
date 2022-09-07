@@ -2,11 +2,12 @@
 
 import {Link} from "svelte-navigator";
 import {toggleTheme,isDark} from "../lib/theme.js";
-import {Anchor, Center, SimpleGrid, Switch} from "@svelteuidev/core";
+import {Anchor, Button, Center, SimpleGrid, Switch, Text} from "@svelteuidev/core";
+import {user} from "../lib/user.js";
 </script>
 
 <div>
-    <SimpleGrid cols={3} >
+    <SimpleGrid cols={4} >
         <h1>Filing deadlines</h1>
         <Center >
 
@@ -17,6 +18,12 @@ import {Anchor, Center, SimpleGrid, Switch} from "@svelteuidev/core";
             </nav>
         </Center>
         <Switch on:change={toggleTheme} label={$isDark ? 'Change to light':'Change to dark'} />
+        {#if $user !== null && $user !== undefined}
+            <div>
+                <Text>Logged in as {$user.name}</Text>
+                <Button on:click={user.logout}>Logout</Button>
+            </div>
+        {/if}
     </SimpleGrid>
 </div>
 
