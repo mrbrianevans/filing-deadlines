@@ -1,6 +1,6 @@
-import {FastifyPluginAsync} from "fastify";
+import type {FastifyPluginAsync} from "fastify";
 import jwtDecode from "jwt-decode";
-import {AccessToken, IdToken} from "../types/token.js";
+import type {AccessToken, IdToken} from "../types/token.js";
 import { getEnv } from '../../backend-shared/utils.js'
 
 const userScopes = ['openid', 'profile', 'email']

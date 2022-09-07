@@ -5,7 +5,8 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "strictNullChecks": true,
-    "skipLibCheck": true // to fix fastify session errors
+    "skipLibCheck": true, // to fix fastify session errors
+    "importsNotUsedAsValues": "error"
   },
   "exclude": [
     "node_modules"

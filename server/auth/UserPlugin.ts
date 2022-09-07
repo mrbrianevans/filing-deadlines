@@ -1,8 +1,7 @@
-import {FastifyPluginAsync} from "fastify";
+import type {FastifyPluginAsync} from "fastify";
 import jwtDecode from "jwt-decode";
 import type { User } from "../../fs-shared/User.js";
-import { IdToken } from "../types/token.js";
-
+import type { IdToken } from "../types/token.js";
 
 const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.addHook('onRequest', async (request, reply)=> {
@@ -15,6 +14,8 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
     }
     request.log = request.log.child({userId})
   })
+
+  await fastify.register(import("../clientList/ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
 
   fastify.get('/', async (request, reply) => {
     const userId = request.session.userId
