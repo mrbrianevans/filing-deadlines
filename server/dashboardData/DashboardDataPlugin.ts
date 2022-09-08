@@ -1,7 +1,7 @@
 import type {FastifyPluginAsync} from "fastify";
 import type {CompanyProfile} from '../../fs-shared/CompanyProfile.js'
 import {convertCompanyProfilesToDashboard} from '../../fs-shared/DashboardData.js'
-import {getCompanyProfileFromApi} from '../../backend-shared/getCompanyProfile.js'
+import {getCompanyProfileFromApi} from '../../backend-shared/companiesHouseApi/getCompanyProfile.js'
 
 const DashboardDataPlugin: FastifyPluginAsync = async (fastify, opts) => {
 

@@ -6,6 +6,7 @@ import { nextTick,stdout,env } from "node:process";
 import {setTimeout} from "node:timers/promises";
 import {getRedisClient} from '../../backend-shared/getRedisClient.js'
 import {getEnv} from '../../backend-shared/utils.js'
+import { workerLogger } from "../../backend-shared/loggers.js";
 
 export type StreamPath =
   | "insolvency-cases"
@@ -51,9 +52,9 @@ export async function listenToStream(streamPath: StreamPath = "companies", start
     throw new Error('Could not listen on stream')
   }
 }
-//todo: replace any console.log with workerLogger.info()s
 
 export async function *streamEventsContinuously<EventType extends {event:{timepoint:number}}= any>(path: StreamPath) {
+  const logger = workerLogger.child({workerType:'listener', stream: path})
   const streamTimepointKey = 'streams:timepoint:'+path
   try {
     while (true) {//  reconnect if(when) ended
@@ -63,14 +64,14 @@ export async function *streamEventsContinuously<EventType extends {event:{timepo
 
       //pick up at left off timepoint (saved in redis)
       const previousTimepoint = await redis.get(streamTimepointKey)
-      if (previousTimepoint) console.log("Picking up from previous time point:", previousTimepoint)
+      if (previousTimepoint) logger.info({previousTimepoint},"Picking up from previous time point")
       const eventEmitter = await listenToStream(path, previousTimepoint ? parseInt(previousTimepoint) : undefined)
       eventEmitter.on('end', () => {
-        console.log("Event emitter ended", new Date())
+        logger.info("Event emitter ended")
         ac.abort()
       })
-      eventEmitter.on('start', () => console.log("Event emitter started", new Date()))
-      eventEmitter.on('error', (e) => console.log("Event emitter errored", new Date(), e))
+      eventEmitter.on('start', () => logger.info("Event emitter started"))
+      eventEmitter.on('error', (e) => logger.error(e, "Event emitter errored"))
       let counter = 0, lastTimepoint: number | null = null
       try {
         for await(const events of on(eventEmitter, 'event', {signal})) {
@@ -84,12 +85,11 @@ export async function *streamEventsContinuously<EventType extends {event:{timepo
       } catch (e) {
         if (e.code !== 'ABORT_ERR') throw e
       }
-      console.log("End of loop after", counter, 'events. Will restart in 60 seconds. Last timepoint:', lastTimepoint)
+      logger.info({counter, lastTimepoint}, 'End of looping through events. Will restart in 60 seconds from last timepoint')
       await setTimeout(60_000) // wait a minute before reconnecting
       await redis.quit()
     }
   } catch (e) {
-    console.log("Exiting update script due to failure to connect to Streaming API.")
-    console.log(e)
+    logger.error(e,"Exiting update script due to failure to connect to Streaming API.")
   }
 }

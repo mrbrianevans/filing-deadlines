@@ -36,9 +36,9 @@ import FileUpload from 'sveltefileuploadcomponent';
     sortable: true
   },
   {
-    key: 'date_added',
+    key: 'added_on',
     title: "Added on",
-    value: v => v.date_added, // this needs to be formatted with Temporal, but Temporal MUST be imported dynamically
+    value: v => v.added_on, // this needs to be formatted with Temporal, but Temporal MUST be imported dynamically
   },
   {
     key: 'remove',

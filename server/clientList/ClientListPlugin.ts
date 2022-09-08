@@ -1,7 +1,12 @@
-import type {FastifyPluginAsync} from "fastify";
-import { getCompanyProfileFromApi } from "../../backend-shared/getCompanyProfile.js";
+import type {FastifyPluginAsync, FastifySchema} from "fastify";
+import { getCompanyProfileFromApi } from "../../backend-shared/companiesHouseApi/getCompanyProfile.js";
+import { dispatchLoadFilingHistory } from "../../backend-shared/jobs/dispatchJobs.js";
 import type {ClientListItem} from '../../fs-shared/ClientList.js'
 import {sortClientList} from "../../fs-shared/ClientList.js";
+
+const addClientSchema: FastifySchema = {
+  body: {type: 'object', properties: {companyNumber: {type: 'string'}}}
+}
 
 const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
@@ -21,24 +26,27 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   // add a single client by its company number
-  fastify.put<{Params: {clientId: string}}>('/:clientId', async (request, reply)=>{
-    const {clientId} = request.params
-    const profile = await getCompanyProfileFromApi(clientId)
-    if(profile) await fastify.redis.set(`company:${clientId}:profile`, JSON.stringify(profile))
-    const client: ClientListItem = {company_number: clientId, date_added: new Date().toISOString().split('T')[0],company_name: profile?.company_name}
-    await fastify.redis.hset('user:'+request.session.userId+':clients', clientId, JSON.stringify(client))
+  fastify.post<{Body: {companyNumber: string}}>('/', {schema: addClientSchema},async (request, reply)=>{
+    const {companyNumber} = request.body
+    const profile = await getCompanyProfileFromApi(companyNumber)
+    if(profile) await fastify.redis.set(`company:${companyNumber}:profile`, JSON.stringify(profile))
+    const client: ClientListItem = {company_number: companyNumber, added_on: new Date().toISOString(),company_name: profile?.company_name}
+    const exists = await fastify.redis.hexists('user:'+request.session.userId+':clients', companyNumber)
+    if(!exists){
+      // new client, dispatch event to load filing history
+      await dispatchLoadFilingHistory(companyNumber, 100, 'new-client-added')
+    }
+    await fastify.redis.hset('user:'+request.session.userId+':clients', companyNumber, JSON.stringify(client))
     reply.status(201).send()
   })
 
-  // add many clients by their company numbers
-  fastify.put('/addManyByCompanyNumber', async (request, reply)=>{
-    // similar to /addByCompanyNumber, but with a for loop
-   reply.status(501).send({message:'Not implemented'})
-  })
-
-  fastify.delete<{Params: {clientId: string}}>('/:clientId', async (request, reply)=>{
-    const {clientId} = request.params
-    await fastify.redis.hdel('user:'+request.session.userId+':clients', clientId)
+  fastify.delete<{Params: {companyNumber: string}}>('/:companyNumber', async (request, reply)=>{
+    const {companyNumber} = request.params
+    const exists = await fastify.redis.hexists('user:'+request.session.userId+':clients', companyNumber)
+    if(!exists){
+      reply.status(404).send({message: 'Not found'})
+    }
+    await fastify.redis.hdel('user:'+request.session.userId+':clients', companyNumber)
     reply.status(204).send()
   })
 

@@ -8,7 +8,7 @@ import {sortClientList} from "../../../fs-shared/ClientList.js";
 function createClientList(){
   const key = '/api/user/client-list/'
   // add and delete REST endpoints
-  const addClient = (id) => fetch(key+id, {method: 'PUT'}).then((r) => r.ok)
+  const addClient = (id) => fetch(key, {method: 'POST', body: JSON.stringify({companyNumber: id}), headers: {'Content-Type':'application/json'}}).then((r) => r.ok)
   const deleteClient = (id) => fetch(key+id, {method: 'DELETE'}).then((r) => r.ok)
 
   const { data: {subscribe}, error, refresh, update,processing } = swr<ClientListItem[]|null>(key, readableSwrOptions)
@@ -17,7 +17,7 @@ function createClientList(){
   async function addNew(client: ClientListItem['company_number']|ClientListItem['company_number'][]){
     console.time('Add clients')
     const companyNumbers:string[] = [].concat(client)
-    const newClients = companyNumbers.map(company_number=>({company_number, date_added: new Date().toISOString().split('T')[0]}))
+    const newClients = companyNumbers.map(company_number=>({company_number, added_on: new Date().toISOString()}))
     await update(prev=>prev?.concat(newClients).sort(sortClientList)??newClients)
     //call endpoint to add by company number
     await Promise.all(companyNumbers.map(companyNumber=>addClient(companyNumber)))

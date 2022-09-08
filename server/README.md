@@ -15,7 +15,7 @@ Fetch current user profile.
 ##### `/api/user/client-list`
 Fetch the client list of the current user.
 
-###### `/api/user/client-list/:clientId` 
+###### `/api/user/client-list/:companyNumber` 
 `PUT` to add a client, `DELETE` to remove a client.
 
 ##### `/api/user/dashboard`
@@ -30,7 +30,8 @@ Users are stored in `user:{userId}` under 3 suffixes for different token types: 
 
 Client lists are stored in `user:{userId}:clients` as a Redis Hash of `id => JSON([Object Client])`.
 
-Client company profiles from Companies House are stored in `company:{clientId}:profile` and filing history in `company:{clientId}:filingHistory`, both as stringified JSON. 
+Client company profiles from Companies House are stored in `company:{companyNumber}:profile` and filing history in `company:{companyNumber}:filingHistory`. 
+Company profile is stored as a JSON string. Filing history is stored as a Redis Hash of `transaction_id => JSON([Object FilingItem])`.
 Because this data is from Companies House, it is shared between users.
 
 
