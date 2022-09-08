@@ -1,9 +1,10 @@
 <script lang="ts">
     import type {TableColumns} from "svelte-table/src/types.js";
-    import SvelteTable from "svelte-table";
     import {dashboardData} from "../lib/dashboardData.js";
     import type {DashboardDataItem} from '../../../fs-shared/DashboardData.js'
     import {company_type,company_status} from '../assets/constants.json'
+    import {ActionIcon, Loader} from "@svelteuidev/core";
+    import {Reload} from "radix-icons-svelte";
 
     const columns: TableColumns<DashboardDataItem> = [
       {
@@ -58,17 +59,24 @@
 </script>
 
 <div>
+    <ActionIcon on:click={()=>dashboardData.refresh()}><Reload/></ActionIcon>
+    {#await import('svelte-table').then(m=>m.default)}
+        <Loader/>
+    {:then SvelteTable}
+        {#if $dashboardData?.length > 0}
+            <SvelteTable columns="{columns}" rows={$dashboardData}
+                         sortBy="next_due_accounts" sortOrder="{1}"
+                         rowKey="company_number" classNameRow="{getRowClass}"
+                         classNameTable="dashboard-table"
+                         expandSingle="{true}"
+                         bind:expanded={expanded}
+                         on:clickRow="{handleRowClick}"
+            >
+                <svelte:fragment slot="expanded" let:row><pre>{JSON.stringify(row, null, 2)}</pre></svelte:fragment>
+            </SvelteTable>
+        {/if}
+    {/await}
 
-    <SvelteTable columns="{columns}" rows={$dashboardData}
-                 sortBy="next_due_accounts" sortOrder="{1}"
-                 rowKey="company_number" classNameRow="{getRowClass}"
-                 classNameTable="dashboard-table"
-                 expandSingle="{true}"
-                 bind:expanded={expanded}
-                 on:clickRow="{handleRowClick}"
-    >
-        <svelte:fragment slot="expanded" let:row><pre>{JSON.stringify(row, null, 2)}</pre></svelte:fragment>
-    </SvelteTable>
 
 </div>
 

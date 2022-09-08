@@ -1,15 +1,12 @@
-import {writable} from "svelte/store";
-import sampleDashboardData from "../assets/sampleDashboardData.json";
 import type {DashboardData} from '../../../fs-shared/DashboardData.js'
+import {swr} from "@svelte-drama/swr";
+import {readableSwrOptions} from "./swr.js";
 
 function createDashboardData(){
-  const {set,update, subscribe} = writable<DashboardData>(sampleDashboardData, function(subscriber){
-    //todo: listen to server for updates
-    // subscriber([])
-  })
+  const key = '/api/user/dashboard-data'
+  const { data: {subscribe}, error, refresh, update, processing } = swr<DashboardData|null>(key, readableSwrOptions)
 
-
-  return {subscribe}
+  return {subscribe, processing, refresh, error}
 }
 
 export const dashboardData = createDashboardData()

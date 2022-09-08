@@ -16,6 +16,8 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   await fastify.register(import("../clientList/ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
+  await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
+
 
   fastify.get('/', async (request, reply) => {
     const userId = request.session.userId

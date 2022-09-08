@@ -1,9 +1,10 @@
 
 import Fastify from 'fastify'
 import { getEnv } from '../backend-shared/utils.js'
+import { serverLogger } from '../backend-shared/loggers.js'
 const port = parseInt(process.env.PORT??'4004')
 
-const fastify = Fastify({logger: {level: 'trace'}})
+const fastify = Fastify({logger: serverLogger})
 
 //register any third party plugins here
 {

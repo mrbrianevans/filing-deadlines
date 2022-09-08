@@ -10,7 +10,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "bullmq": "^1.90.1"
+    "bullmq": "^1.90.1",
+    "pino": "^8.5.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
