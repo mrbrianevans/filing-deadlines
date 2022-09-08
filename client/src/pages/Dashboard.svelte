@@ -3,8 +3,8 @@
     import {dashboardData} from "../lib/dashboardData.js";
     import type {DashboardDataItem} from '../../../fs-shared/DashboardData.js'
     import {company_type,company_status} from '../assets/constants.json'
-    import {ActionIcon, Loader} from "@svelteuidev/core";
-    import {Reload} from "radix-icons-svelte";
+    import {ActionIcon, Alert, Loader, Tooltip} from "@svelteuidev/core";
+    import {InfoCircled, Reload} from "radix-icons-svelte";
 
     const columns: TableColumns<DashboardDataItem> = [
       {
@@ -40,8 +40,7 @@
       {
         key: 'next_due_accounts',
         title: 'Next accounts due',
-        value: v => v.next_due_accounts,
-        sortable: true
+        value: v => v.next_due_accounts
       }
     ]
 
@@ -56,14 +55,24 @@
       if(event.detail.row.$expanded) expanded = []
       else expanded = [event.detail.row.company_number]
     }
+    const {error, processing} = dashboardData
 </script>
 
 <div>
-    <ActionIcon on:click={()=>dashboardData.refresh()}><Reload/></ActionIcon>
     {#await import('svelte-table').then(m=>m.default)}
         <Loader/>
     {:then SvelteTable}
-        {#if $dashboardData?.length > 0}
+        {#if $processing}
+
+            <Loader />
+        {:else if $error}
+            <Alert icon={InfoCircled} title="{$error.name}" color="red">
+             An error occurred while getting the dashboard data.
+            </Alert>
+        {:else if $dashboardData?.length > 0}
+            <Tooltip label="Reload dashboard" withArrow>
+                <ActionIcon on:click={()=>dashboardData.refresh()}><Reload/></ActionIcon>
+            </Tooltip>
             <SvelteTable columns="{columns}" rows={$dashboardData}
                          sortBy="next_due_accounts" sortOrder="{1}"
                          rowKey="company_number" classNameRow="{getRowClass}"

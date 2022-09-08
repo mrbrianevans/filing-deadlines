@@ -1,4 +1,5 @@
 import type {FastifyPluginAsync} from "fastify";
+import { getCompanyProfileFromApi } from "../../backend-shared/getCompanyProfile.js";
 import type {ClientListItem} from '../../fs-shared/ClientList.js'
 import {sortClientList} from "../../fs-shared/ClientList.js";
 
@@ -22,9 +23,10 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   // add a single client by its company number
   fastify.put<{Params: {clientId: string}}>('/:clientId', async (request, reply)=>{
     const {clientId} = request.params
-    const client: ClientListItem = {company_number: clientId, date_added: new Date().toISOString().split('T')[0],company_name: 'fetch from gov.API'}
+    const profile = await getCompanyProfileFromApi(clientId)
+    if(profile) await fastify.redis.set(`company:${clientId}:profile`, JSON.stringify(profile))
+    const client: ClientListItem = {company_number: clientId, date_added: new Date().toISOString().split('T')[0],company_name: profile?.company_name}
     await fastify.redis.hset('user:'+request.session.userId+':clients', clientId, JSON.stringify(client))
-    //todo: also need to store the client details from API in a separate key
     reply.status(201).send()
   })
 
