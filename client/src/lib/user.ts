@@ -16,6 +16,7 @@ function createUserStore(){
   async function logout(){
     await fetch('/api/user/logout')
     await update(()=>null)
+    await refresh() // have to manually refresh after updating?
   }
 
   return {subscribe,logout}

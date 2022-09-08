@@ -1,23 +1,39 @@
-import {writable} from "svelte/store";
-import sampleClientList from '../assets/sampleClientList.json'
 import type {ClientListItem} from "../../../fs-shared/ClientList.js";
 import type { ParseLocalConfig, ParseResult} from 'papaparse'
 import camelcase from "camelcase";
+import {swr} from "@svelte-drama/swr";
+import {readableSwrOptions, writableSwrOptions} from "./swr.js";
+import {sortClientList} from "../../../fs-shared/ClientList.js";
+
 function createClientList(){
-  const {set,update, subscribe} = writable<ClientListItem[]>([...sampleClientList])
+  const key = '/api/user/client-list/'
+  // add and delete REST endpoints
+  const addClient = (id) => fetch(key+id, {method: 'PUT'}).then((r) => r.ok)
+  const deleteClient = (id) => fetch(key+id, {method: 'DELETE'}).then((r) => r.ok)
+
+  const { data: {subscribe}, error, refresh, update,processing } = swr<ClientListItem[]|null>(key, readableSwrOptions)
 
   /** Add either one or many clients to the list */
-  function addNew(client: ClientListItem|ClientListItem[]){
-    update(prev=>prev.concat(client))
+  async function addNew(client: ClientListItem['company_number']|ClientListItem['company_number'][]){
+    console.time('Add clients')
+    const companyNumbers:string[] = [].concat(client)
+    const newClients = companyNumbers.map(company_number=>({company_number, date_added: new Date().toISOString().split('T')[0]}))
+    await update(prev=>prev?.concat(newClients).sort(sortClientList)??newClients)
+    //call endpoint to add by company number
+    await Promise.all(companyNumbers.map(companyNumber=>addClient(companyNumber)))
+    await refresh() // after adding, refresh entire list
+    console.timeEnd('Add clients')
   }
 
 
-  function remove(companyNumber: ClientListItem['company_number']){
-    update(prev=>prev.filter(c=>c.company_number!==companyNumber))
+  async function remove(companyNumber: ClientListItem['company_number']){
+    await update(prev=>prev?.filter(c=>c.company_number!==companyNumber)) // sort order shouldn't change
+    // call endpoint to remove by company number
+    await deleteClient(companyNumber)
+    await refresh() // after deleting, refresh entire list
   }
 
-
-  return {subscribe, addNew, remove}
+  return {subscribe, addNew, remove, processing}
 }
 
 export const clientList = createClientList()
@@ -33,5 +49,5 @@ export async function importClientListCsv(csv){
   }
   const rows:ParseResult<{ companyNumber: string }> = await new Promise((resolve, reject) => papa.parse(csv, {complete: resolve, error: reject,...papaOptions }))
   const companyNumbers = rows.data.map(r=>r.companyNumber)
-  console.log(companyNumbers.slice(0,4))
+  await clientList.addNew(companyNumbers)
 }
