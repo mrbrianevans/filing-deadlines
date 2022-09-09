@@ -26,6 +26,7 @@ import FileUpload from 'sveltefileuploadcomponent';
   import {Link} from "svelte-navigator";
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import SampleSpreadsheet from "../components/clientList/SampleSpreadsheet.svelte";
+  import {onMount} from "svelte";
 
 
   const columns: TableColumns<ClientListItem> = [
@@ -59,6 +60,7 @@ async function addClient(){
     await clientList.addNew(newCompanyNumber)
 }
 let {processing, error} = clientList
+  onMount(()=>clientList.refresh())
 </script>
 
 
@@ -114,7 +116,7 @@ let {processing, error} = clientList
         {/if}
     {/await}
         {:else}
-        <Text>You need to be logged in to manage a client list. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" inherit>home page</Anchor></Text>
+        <Text>You need to be logged in to manage a client list. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" href="/" inherit>home page</Anchor></Text>
         {/if}
 </Container>
 

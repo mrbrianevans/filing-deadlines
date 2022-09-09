@@ -4,15 +4,14 @@
     import type {DashboardDataItem} from '../../../fs-shared/DashboardData.js'
     import {company_type,company_status} from '../assets/constants.json'
     import {ActionIcon, Alert, Anchor, Container, Loader, Text, Title, Tooltip} from "@svelteuidev/core";
-    import {InfoCircled, Reload} from "radix-icons-svelte";
+    import {InfoCircled, Reload } from "radix-icons-svelte";
     import {user} from "../lib/user.js";
     import {Link} from "svelte-navigator";
     import CompanyName from "../components/dashboard/CompanyName.svelte";
     import CompanyStatus from "../components/dashboard/CompanyStatus.svelte";
     import CompanyProfile from "../components/dashboard/CompanyProfile.svelte";
+    import {onMount} from "svelte";
 
-    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     function getDaysLeft(date: string){
       return Math.floor((new Date(date) - Date.now())/(86400*1000))
     }
@@ -78,6 +77,7 @@
       else expanded = [event.detail.row.company_number]
     }
     const {error, processing} = dashboardData
+    onMount(()=>dashboardData.refresh())
 </script>
 
 <div>
@@ -109,7 +109,7 @@
                     <Title order={3}>Get started</Title>
                     <Text>
                         It looks like you haven't added any clients yet.
-                        Go the <Anchor root={Link} to="/clients" inherit>client list page</Anchor> and add some clients to get started.
+                        Go the <Anchor root={Link} to="/clients" href="/clients" inherit>client list page</Anchor> and add some clients to get started.
                         Then data will appear in your dashboard.
                     </Text>
                 </Container>
@@ -117,7 +117,7 @@
         {/if}
     {/await}
     {:else}
-    <Text>You need to be logged in to view your dashboard. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" inherit>home page</Anchor>.</Text>
+    <Text>You need to be logged in to view your dashboard. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" href="/" inherit>home page</Anchor>.</Text>
     {/if}
 
 

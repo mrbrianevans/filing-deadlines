@@ -41,7 +41,7 @@
                     <li>client details loaded automatically from Companies House</li>
                 </ul>
                 {#if $user}
-                    <Anchor root={Link} to="/clients">Go to your client list</Anchor>
+                    <Anchor root={Link} to="/clients" href="/clients">Go to your client list</Anchor>
                     <Space h="md"/>
                 {/if}
             <Image src="{clientListScreenshot}"></Image>
@@ -56,7 +56,7 @@
                     <li>highlighted based on time left to file</li>
                 </ul>
                 {#if $user}
-                    <Anchor root={Link} to="/dashboard">Go to your dashboard</Anchor>
+                    <Anchor root={Link} to="/dashboard" href="/dashboard">Go to your dashboard</Anchor>
                     <Space h="md"/>
                 {/if}
                 <Image src="{dashboardScreenshot}"></Image>

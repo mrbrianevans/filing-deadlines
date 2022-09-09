@@ -23,7 +23,7 @@ let userProcessing = user.processing
 
 <div>
     <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem' }}>
-        <Title order={1}><Anchor root={Link} to="/" inherit>Filing deadlines</Anchor></Title>
+        <Title order={1}><Anchor root={Link} to="/" href="/" inherit>Filing deadlines</Anchor></Title>
         <Group spacing="lg" >
             <nav>
                 <Group>
@@ -31,9 +31,9 @@ let userProcessing = user.processing
 <!--                    <Anchor root={Link} to="/">Home</Anchor>-->
 <!--                    <DividerVertical/>-->
                     {#if $user}
-                        <Anchor root={Link} to="/clients">Client list</Anchor>
+                        <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
                         <DividerVertical/>
-                        <Anchor root={Link} to="/dashboard">Dashboard</Anchor>
+                        <Anchor root={Link} to="/dashboard" href="/dashboard">Dashboard</Anchor>
                     {/if}
                 </Group>
             </nav>
