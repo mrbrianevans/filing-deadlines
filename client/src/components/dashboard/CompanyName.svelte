@@ -11,7 +11,7 @@
   })
 </script>
 
-<Text>
+<Text inherit>
     {row.company_name}
     {#if isNew}
         <Tooltip label="Company created on {new Date(row.date_of_creation).toLocaleDateString()}">

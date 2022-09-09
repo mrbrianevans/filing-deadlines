@@ -1,6 +1,6 @@
 <script lang="ts">
   import type {DashboardDataItem} from '../../../../fs-shared/DashboardData.js'
-  import {Anchor, Paper, Text, Title, Stack} from "@svelteuidev/core";
+  import {Anchor, Paper, Text, Title, Stack, Tooltip} from "@svelteuidev/core";
   import CompanyStatus from "./CompanyStatus.svelte";
   import {company_type,account_type} from '../../assets/constants.json'
     import {shortMonths} from '../../../../fs-shared/dates.js'
@@ -29,8 +29,11 @@
                 <td>{row.company_number}</td>
             </tr>
             <tr>
-                <th>Accounting reference date</th>
-                <td>{formatRefDate(row)} (is this the year end?)</td>
+                <th>
+                    <Tooltip label="Accounting reference date">
+                        Year end
+                    </Tooltip></th>
+                <td>{formatRefDate(row)}</td>
             </tr>
             <tr>
                 <th>Date of creation</th>
