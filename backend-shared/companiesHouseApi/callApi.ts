@@ -10,10 +10,21 @@ export async function callApi<ResponseType = any>(path: string) {
   const startTime = performance.now()
   const res = await fetch(apiUrl + path, {headers})
   const duration = performance.now() - startTime
-  //todo: log rate limit remaining, and trigger an error if it gets dangerously low
   const {ok,status} = res
-  sharedLogger.info({path, duration, ok, status },'Called Companies House API')
+  const rateLimit = getRateLimit(res.headers)
+  sharedLogger.info({path, duration, ok, status, rateLimit },'Called Companies House API')
+  if(rateLimit.remain < 100) sharedLogger.warn({...rateLimit},"Companies House API rate limit getting dangerously low")
   if (ok) return await res.json() as ResponseType
     // if it is null, potentially need to warn the user about missing data
   else return null
+}
+
+
+function getRateLimit(headers: {get(key: string): string|null}){
+  return {
+    limit: parseInt(headers.get('X-Ratelimit-Limit')??'0'),
+    remain: parseInt(headers.get('X-Ratelimit-Remain')??'0'),
+    reset: parseInt(headers.get('X-Ratelimit-Reset')??'0'),
+    window: headers.get('X-Ratelimit-Window')??'0m'
+  }
 }

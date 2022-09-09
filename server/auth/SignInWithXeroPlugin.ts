@@ -29,18 +29,24 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   fastify.get('/callback', async function(request,reply){
-    const {token} = await this.xeroOauth.getAccessTokenFromAuthorizationCodeFlow(request)
-    const {access_token, id_token,refresh_token} = token
-    const decodedAccessToken = jwtDecode(access_token) as AccessToken
-    const decodedIdToken = jwtDecode(id_token) as IdToken
-    request.session.userId = decodedIdToken.xero_userid
-    await fastify.redis.set('user:'+request.session.userId+':id', id_token)
-    await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
-    if(refresh_token) await fastify.redis.set('user:'+request.session.userId+':refresh_token', refresh_token)
-    // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
-    const clientListLength = await fastify.redis.hlen('user:'+request.session.userId+':clients')
-    if(clientListLength > 0) reply.redirect('/dashboard')
-    else reply.redirect('/clients')
+    try{
+      const {token} = await this.xeroOauth.getAccessTokenFromAuthorizationCodeFlow(request)
+      const {access_token, id_token,refresh_token} = token
+      const decodedAccessToken = jwtDecode(access_token) as AccessToken
+      const decodedIdToken = jwtDecode(id_token) as IdToken
+      request.session.userId = decodedIdToken.xero_userid
+      await fastify.redis.set('user:'+request.session.userId+':id', id_token)
+      await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
+      if(refresh_token) await fastify.redis.set('user:'+request.session.userId+':refresh_token', refresh_token)
+      // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
+      const clientListLength = await fastify.redis.hlen('user:'+request.session.userId+':clients')
+      if(clientListLength > 0) reply.redirect('/dashboard')
+      else reply.redirect('/clients')
+    }catch (e) {
+      // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.
+      request.log.error(e)
+      reply.redirect('/')
+    }
   })
 
 }

@@ -102,7 +102,7 @@ let {processing, error} = clientList
                 <SimpleGrid cols="{2}">
                     <div>
                         <Text>The easiest way to get started with a list of your clients is to upload a spreadsheet. </Text>
-                        <Text>Make an Excel spreadsheet with a column called "company number" and then put each company number on a new line, as shown in the example below.</Text>
+                        <Text>Make an Excel spreadsheet with a column called "company number" and then put each company number on a new line, as shown in the example.</Text>
                         <Text>Save it as a CSV file ending in <code>.csv</code> and upload it.</Text>
                         <Space h="sm"/>
                         <Text>Or you can manually add clients by their company number in the text box above.</Text>
