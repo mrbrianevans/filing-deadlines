@@ -6,6 +6,7 @@
   import Auth from "./pages/Auth.svelte";
   import NavBar from "./components/NavBar.svelte";
   import ClientList from "./pages/ClientList.svelte";
+  import Home from "./pages/Home.svelte";
 
   const config = {
     dark: { bg: '#1A1B1E', color: '#C1C2C5' }
@@ -17,13 +18,13 @@
 <SvelteUIProvider {config} withNormalizeCSS withGlobalStyles  themeObserver={$isDark ? 'dark' : 'light'}>
   <Seo title="Filing deadlines tracker" />
   <TypographyProvider>
-    <main theme={$isDark ? 'dark' : 'light'} class="full-height">
+    <div theme={$isDark ? 'dark' : 'light'} class="full-height">
       <AppShell>
         <Header slot="header">
           <NavBar/>
         </Header>
         <slot>
-          <Route path="/">
+          <Route path="/dashboard">
             <Dashboard />
           </Route>
           <Route path="/login">
@@ -32,16 +33,19 @@
           <Route path="/clients">
             <ClientList />
           </Route>
+          <Route path="/">
+            <Home />
+          </Route>
         </slot>
       </AppShell>
-    </main>
+    </div>
   </TypographyProvider>
 </SvelteUIProvider>
 
 </Router>
 
 <style>
-  main.full-height{
+  div.full-height{
     min-height: 100vh;
   }
 </style>
