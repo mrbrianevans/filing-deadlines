@@ -12,7 +12,8 @@ services:
       - caddy_config:/config
     environment:
       SERVER_PORT: 3000
-      SITE_ADDRESS: localhost:80
+    env_file:
+      - .url.env
   redis:
     build: redis
     volumes:
@@ -39,6 +40,7 @@ services:
       - .api.env
       - .xero.env
       - .server.env
+      - .url.env
 volumes:
   redisdata:
   caddy_data:

@@ -27,6 +27,7 @@ import FileUpload from 'sveltefileuploadcomponent';
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import SampleSpreadsheet from "../components/clientList/SampleSpreadsheet.svelte";
   import {onMount} from "svelte";
+  import AddedOn from "../components/clientList/AddedOn.svelte";
 
 
   const columns: TableColumns<ClientListItem> = [
@@ -44,7 +45,8 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   {
     key: 'added_on',
     title: "Added on",
-    value: v => v.added_on, // this needs to be formatted with Temporal, but Temporal MUST be imported dynamically
+    value: v => new Date(v.added_on).getTime().toString(),
+    renderComponent: AddedOn
   },
   {
     key: 'remove',
@@ -94,7 +96,7 @@ let {processing, error} = clientList
         {:else}
             {#if $clientList.length > 0}
                 <Text>{$clientList.length} clients</Text>
-                <SvelteTable columns="{columns}" rows={$clientList}></SvelteTable>
+                <SvelteTable columns="{columns}" rows={$clientList} sortBy="added_on" sortOrder="{-1}"></SvelteTable>
             {:else}
                 <Title order={3}>Get started</Title>
                 <SimpleGrid cols="{2}">

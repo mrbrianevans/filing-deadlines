@@ -1,22 +1,11 @@
 <script lang="ts">
-
-  import {
-    Text,
-    Title,
-    Container,
-    Paper,
-    ShellSection,
-    SimpleGrid,
-    Space,
-    Image,
-    Button,
-    Anchor
-  } from "@svelteuidev/core";
+  import {Anchor, Container, Group, Image, Paper, SimpleGrid, Space, Text, Title} from "@svelteuidev/core";
   import {isDark} from "../lib/theme.js";
   import clientListScreenshot from '../assets/client-list.png'
   import dashboardScreenshot from '../assets/dashboard.png'
   import {user} from "../lib/user.js";
   import {Link} from "svelte-navigator";
+  import SignInWithXeroButton from "../components/SignInWithXeroButton.svelte";
 </script>
 
 <div class="background" class:dark={$isDark}>
@@ -62,6 +51,18 @@
                 <Image src="{dashboardScreenshot}"></Image>
             </Paper>
         </SimpleGrid>
+        {#if !$user}
+            <Space h="md"/>
+        <Paper>
+            <Title order={3} color="green" weight="bold">Sign in with Xero to get started.</Title>
+            <Group>
+                <SignInWithXeroButton/>
+            </Group>
+            <Space h="xs"/>
+            <Text color='dimmed'>It won't connect to your Xero organisation, it only uses Xero to authenticate you.</Text>
+            <Space h="xs"/>
+        </Paper>
+        {/if}
     </Container>
 </div>
 
