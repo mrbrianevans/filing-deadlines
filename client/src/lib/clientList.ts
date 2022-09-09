@@ -16,7 +16,7 @@ function createClientList(){
   /** Add either one or many clients to the list */
   async function addNew(client: ClientListItem['company_number']|ClientListItem['company_number'][]){
     console.time('Add clients')
-    const companyNumbers:string[] = [].concat(client)
+    const companyNumbers:string[] = [].concat(client).map(companyNumber=>companyNumber.padStart(8, '0'))
     const newClients = companyNumbers.map(company_number=>({company_number, added_on: new Date().toISOString()}))
     await update(prev=>prev?.concat(newClients).sort(sortClientList)??newClients)
     //call endpoint to add by company number
@@ -33,7 +33,7 @@ function createClientList(){
     await refresh() // after deleting, refresh entire list
   }
 
-  return {subscribe, addNew, remove, processing}
+  return {subscribe, addNew, remove, error, processing}
 }
 
 export const clientList = createClientList()

@@ -1,15 +1,16 @@
 <script lang="ts">
   import {
+    Alert,
     Anchor,
     Box,
-    Button,
+    Button, Center,
     CloseButton,
     Container,
     Divider,
-    Group,
-    InputWrapper, Space,
+    Group, Image,
+    InputWrapper, SimpleGrid, Space,
     Text,
-    TextInput,
+    TextInput, Title,
     Tooltip
   } from "@svelteuidev/core";
 // import SvelteTable from "svelte-table";
@@ -20,10 +21,11 @@ import {clientList, importClientListCsv} from "../lib/clientList.js";
 import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
-  import {FilePlus} from "radix-icons-svelte";
+  import {FilePlus, InfoCircled} from "radix-icons-svelte";
   import {user} from "../lib/user.js";
   import {Link} from "svelte-navigator";
-
+import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
+  import SampleSpreadsheet from "../components/clientList/SampleSpreadsheet.svelte";
 
 
   const columns: TableColumns<ClientListItem> = [
@@ -56,12 +58,12 @@ async function addClient(){
     addedCompanyNumber = ''
     await clientList.addNew(newCompanyNumber)
 }
-
+let {processing, error} = clientList
 </script>
 
 
 <Container>
-    <h2>Client list</h2>
+    <Title order={2}>Client list</Title>
     {#if $user}
     <Group>
         <TextInput bind:value={addedCompanyNumber} placeholder="Company number"/>
@@ -79,13 +81,36 @@ async function addClient(){
             </FileUpload>
         </Tooltip>
     </Group>
+        <Space h="md"/>
     {#await import('svelte-table').then(m=>m.default)}
         <Loader/>
         {:then SvelteTable}
-        {#if $clientList?.length > 0}
-            <Space h="md"/>
-            <Text>{$clientList.length} clients</Text>
-            <SvelteTable columns="{columns}" rows={$clientList}></SvelteTable>
+        {#if $clientList === null || $clientList === undefined}
+            {#if $processing} <Loader/>
+            {:else if $error} <Alert icon={InfoCircled} title="{$error.name}" color="red">An error occurred while getting your client list.</Alert>
+            {/if}
+        {:else}
+            {#if $clientList.length > 0}
+                <Text>{$clientList.length} clients</Text>
+                <SvelteTable columns="{columns}" rows={$clientList}></SvelteTable>
+            {:else}
+                <Title order={3}>Get started</Title>
+                <SimpleGrid cols="{2}">
+                    <div>
+                        <Text>The easiest way to get started with a list of your clients is to upload a spreadsheet. </Text>
+                        <Text>Make an Excel spreadsheet with a column called "company number" and then put each company number on a new line, as shown in the example below.</Text>
+                        <Text>Save it as a CSV file ending in <code>.csv</code> and upload it.</Text>
+                        <Space h="sm"/>
+                        <Text>Or you can manually add clients by their company number in the text box above.</Text>
+                    </div>
+                    <Center><Image src={sampleSpreadsheet} width={300} height={300} caption="Sample spreadsheet to upload client list" fit="contain" usePlaceholder>
+                    <svelte:fragment slot='placeholder'>
+                        <Text>Failed to load image, but this is what the spreadsheet looks like:</Text>
+                        <SampleSpreadsheet/>
+                    </svelte:fragment>
+                </Image></Center>
+                </SimpleGrid>
+            {/if}
         {/if}
     {/await}
         {:else}

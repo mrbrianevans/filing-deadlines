@@ -3,7 +3,7 @@
     import {dashboardData} from "../lib/dashboardData.js";
     import type {DashboardDataItem} from '../../../fs-shared/DashboardData.js'
     import {company_type,company_status} from '../assets/constants.json'
-    import {ActionIcon, Alert, Anchor, Loader, Text, Tooltip} from "@svelteuidev/core";
+    import {ActionIcon, Alert, Anchor, Container, Loader, Text, Title, Tooltip} from "@svelteuidev/core";
     import {InfoCircled, Reload} from "radix-icons-svelte";
     import {user} from "../lib/user.js";
     import {Link} from "svelte-navigator";
@@ -89,7 +89,8 @@
             <Alert icon={InfoCircled} title="{$error.name}" color="red">
              An error occurred while getting the dashboard data.
             </Alert>
-        {:else if $dashboardData?.length > 0}
+        {:else if $dashboardData}
+            {#if $dashboardData.length > 0}
             <Tooltip label="Reload dashboard" withArrow>
                 <ActionIcon on:click={()=>dashboardData.refresh()} loading="{$processing}"><Reload/></ActionIcon>
             </Tooltip>
@@ -103,6 +104,16 @@
             >
                 <svelte:fragment slot="expanded" let:row><CompanyProfile row="{row}"/></svelte:fragment>
             </SvelteTable>
+            {:else}
+                <Container>
+                    <Title order={3}>Get started</Title>
+                    <Text>
+                        It looks like you haven't added any clients yet.
+                        Go the <Anchor root={Link} to="/clients" inherit>client list page</Anchor> and add some clients to get started.
+                        Then data will appear in your dashboard.
+                    </Text>
+                </Container>
+            {/if}
         {/if}
     {/await}
     {:else}

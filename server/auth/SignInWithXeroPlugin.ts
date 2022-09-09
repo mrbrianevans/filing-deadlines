@@ -37,8 +37,10 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
     await fastify.redis.set('user:'+request.session.userId+':id', id_token)
     await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
     if(refresh_token) await fastify.redis.set('user:'+request.session.userId+':refresh_token', refresh_token)
-    // todo: if the user already has a client list, show them the dashboard. Otherwise send them to make a client list.
-    reply.redirect('/') // back home after signing in
+    // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
+    const clientListLength = await fastify.redis.hlen('user:'+request.session.userId+':clients')
+    if(clientListLength > 0) reply.redirect('/dashboard')
+    else reply.redirect('/clients')
   })
 
 }
