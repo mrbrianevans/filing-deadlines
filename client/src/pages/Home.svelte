@@ -1,9 +1,22 @@
 <script lang="ts">
 
-  import {Text, Title, Container, Paper, ShellSection, SimpleGrid, Space, Image} from "@svelteuidev/core";
+  import {
+    Text,
+    Title,
+    Container,
+    Paper,
+    ShellSection,
+    SimpleGrid,
+    Space,
+    Image,
+    Button,
+    Anchor
+  } from "@svelteuidev/core";
   import {isDark} from "../lib/theme.js";
   import clientListScreenshot from '../assets/client-list.png'
   import dashboardScreenshot from '../assets/dashboard.png'
+  import {user} from "../lib/user.js";
+  import {Link} from "svelte-navigator";
 </script>
 
 <div class="background" class:dark={$isDark}>
@@ -27,6 +40,10 @@
                     <li>manually edit client list (add or remove)</li>
                     <li>client details loaded automatically from Companies House</li>
                 </ul>
+                {#if $user}
+                    <Anchor root={Link} to="/clients">Go to your client list</Anchor>
+                    <Space h="md"/>
+                {/if}
             <Image src="{clientListScreenshot}"></Image>
 
             </Paper>
@@ -38,6 +55,10 @@
                     <li>click a row to see more details about a company</li>
                     <li>highlighted based on time left to file</li>
                 </ul>
+                {#if $user}
+                    <Anchor root={Link} to="/dashboard">Go to your dashboard</Anchor>
+                    <Space h="md"/>
+                {/if}
                 <Image src="{dashboardScreenshot}"></Image>
             </Paper>
         </SimpleGrid>

@@ -9,7 +9,7 @@
   import Home from "./pages/Home.svelte";
 
   const config = {
-    dark: { bg: '#1A1B1E', color: '#C1C2C5' }
+    // dark: { bg: '#1A1B1E', color: '#C1C2C5' }
   };
 
 </script>

@@ -2,29 +2,68 @@
 
 import {Link} from "svelte-navigator";
 import {toggleTheme,isDark} from "../lib/theme.js";
-import {Anchor, Button, Center, SimpleGrid, Switch, Text} from "@svelteuidev/core";
+import {
+  ActionIcon,
+  Anchor, Box,
+  Button,
+  Center,
+  Group,
+  Loader,
+  Navbar,
+  SimpleGrid,
+  Switch,
+  Text, Title,
+  Tooltip
+} from "@svelteuidev/core";
 import {user} from "../lib/user.js";
+import {Exit, Sun, DividerVertical, Moon} from "radix-icons-svelte";
+
+let userProcessing = user.processing
+let titleStyles = {
+  lineHeight: 1.5,marginTop: 0
+}
 </script>
 
 <div>
-    <SimpleGrid cols={4} >
-        <h1>Filing deadlines</h1>
-        <Center >
-
+    <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem' }}>
+        <Title order={1}><Anchor root={Link} to="/" inherit>Filing deadlines</Anchor></Title>
+        <Group spacing="lg" >
             <nav>
-                <Anchor root={Link} to="/">Home</Anchor>
-                <Anchor root={Link} to="/login">Login</Anchor>
-                <Anchor root={Link} to="/clients">Client list</Anchor>
+                <Group>
+<!--                    this home link has been replaced by making the "Filing deadlines" H1 a link to home page-->
+<!--                    <Anchor root={Link} to="/">Home</Anchor>-->
+<!--                    <DividerVertical/>-->
+                    {#if $user}
+                        <Anchor root={Link} to="/clients">Client list</Anchor>
+                        <DividerVertical/>
+                        <Anchor root={Link} to="/dashboard">Dashboard</Anchor>
+                    {/if}
+                </Group>
             </nav>
-        </Center>
-        <Switch on:change={toggleTheme} label={$isDark ? 'Change to light':'Change to dark'} />
-        {#if $user !== null && $user !== undefined}
-            <div>
+        <ActionIcon on:click={toggleTheme} variant="filled" aria-label={$isDark ? 'Change to light theme':'Change to dark theme'} >
+            {#if $isDark}
+                <Sun/>
+            {:else }
+                <Moon/>
+            {/if}
+        </ActionIcon>
+        <div>
+        {#if $userProcessing}
+            <Loader/>
+        {:else if $user === null || $user === undefined}
+            <Button href="/api/sign-in/xero"  ripple variant="outline">Sign in with Xero</Button>
+        {:else}
+            <Group>
                 <Text>Logged in as {$user.name}</Text>
-                <Button on:click={user.logout}>Logout</Button>
-            </div>
+                <Tooltip label="Logout" position="left">
+                    <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
+                </Tooltip>
+            </Group>
         {/if}
-    </SimpleGrid>
+        </div>
+        </Group>
+
+    </Box>
 </div>
 
 

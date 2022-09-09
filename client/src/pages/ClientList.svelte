@@ -67,7 +67,7 @@ async function addClient(){
         </Box>
         <Tooltip withArrow opened position="right" label="Upload CSV of clients">
             <FileUpload let:dragging multiple={false} on:input={e=>importClientListCsv(e.detail.files)}>
-                <Box root="span" css={{border: '1px dashed black', display: 'flex', gap: '1ch', padding: '5px'}}>
+                <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
                     <FilePlus/>
                     <Text>Drag and Drop or </Text>
                     <Text underline>Browse</Text>
