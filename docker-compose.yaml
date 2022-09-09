@@ -14,10 +14,14 @@ services:
       SERVER_PORT: 3000
     env_file:
       - .url.env
+    logging:
+      driver: local
   redis:
     build: redis
     volumes:
       - redisdata:/data
+    logging:
+      driver: local
   client:
     build:
       dockerfile: Client.Dockerfile
@@ -30,6 +34,8 @@ services:
       REDIS_URL: redis://redis:6379
     env_file:
       - .api.env
+    logging:
+      driver: local
   server:
     build:
       dockerfile: Server.Dockerfile
@@ -41,6 +47,8 @@ services:
       - .xero.env
       - .server.env
       - .url.env
+    logging:
+      driver: local
 volumes:
   redisdata:
   caddy_data:
