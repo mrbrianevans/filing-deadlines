@@ -1,11 +1,10 @@
 <script lang="ts">
 
   import type {DashboardDataItem} from '../../../../fs-shared/DashboardData.js'
-  import {Text, Badge, Tooltip} from "@svelteuidev/core";
-  import {onMount} from "svelte";
+  import { Badge} from "@svelteuidev/core";
   import {company_status} from '../../assets/constants.json'
   export let row: DashboardDataItem
-  export let col: any
+  export const col: any = null
 
 </script>
 

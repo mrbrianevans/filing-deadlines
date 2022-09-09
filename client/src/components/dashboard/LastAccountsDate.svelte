@@ -4,7 +4,7 @@
   import AsyncDate from "../AsyncDate.svelte";
   import {Tooltip} from "@svelteuidev/core";
   export let row: DashboardDataItem
-  export let col: any
+  export const col: any = null
 </script>
 
 {#if row.last_accounts?.made_up_to}

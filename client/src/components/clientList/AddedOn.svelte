@@ -4,7 +4,7 @@
   import AsyncDate from "../AsyncDate.svelte";
   import {Tooltip} from "@svelteuidev/core";
   export let row: ClientListItem
-  export let col: any
+  export const col: any = null
 </script>
 
 <Tooltip label="{new Date(row.added_on).toLocaleString()}">

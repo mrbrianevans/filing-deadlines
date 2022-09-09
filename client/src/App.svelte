@@ -59,8 +59,4 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
   :global(html){
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   }
-  .provider{
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-
-  }
 </style>
