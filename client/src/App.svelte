@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
-  import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell} from '@svelteuidev/core';
+  import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles} from '@svelteuidev/core';
   import Dashboard from "./pages/Dashboard.svelte";
   import {isDark} from "./lib/theme.ts";
   import Auth from "./pages/Auth.svelte";
@@ -9,13 +9,24 @@
   import Home from "./pages/Home.svelte";
 
   const config = {
-    // dark: { bg: '#1A1B1E', color: '#C1C2C5' }
+    light: { bg: 'White', color: 'Black' },
+    dark: { bg: '#1A1B1E', color: '#C1C2C5' },
+    fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'
   };
+  const useStyles = createStyles(() => ({
+    root: {
+      fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'
+    }
+  }));
 
+  let getStyles// CANNOT change the default font for some reason??? tried everything
+  $: ({ getStyles } = useStyles())
 </script>
 
 <Router>
-<SvelteUIProvider {config} withNormalizeCSS withGlobalStyles  themeObserver={$isDark ? 'dark' : 'light'}>
+<SvelteUIProvider {config} withNormalizeCSS withGlobalStyles  themeObserver={$isDark ? 'dark' : 'light'} fontFamily="Inter, Avenir, Helvetica, Arial, sans-serif;"
+override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={getStyles()}
+>
   <Seo title="Filing deadlines tracker" />
   <TypographyProvider>
     <div theme={$isDark ? 'dark' : 'light'} class="full-height">
@@ -44,5 +55,12 @@
 <style>
   div.full-height{
     min-height: 100vh;
+  }
+  :global(html){
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  }
+  .provider{
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+
   }
 </style>
