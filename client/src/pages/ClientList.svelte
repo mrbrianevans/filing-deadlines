@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    Anchor,
     Box,
     Button,
     CloseButton,
@@ -20,6 +21,8 @@ import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
   import {FilePlus} from "radix-icons-svelte";
+  import {user} from "../lib/user.js";
+  import {Link} from "svelte-navigator";
 
 
 
@@ -59,6 +62,7 @@ async function addClient(){
 
 <Container>
     <h2>Client list</h2>
+    {#if $user}
     <Group>
         <TextInput bind:value={addedCompanyNumber} placeholder="Company number"/>
         <Button on:click={addClient}>Add</Button>
@@ -84,6 +88,9 @@ async function addClient(){
             <SvelteTable columns="{columns}" rows={$clientList}></SvelteTable>
         {/if}
     {/await}
+        {:else}
+        <Text>You need to be logged in to manage a client list. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" inherit>home page</Anchor></Text>
+        {/if}
 </Container>
 
 

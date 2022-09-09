@@ -4,6 +4,7 @@ import {clear, swr} from '@svelte-drama/swr'
 import { refreshInterval, refreshOnFocus, refreshOnReconnect } from '@svelte-drama/swr/plugin'
 import type {SWROptions} from "@svelte-drama/swr/types.js";
 import {readableSwrOptions} from "./swr.js";
+import {navigate} from "svelte-navigator";
 
 function createUserStore(){
   const key = '/api/user'
@@ -14,6 +15,7 @@ function createUserStore(){
     await update(()=>null)
     await clear() // when a user logs out, clear all cache entries (because they could contain user data)
     await refresh() // have to manually refresh after updating?
+    navigate('/') // redirect the user to the home page after logging out
   }
 
   return {subscribe,logout, processing}

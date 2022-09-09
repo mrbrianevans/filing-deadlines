@@ -3,7 +3,7 @@
   import {Container, Button, Divider, TextInput, Space, Anchor, Group} from "@svelteuidev/core";
   import SignInWithXeroButton from "../components/SignInWithXeroButton.svelte";
 
-  // the design of this page will depend quite heavily on the auth flow logic in the backend
+  // this page has been removed from being accessible and replaced with a login button in the navbar
 </script>
 
 <Container>

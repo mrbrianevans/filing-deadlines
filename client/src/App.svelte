@@ -27,9 +27,6 @@
           <Route path="/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/login">
-            <Auth />
-          </Route>
           <Route path="/clients">
             <ClientList />
           </Route>

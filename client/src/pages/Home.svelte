@@ -22,7 +22,7 @@
 <div class="background" class:dark={$isDark}>
     <Container>
         <Paper>
-            <Title order={1} variant='gradient' gradient={{from: 'blue', to: 'green', deg: 75}} weight="bold">Never miss a filing deadline.</Title>
+            <Title order={1} color="teal" weight="bold">Never miss a filing deadline.</Title>
             <Text color='dimmed'>This up-to-date dashboard will help you and your team keep track of upcoming deadlines.</Text>
         </Paper>
         <Space h="md"/>

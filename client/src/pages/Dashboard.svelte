@@ -3,8 +3,10 @@
     import {dashboardData} from "../lib/dashboardData.js";
     import type {DashboardDataItem} from '../../../fs-shared/DashboardData.js'
     import {company_type,company_status} from '../assets/constants.json'
-    import {ActionIcon, Alert, Loader, Tooltip} from "@svelteuidev/core";
+    import {ActionIcon, Alert, Anchor, Loader, Text, Tooltip} from "@svelteuidev/core";
     import {InfoCircled, Reload} from "radix-icons-svelte";
+    import {user} from "../lib/user.js";
+    import {Link} from "svelte-navigator";
 
     const columns: TableColumns<DashboardDataItem> = [
       {
@@ -59,6 +61,7 @@
 </script>
 
 <div>
+    {#if $user}
     {#await import('svelte-table').then(m=>m.default)}
         <Loader/>
     {:then SvelteTable}
@@ -85,6 +88,9 @@
             </SvelteTable>
         {/if}
     {/await}
+    {:else}
+    <Text>You need to be logged in to view your dashboard. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" inherit>home page</Anchor>.</Text>
+    {/if}
 
 
 </div>

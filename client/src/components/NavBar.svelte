@@ -12,16 +12,13 @@ import {
   Navbar,
   SimpleGrid,
   Switch,
-  Text, Title,
+  Text, ThemeIcon, Title,
   Tooltip
 } from "@svelteuidev/core";
 import {user} from "../lib/user.js";
 import {Exit, Sun, DividerVertical, Moon} from "radix-icons-svelte";
-
+import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
 let userProcessing = user.processing
-let titleStyles = {
-  lineHeight: 1.5,marginTop: 0
-}
 </script>
 
 <div>
@@ -40,6 +37,7 @@ let titleStyles = {
                     {/if}
                 </Group>
             </nav>
+            <Tooltip label="{$isDark ? 'Change to light theme':'Change to dark theme'}" position="left">
         <ActionIcon on:click={toggleTheme} variant="filled" aria-label={$isDark ? 'Change to light theme':'Change to dark theme'} >
             {#if $isDark}
                 <Sun/>
@@ -47,11 +45,12 @@ let titleStyles = {
                 <Moon/>
             {/if}
         </ActionIcon>
+            </Tooltip>
         <div>
         {#if $userProcessing}
             <Loader/>
         {:else if $user === null || $user === undefined}
-            <Button href="/api/sign-in/xero"  ripple variant="outline">Sign in with Xero</Button>
+            <SignInWithXeroButton/>
         {:else}
             <Group>
                 <Text>Logged in as {$user.name}</Text>
