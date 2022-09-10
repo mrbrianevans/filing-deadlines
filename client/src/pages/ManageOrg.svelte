@@ -28,7 +28,7 @@ async function inviteUser(){
   errorInviting = !success
   await orgMembers.refresh()
 }
-
+//todo: show some warning about creating a new org if the user has been invited to join an existing one
 onMount(async ()=>{
   await Promise.allSettled([org.refresh(), orgMembers.refresh()])
 })
@@ -43,9 +43,10 @@ onMount(async ()=>{
             <Group><TextInput placeholder="Email address" bind:value={inviteEmail} invalid="{errorInviting}" /> <Button on:click={inviteUser} loading="{creating}">Invite</Button></Group>
             <table class="members">
                 {#each Object.entries($orgMembers??{}) as member}
-                    <tr><td>{member[0]}</td><td>{OrgMemberStatusPretty[member[1]]}</td></tr>
+                    <tr><td>{member[0]}</td><td>{OrgMemberStatusPretty[member[1]]}</td><td><Button disabled color="red">Remove</Button></td></tr>
                 {/each}
             </table>
+            <Group><Button disabled color="red">Leave organisation</Button><Button disabled color="red">Delete organisation</Button></Group>
         {:else}
             <Text>You need to belong to an organisation before you can manage members access. Either create one, or ask someone to add you to one they have created.</Text>
 

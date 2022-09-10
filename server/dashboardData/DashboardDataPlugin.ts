@@ -18,7 +18,7 @@ const DashboardDataPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // get the dashboard data for the current user
   fastify.get('/', async (request, reply)=>{
-    const clientIds = (await fastify.redis.hkeys('user:'+request.session.userId+':clients')) ?? []
+    const clientIds = (await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)) ?? []
     request.log.info({numberOfClients: clientIds.length},'Getting company profiles for client list')
     const companyProfiles = await Promise.all(clientIds.map(clientId=>getCompanyProfile(clientId)))
     return convertCompanyProfilesToDashboard(companyProfiles)

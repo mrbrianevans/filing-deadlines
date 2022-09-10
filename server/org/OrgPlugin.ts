@@ -54,6 +54,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const pendingInviteOrgId = await fastify.redis.hget(`invite:${email}`, 'orgId')
     if(orgIdAccepted === pendingInviteOrgId){
       // accept
+      request.session.orgId = orgIdAccepted
       await fastify.redis.del(`invite:${email}`)
       await fastify.redis.set(`user:${userId}:org`, orgIdAccepted)
       await fastify.redis.hset(`org:${orgIdAccepted}:members`, email, OrgMemberStatus.acceptedInvite)

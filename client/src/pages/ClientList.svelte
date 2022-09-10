@@ -39,7 +39,7 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   {
     key: 'company_name',
     title: "Client name",
-    value: v => v.company_name,
+    value: v => v.company_name??'',
     sortable: true
   },
   {

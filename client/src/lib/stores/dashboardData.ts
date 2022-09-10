@@ -3,7 +3,7 @@ import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../swr.js";
 
 function createDashboardData(){
-  const key = '/api/user/dashboard-data'
+  const key = '/api/user/org/member/dashboard-data'
   const { data: {subscribe}, error, refresh, update, processing } = swr<DashboardData|null>(key, readableSwrOptions)
 
   return {subscribe, processing, refresh, error}

@@ -2,13 +2,13 @@ import type {ClientListItem} from "../../../../fs-shared/ClientList.js";
 import type { ParseLocalConfig, ParseResult} from 'papaparse'
 import camelcase from "camelcase";
 import {swr} from "@svelte-drama/swr";
-import {readableSwrOptions, writableSwrOptions} from "../swr.js";
+import {poster, readableSwrOptions, writableSwrOptions} from "../swr.js";
 import {sortClientList} from "../../../../fs-shared/ClientList.js";
 
 function createClientList(){
-  const key = '/api/user/client-list/'
+  const key = '/api/user/org/member/client-list/'
   // add and delete REST endpoints
-  const addClient = (id) => fetch(key, {method: 'POST', body: JSON.stringify({companyNumber: id}), headers: {'Content-Type':'application/json'}}).then((r) => r.ok)
+  const addClient = (id) => poster(key, {companyNumber: id})
   const deleteClient = (id) => fetch(key+id, {method: 'DELETE'}).then((r) => r.ok)
 
   const { data: {subscribe}, error, refresh, update,processing } = swr<ClientListItem[]|null>(key, readableSwrOptions)

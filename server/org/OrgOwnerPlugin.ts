@@ -1,12 +1,16 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import {Invite, OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
+import {emailRegex} from '../../fs-shared/sharedRegex.js'
 
 
 const inviteSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      email: {type:'string'}
+      email: {
+        type:'string',
+        // pattern: emailRegex.toString()
+      }
     }
   }
 }
@@ -36,6 +40,7 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
       return reply.status(400).send({message:"This user has already been invited to another organisation",errCode:'already-invited-elsewhere'})
     } else {
       const currentStatus = await fastify.redis.hget(`org:${orgId}:members`, email)
+      // todo: this should also somehow check that the person isn't already a part of an organisation. Not sure how to do that with email.
       if(!currentStatus || currentStatus === OrgMemberStatus.left || currentStatus === OrgMemberStatus.removed || currentStatus === OrgMemberStatus.rejectedInvite) {
         const invite: Invite = {
           orgId: <string>orgId,

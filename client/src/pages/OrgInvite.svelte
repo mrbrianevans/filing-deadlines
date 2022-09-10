@@ -15,8 +15,9 @@
   let acceptLoading = false
   async function acceptInvite(){
     acceptLoading = true
-    await poster('/api/user/org/acceptInvitation?orgId='+invite.orgId, {})
+    const success = await poster('/api/user/org/acceptInvitation?orgId='+invite.orgId, {})
     acceptLoading = false
+    if(success) navigate('/dashboard')
   }
 </script>
 
@@ -29,7 +30,7 @@
             <Space h="sm"/>
             <Group>
                 <Button color="green" on:click={acceptInvite} loading="{acceptLoading}">Accept</Button>
-                <Button color="red" on:click={()=>navigate('/')}>Reject</Button>
+                <Button color="red" on:click={()=>navigate('/')} disabled>Reject</Button>
             </Group>
             <Space h="sm"/>
             <Text color="dimmed">Accepting the invitation will give you access to view the dashboard and client list, and also to edit the client list.</Text>

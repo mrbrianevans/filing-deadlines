@@ -27,8 +27,6 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
     request.log = request.log.child({userId})
   })
 
-  await fastify.register(import("../clientList/ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
-  await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
   await fastify.register(import('../org/OrgPlugin.js'), {prefix: 'org'}) // organisation management
 
 
@@ -37,8 +35,10 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const user: User = {
       id: decodedIdToken.xero_userid,
       name: decodedIdToken.name,
-      email: decodedIdToken.email
+      email: decodedIdToken.email,
+      owner: request.session.owner
     }
+    if(request.session.orgId) user.orgName = <string>await fastify.redis.get(`org:${request.session.orgId}:name`)
     return user
   })
 

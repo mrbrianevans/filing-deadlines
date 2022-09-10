@@ -28,7 +28,7 @@ Fetch the profile of a company in the dashboard (for expanded details).
 
 Users are stored in `user:{userId}` under 3 suffixes for different token types: `id`, `access_token` and `refresh_token`.
 
-Client lists are stored in `user:{userId}:clients` as a Redis Hash of `id => JSON([Object Client])`.
+Client lists are stored in `org:{orgId}:clients` as a Redis Hash of `id => JSON([Object Client])`.
 
 Client company profiles from Companies House are stored in `company:{companyNumber}:profile` and filing history in `company:{companyNumber}:filingHistory`. 
 Company profile is stored as a JSON string. Filing history is stored as a Redis Hash of `transaction_id => JSON([Object FilingItem])`.

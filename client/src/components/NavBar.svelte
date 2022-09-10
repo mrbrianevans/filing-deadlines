@@ -10,7 +10,7 @@ import {
   Group,
   Loader,
   Navbar,
-  SimpleGrid,
+  SimpleGrid, Stack,
   Switch,
   Text, ThemeIcon, Title,
   Tooltip
@@ -31,11 +31,15 @@ let userProcessing = user.processing
 <!--                    <Anchor root={Link} to="/">Home</Anchor>-->
 <!--                    <DividerVertical/>-->
                     {#if $user}
-                        <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
-                        <DividerVertical/>
-                        <Anchor root={Link} to="/dashboard" href="/dashboard">Dashboard</Anchor>
-                        <DividerVertical/>
-                        <Anchor root={Link} to="/manage-access" href="/manage-access">Manage access</Anchor>
+                        {#if $user.orgName}
+                            <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
+                            <DividerVertical/>
+                            <Anchor root={Link} to="/dashboard" href="/dashboard">Dashboard</Anchor>
+                        {/if}
+                        {#if $user.owner}
+                            <DividerVertical/>
+                            <Anchor root={Link} to="/manage-access" href="/manage-access">Manage access</Anchor>
+                        {/if}
                     {/if}
                 </Group>
             </nav>
@@ -54,12 +58,15 @@ let userProcessing = user.processing
         {:else if $user === null || $user === undefined}
             <SignInWithXeroButton/>
         {:else}
-            <Group>
-                <Text>Logged in as {$user.name}</Text>
-                <Tooltip label="Logout" position="left">
-                    <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
-                </Tooltip>
-            </Group>
+            <Stack spacing="xs">
+                <Group>
+                    <Text>Logged in as {$user.name}</Text>
+                    <Tooltip label="Logout" position="left">
+                        <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
+                    </Tooltip>
+                </Group>
+                <Text>{$user.orgName??'No organisation'}</Text>
+            </Stack>
         {/if}
         </div>
         </Group>
