@@ -17,6 +17,7 @@
     acceptLoading = true
     const success = await poster('/api/user/org/acceptInvitation?orgId='+invite.orgId, {})
     acceptLoading = false
+    await user.refresh()
     if(success) navigate('/dashboard')
   }
 </script>

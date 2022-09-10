@@ -2,7 +2,8 @@ name: 'build-typescript'
 on: # rebuild any PRs and any branch changes
   pull_request:
   push:
-
+#todo: would be good to spin up the server and request a health status endpoint, to ensure that all fastify plugins could register.
+# For example regex schema mistakes are only caught when the plugin registers, not in typescript compile.
 jobs:
   build-server:
     runs-on: ubuntu-latest

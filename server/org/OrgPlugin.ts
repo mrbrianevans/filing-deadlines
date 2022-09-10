@@ -37,6 +37,8 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(added === 0) return reply.status(400).send({message:'An organisation already exists with that name', errCode: 'duplicate-name'})
 
     const orgId = randomUUID() // generate orgId
+    request.session.orgId = orgId
+    request.session.owner = true
     await fastify.redis.set(`org:${orgId}:name`, name)
     const {userId} = request.session
     await fastify.redis.set(`org:${orgId}:owner`, <string>userId)
