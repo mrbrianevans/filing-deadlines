@@ -3,7 +3,12 @@ import jwtDecode from "jwt-decode";
 import type { User } from "../../fs-shared/User.js";
 import type { IdToken } from "../types/token.js";
 
+function getUserFromIdToken(idToken: string){
+  return jwtDecode(idToken) as IdToken
+}
+
 const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
+  fastify.decorateRequest('user', null)
   fastify.addHook('onRequest', async (request, reply)=> {
     const {userId} = request.session
     // ensure user is logged in (if userId is set on the session, then they are logged in)
@@ -12,34 +17,29 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
       reply.status(401).send({code: 401, message: 'Not logged in'})
       return
     }
+    const idToken = await fastify.redis.get(`user:${userId}:id`)
+    if(!idToken) {
+      request.log.warn('userId exists, but couldn\'t find ID token in Redis')
+      reply.status(401).send({code: 401, message: 'Issue with account'})
+      return null
+    }
+    request.user = getUserFromIdToken(idToken)
     request.log = request.log.child({userId})
   })
 
   await fastify.register(import("../clientList/ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
   await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
+  await fastify.register(import('../org/OrgPlugin.js'), {prefix: 'org'}) // organisation management
 
 
   fastify.get('/', async (request, reply) => {
-    const userId = request.session.userId
-    if(!userId) {
-      request.log.debug('Requested user profile, but userId not found on session')
-      return null
+    const decodedIdToken = request.user
+    const user: User = {
+      id: decodedIdToken.xero_userid,
+      name: decodedIdToken.name,
+      email: decodedIdToken.email
     }
-    else{
-      // get user from Redis and return
-      const id_token = await fastify.redis.get('user:'+request.session.userId+':id')
-      if(!id_token) {
-        request.log.debug('Requested user profile, and userId exists, but couldn\'t find ID token in Redis')
-        return null
-      }
-      const decodedIdToken = jwtDecode(id_token) as IdToken
-      const user: User = {
-        id: decodedIdToken.xero_userid,
-        name: decodedIdToken.name,
-        email: decodedIdToken.email
-      }
-      return user
-    }
+    return user
   })
 
   fastify.get('/logout', async (request, reply)=>{
