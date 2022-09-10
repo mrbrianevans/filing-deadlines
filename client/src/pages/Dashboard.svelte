@@ -1,8 +1,8 @@
 <script lang="ts">
-  import {dashboardData} from "../lib/dashboardData.js";
+  import {dashboardData} from "../lib/stores/dashboardData.js";
   import {ActionIcon, Alert, Anchor, Container, Group, Switch, Text, Title, Tooltip} from "@svelteuidev/core";
   import {InfoCircled, Reload} from "radix-icons-svelte";
-  import {user} from "../lib/user.js";
+  import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
   import {onMount} from "svelte";
   import PublicDisplayTable from "../components/dashboard/PublicDisplayTable.svelte";

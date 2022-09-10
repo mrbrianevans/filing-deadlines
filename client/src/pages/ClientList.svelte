@@ -17,12 +17,12 @@
 // import {Temporal} from '@js-temporal/polyfill'
 import type {TableColumns} from "svelte-table/src/types.js";
 import type {ClientListItem} from "../../../fs-shared/ClientList.js";
-import {clientList, importClientListCsv} from "../lib/clientList.js";
+import {clientList, importClientListCsv} from "../lib/stores/clientList.js";
 import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
   import {FilePlus, InfoCircled} from "radix-icons-svelte";
-  import {user} from "../lib/user.js";
+  import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import SampleSpreadsheet from "../components/clientList/SampleSpreadsheet.svelte";

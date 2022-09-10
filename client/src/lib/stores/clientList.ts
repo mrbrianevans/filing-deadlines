@@ -1,9 +1,9 @@
-import type {ClientListItem} from "../../../fs-shared/ClientList.js";
+import type {ClientListItem} from "../../../../fs-shared/ClientList.js";
 import type { ParseLocalConfig, ParseResult} from 'papaparse'
 import camelcase from "camelcase";
 import {swr} from "@svelte-drama/swr";
-import {readableSwrOptions, writableSwrOptions} from "./swr.js";
-import {sortClientList} from "../../../fs-shared/ClientList.js";
+import {readableSwrOptions, writableSwrOptions} from "../swr.js";
+import {sortClientList} from "../../../../fs-shared/ClientList.js";
 
 function createClientList(){
   const key = '/api/user/client-list/'

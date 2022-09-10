@@ -2,11 +2,13 @@
   import { Router, Route } from "svelte-navigator";
   import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles} from '@svelteuidev/core';
   import Dashboard from "./pages/Dashboard.svelte";
-  import {isDark} from "./lib/theme.ts";
+  import {isDark} from "./lib/stores/theme.ts";
   import Auth from "./pages/Auth.svelte";
   import NavBar from "./components/NavBar.svelte";
   import ClientList from "./pages/ClientList.svelte";
   import Home from "./pages/Home.svelte";
+  import ManageOrg from "./pages/ManageOrg.svelte";
+  import OrgInvite from "./pages/OrgInvite.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -35,6 +37,12 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
           <NavBar/>
         </Header>
         <slot>
+          <Route path="/manage-access">
+            <ManageOrg />
+          </Route>
+          <Route path="/org-invite">
+            <OrgInvite />
+          </Route>
           <Route path="/dashboard">
             <Dashboard />
           </Route>

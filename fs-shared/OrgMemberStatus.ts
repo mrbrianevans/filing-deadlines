@@ -10,4 +10,14 @@ export enum OrgMemberStatus {
 }
 
 // an invitation to an organisation. Stored in invite:{userEmail}
-export interface Invite{orgId: string, invitedByName: string, invitedOn: string}
+export interface Invite{orgId: string, orgName: string, invitedByName: string, invitedOn: string}
+
+
+export const OrgMemberStatusPretty: Record<OrgMemberStatus, string> = {
+  "pending-invite": "Pending invitation",
+  "accepted-invite": "Accepted invitation, member",
+  "rejected-invite": "Rejected invitation",
+  owner: "Organisation owner",
+  left: "Left organisation",
+  removed: "Removed from organisation"
+}

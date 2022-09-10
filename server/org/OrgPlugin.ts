@@ -7,7 +7,7 @@ const createOrgSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      name: {type:'string', pattern: '^[a-zA-Z\\d-_]+$'}
+      name: {type:'string', pattern: '^[a-zA-Z0-9-_ ]+$'}
     }
   }
 }
@@ -47,7 +47,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   //  accept invite
-  fastify.put<{Querystring: {orgId: string}}>('/acceptInvitation', {schema:acceptInviteSchema},async (request, reply)=>{
+  fastify.post<{Querystring: {orgId: string}}>('/acceptInvitation', {schema:acceptInviteSchema},async (request, reply)=>{
     const orgIdAccepted = request.query.orgId
     const {email} = request.user
     const {userId} = request.session

@@ -1,6 +1,6 @@
-import type {DashboardData} from '../../../fs-shared/DashboardData.js'
+import type {DashboardData} from '../../../../fs-shared/DashboardData.js'
 import {swr} from "@svelte-drama/swr";
-import {readableSwrOptions} from "./swr.js";
+import {readableSwrOptions} from "../swr.js";
 
 function createDashboardData(){
   const key = '/api/user/dashboard-data'

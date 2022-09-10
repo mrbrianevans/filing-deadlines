@@ -1,9 +1,9 @@
 import {writable} from "svelte/store";
-import type {User} from '../../../fs-shared/User.js'
+import type {User} from '../../../../fs-shared/User.js'
 import {clear, swr} from '@svelte-drama/swr'
 import { refreshInterval, refreshOnFocus, refreshOnReconnect } from '@svelte-drama/swr/plugin'
 import type {SWROptions} from "@svelte-drama/swr/types.js";
-import {readableSwrOptions} from "./swr.js";
+import {readableSwrOptions} from "../swr.js";
 import {navigate} from "svelte-navigator";
 
 function createUserStore(){

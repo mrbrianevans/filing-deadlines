@@ -21,6 +21,8 @@ declare module 'fastify' {
   interface FastifyRequest{
     // this is only set on /user routes! is null elsewhere
     user: IdToken
+
+    org: {name: string}
   }
 }
 

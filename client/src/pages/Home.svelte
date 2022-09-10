@@ -1,9 +1,9 @@
 <script lang="ts">
   import {Anchor, Container, Group, Image, Paper, SimpleGrid, Space, Text, Title} from "@svelteuidev/core";
-  import {isDark} from "../lib/theme.js";
+  import {isDark} from "../lib/stores/theme.js";
   import clientListScreenshot from '../assets/client-list.png'
   import dashboardScreenshot from '../assets/dashboard.png'
-  import {user} from "../lib/user.js";
+  import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
   import SignInWithXeroButton from "../components/SignInWithXeroButton.svelte";
 </script>

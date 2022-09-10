@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import {Link} from "svelte-navigator";
-import {toggleTheme,isDark} from "../lib/theme.js";
+import {toggleTheme,isDark} from "../lib/stores/theme.js";
 import {
   ActionIcon,
   Anchor, Box,
@@ -15,7 +15,7 @@ import {
   Text, ThemeIcon, Title,
   Tooltip
 } from "@svelteuidev/core";
-import {user} from "../lib/user.js";
+import {user} from "../lib/stores/user.js";
 import {Exit, Sun, DividerVertical, Moon} from "radix-icons-svelte";
 import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
 let userProcessing = user.processing
@@ -34,6 +34,8 @@ let userProcessing = user.processing
                         <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
                         <DividerVertical/>
                         <Anchor root={Link} to="/dashboard" href="/dashboard">Dashboard</Anchor>
+                        <DividerVertical/>
+                        <Anchor root={Link} to="/manage-access" href="/manage-access">Manage access</Anchor>
                     {/if}
                 </Group>
             </nav>
