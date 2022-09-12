@@ -1,5 +1,5 @@
 import type {SWROptions} from "@svelte-drama/swr/types.js";
-import {refreshInterval, refreshOnFocus, refreshOnReconnect} from "@svelte-drama/swr/plugin";
+// import {refreshInterval, refreshOnFocus, refreshOnReconnect} from "@svelte-drama/swr/plugin";
 
 export const fetcher = (key) => fetch(key).then((r) => r.ok ? r.json():null)
 export const updater = (key, data) => fetch(key, {method: 'PUT', body: JSON.stringify(data), headers: {'Content-Type':'application/json'}}).then((r) => r.ok ? r.json():null)

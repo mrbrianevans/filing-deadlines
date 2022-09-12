@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    ActionIcon,
     Alert,
     Anchor,
     Box,
@@ -21,7 +22,7 @@ import {clientList, importClientListCsv} from "../lib/stores/clientList.js";
 import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
-  import {FilePlus, InfoCircled} from "radix-icons-svelte";
+  import {FilePlus, InfoCircled, Reload} from "radix-icons-svelte";
   import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
@@ -53,7 +54,7 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
     },
   {
     key: 'added_on',
-    title: "Added on",
+    title: "Updated on",
     value: v => new Date(v.added_on).getTime().toString(),
     renderComponent: AddedOn
   },
@@ -72,6 +73,10 @@ async function addClient(){
 }
 let {processing, error} = clientList
   onMount(()=>clientList.refresh())
+  async function reloadClientListDetails(){
+    await fetch('/api/user/org/member/client-list/reloadDetails')
+    setTimeout(()=>clientList.refresh(), 10_000) // refresh client list after 10 seconds because job should be complete
+  }
 </script>
 
 
@@ -93,6 +98,12 @@ let {processing, error} = clientList
                 </Box>
             </FileUpload>
         </InputWrapper>
+        <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
+            <Divider orientation='vertical' />
+        </Box>
+        <Tooltip label="Schedule an update to reload all the details of companies in your client list.">
+            <ActionIcon on:click={reloadClientListDetails}><Reload/></ActionIcon>
+        </Tooltip>
     </Group>
         <Space h="md"/>
     {#await import('svelte-table').then(m=>m.default)}
