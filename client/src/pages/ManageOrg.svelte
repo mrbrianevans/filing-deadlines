@@ -1,10 +1,10 @@
 <script lang="ts">
 
 import {user} from "../lib/stores/user.js";
-import {Anchor, Button, Container, Group, Text, TextInput, Title} from "@svelteuidev/core";
+import {Alert, Anchor, Button, Container, Group, Space, Text, TextInput, Title} from "@svelteuidev/core";
 import {Link} from "svelte-navigator";
-import {org, orgMembers} from "../lib/stores/org.js";
-import {poster} from "../lib/swr.js";
+import { orgMembers} from "../lib/stores/org.js";
+import {fetcher, poster} from "../lib/swr.js";
 import {onMount} from "svelte";
 import {OrgMemberStatusPretty} from '../../../fs-shared/OrgMemberStatus.js'
 
@@ -12,34 +12,64 @@ import {OrgMemberStatusPretty} from '../../../fs-shared/OrgMemberStatus.js'
 let newOrgName = ''
 let creating = false
 let errorCreating = false
+let created = false
 async function createOrg(){
   creating = true
   const success = await poster('/api/user/org/', {name: newOrgName})
   errorCreating = !success // ideally it would show an error message if something failed
+  created = success // show a message to say well done if success
   newOrgName = ''
   creating = false
-  await Promise.allSettled([org.refresh(), orgMembers.refresh()])
+  await Promise.allSettled([orgMembers.refresh(), user.refresh()])
 }
 
 let inviteEmail = ''
 let errorInviting = false
+let invited = false
 async function inviteUser(){
   const success = await poster('/api/user/org/member/owner/invite', {email: inviteEmail})
   errorInviting = !success
+  invited = success
   await orgMembers.refresh()
 }
-//todo: show some warning about creating a new org if the user has been invited to join an existing one
+
 onMount(async ()=>{
-  await Promise.allSettled([org.refresh(), orgMembers.refresh()])
+  await Promise.allSettled([orgMembers.refresh(), user.refresh()])
 })
 </script>
 
 <Container>
     <Title order={2}>Manage access</Title>
     <Text color="dimmed">Invite other users to view/edit your client list and dashboard.</Text>
+    {#if errorCreating}
+        <Space h="sm"/>
+        <Alert color="red" >
+            <Text>Error creating a new organisation. Make sure that the name is unique, and that you aren't already a part of another organisation.</Text>
+        </Alert>
+    {/if}
     {#if $user}
-        {#if $org}
-            <Title order={3}>Members of {$org.name}</Title>
+        {#if $user.orgName}
+            {#if created}
+                <Space h="sm"/>
+                <Alert color="green" >
+                    <Text>You've successfully created a new organisation called <b>{$user.orgName}</b>.</Text>
+                    <Text>You can add members to allow them to access your client list, or you can go straight to the <Anchor root={Link} to="/clients" href="/clients" inherit>client list</Anchor> add start adding some clients.</Text>
+                </Alert>
+            {/if}
+            <Title order={3}>Members of {$user.orgName}</Title>
+            {#if errorInviting}
+                <Alert color="red" >
+                    <Text>Error inviting a new member. Make sure you are the owner of the organisation, as only they can add or remove members.</Text>
+                </Alert>
+                <Space h="sm"/>
+            {/if}
+            {#if invited}
+                <Alert color="green" >
+                    <Text>You've successfully added a member to your organisation. The next time they log in, they will be shown an invitation to join your organisation.</Text>
+                    <Text>You can see the status of their invitation in the table below.</Text>
+                </Alert>
+                <Space h="sm"/>
+            {/if}
             <Group><TextInput placeholder="Email address" bind:value={inviteEmail} invalid="{errorInviting}" /> <Button on:click={inviteUser} loading="{creating}">Invite</Button></Group>
             <table class="members">
                 {#each Object.entries($orgMembers??{}) as member}
@@ -48,8 +78,14 @@ onMount(async ()=>{
             </table>
             <Group><Button disabled color="red">Leave organisation</Button><Button disabled color="red">Delete organisation</Button></Group>
         {:else}
-            <Text>You need to belong to an organisation before you can manage members access. Either create one, or ask someone to add you to one they have created.</Text>
-
+            <Title order={3}>Create or join an organisation</Title>
+            {#await fetcher('/api/user/org/invites') then invite}
+                {#if invite}
+                    <Alert><Text>You have already been invited to join {invite.orgName}. <Anchor root={Link} to="/org-invite" href="/org-invite" inherit>View your invite</Anchor>.</Text></Alert>
+                {/if}
+            {/await}
+            <Text>You need to belong to an organisation before you can manage a client list or view the dashboard. Either create one, or ask someone to add you to one they have created.</Text>
+            <Space h="sm"/>
             <Group><TextInput placeholder="Organisation name" bind:value={newOrgName} invalid="{errorCreating}" /> <Button on:click={createOrg} loading="{creating}">Create</Button></Group>
         {/if}
     {:else}

@@ -28,12 +28,6 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
   await fastify.register(import("./ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
   await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
 
-  fastify.get('/', async (request, reply)=> {
-    const {name} = request.org
-    const {owner} = request.session
-    return {name, owner}
-  })
-
   fastify.get('/members', async (request, reply)=> {
     return await fastify.redis.hgetall(`org:${request.session.orgId}:members`)
   })
