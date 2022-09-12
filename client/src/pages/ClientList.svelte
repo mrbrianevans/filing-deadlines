@@ -33,7 +33,7 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import {company_status} from "../assets/constants.json";
 
 
-  const columns: TableColumns<ClientListItem> = [
+const columns: TableColumns<ClientListItem> = [
   {
     key: 'company_number',
     title: "Registration number",

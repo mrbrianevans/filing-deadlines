@@ -70,7 +70,7 @@
 <style lang="scss">
 
   :global(table.dashboard-table.public td) {
-    font-size: 28px;
+    font-size: 22px;
   }
 
 </style>
