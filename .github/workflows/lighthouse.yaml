@@ -1,0 +1,32 @@
+name: 'Light house scores'
+on: # rebuild any PRs and any branch changes
+  pull_request:
+  push:
+jobs:
+  run-lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: pnpm
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build client with Vite
+        run: pnpm run build
+        working-directory: client
+      - id: lighthouse-step
+        name: Run Lighthouse against built client
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          configPath: './lighthouserc.json'
+      - name: Comment results on commit
+        uses: peter-evans/commit-comment@v2
+        with:
+          body: ${{ toJSON(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary) }}
+

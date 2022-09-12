@@ -14,6 +14,7 @@
         root * /client
 	    encode gzip
         try_files {path} /index.html
+        header /assets/* Cache-Control max-age=31536000,immutable
         file_server
     }
 
