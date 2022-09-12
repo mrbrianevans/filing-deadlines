@@ -8,7 +8,7 @@
 
 </script>
 
-<Badge size="md" variant="dot" color="{row.company_status === 'active' ? 'green': 'red'}" radius="xs">{company_status[row.company_status]}</Badge>
+<Badge size="md" variant="dot" color="{row.company_status === 'active' ? 'green': 'red'}" radius="xs">{company_status[row.company_status]??'unknown'}</Badge>
 
 
 <style>

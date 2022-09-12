@@ -32,7 +32,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(!exists){
       const profile = await getCompanyProfileFromApi(companyNumber)
       if(profile) await fastify.redis.set(`company:${companyNumber}:profile`, JSON.stringify(profile))
-      const client: ClientListItem = {company_number: companyNumber, added_on: new Date().toISOString(),company_name: profile?.company_name}
+      const client: ClientListItem = {company_number: companyNumber, added_on: new Date().toISOString(),company_name: profile?.company_name, company_status: profile?.company_status}
       await fastify.redis.hset(`org:${request.session.orgId}:clients`, companyNumber, JSON.stringify(client))
       // new client, dispatch event to load filing history asynchronously
       await dispatchLoadFilingHistory(companyNumber, 100, 'new-client-added')

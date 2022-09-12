@@ -9,15 +9,23 @@
   import CompanyProfile from "../../components/dashboard/CompanyProfile.svelte";
   import NextAccountsDueDate from "./NextAccountsDueDate.svelte";
   import LastAccountsDate from "./LastAccountsDate.svelte";
+  import CompanyNumber from "./CompanyNumber.svelte";
+  import NextAccountsMadeUpTo from "./NextAccountsMadeUpTo.svelte";
 
 
   const columns: TableColumns<DashboardDataItem> = [
-      {
-        key: 'company_name',
-        title: 'Client',
-        renderComponent: CompanyName,
-        value: v=>v.company_name ?? ''
-      },
+    {
+      key: 'company_number',
+      title: 'Company number',
+      renderComponent: CompanyNumber,
+      value: v=>v.company_number
+    },
+    {
+      key: 'company_name',
+      title: 'Client',
+      renderComponent: CompanyName,
+      value: v=>v.company_name ?? ''
+    },
       {
         key: 'company_status',
         title: 'Company status',
@@ -29,23 +37,29 @@
         title: 'Company type',
         value: v => company_type[v.company_type]?? ''
       },
-      {
-        key: 'last_accounts',
-        title: 'Last accounts made up to',
-        value: v => v.last_accounts.made_up_to?? '',
-        renderComponent: LastAccountsDate
-      },
-      {
-        key: 'next_due_accounts',
-        title: 'Next accounts due',
-        value: v => v.next_due_accounts?? '',
-        renderComponent: NextAccountsDueDate
-      },
+    {
+      key: 'next_accounts_made_up_to',
+      title: 'Next accounts made up to',
+      value: v => v.next_accounts_made_up_to?? '',
+      renderComponent: NextAccountsMadeUpTo
+    },
+    {
+      key: 'next_due_accounts',
+      title: 'Next accounts due',
+      value: v => v.next_due_accounts?? '',
+      renderComponent: NextAccountsDueDate
+    },
       {
         key: 'days_left',
         title: 'Due date',
         value: v => getDaysLeftDuration(v.next_due_accounts)
-      }
+      },
+    {
+      key: 'last_accounts',
+      title: 'Last accounts made up to',
+      value: v => v.last_accounts.made_up_to?? '',
+      renderComponent: LastAccountsDate
+    }
     ]
 
     function getRowClass(row: DashboardDataItem): string{

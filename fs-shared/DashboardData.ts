@@ -6,6 +6,7 @@ export interface DashboardDataItem{
   accounting_reference_date?: {month: number, day: number},
   last_accounts?: { made_up_to: string, type: string};
   next_due_accounts?: string;
+  next_accounts_made_up_to?: string;
   company_status: 'active'|string
   "date_of_creation": string,
   "company_type": "ltd"|'llp'|string,
@@ -37,6 +38,7 @@ export function convertCompanyProfilesToDashboard(companyProfiles: (CompanyProfi
     accounting_reference_date: c.accounts?.accounting_reference_date?{ month: parseInt(c.accounts?.accounting_reference_date.month), day: parseInt(c.accounts?.accounting_reference_date.day) }:undefined,
     last_accounts: c.accounts?.last_accounts,
     next_due_accounts: c.accounts?.next_due,
+    next_accounts_made_up_to: c.accounts.next_accounts?.period_end_on,
     company_status: c.company_status,
     date_of_creation: c.date_of_creation,
     company_type: c.type,

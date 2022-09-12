@@ -1,5 +1,6 @@
 export interface ClientListItem {
   "company_name"?: string,
+  "company_status"?: string,
   "company_number": string,
   "added_on": string
 }

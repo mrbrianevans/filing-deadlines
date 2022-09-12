@@ -6,6 +6,7 @@
     import {company_status} from "../../assets/constants.json";
     import {Loader} from "@svelteuidev/core";
     import NextAccountsDueDate from "./NextAccountsDueDate.svelte";
+    import NextAccountsMadeUpTo from "./NextAccountsMadeUpTo.svelte";
 
     function getDaysLeft(date: string){
       return Math.floor((new Date(date) - Date.now())/(86400*1000))
@@ -21,6 +22,12 @@
         title: 'Client',
         renderComponent: CompanyName,
         value: v=>v.company_name ?? ''
+      },
+      {
+        key: 'next_accounts_made_up_to',
+        title: 'Next accounts made up to',
+        value: v => v.next_accounts_made_up_to?? '',
+        renderComponent: NextAccountsMadeUpTo
       },
       {
         key: 'next_due_accounts',

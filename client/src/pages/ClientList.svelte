@@ -28,6 +28,8 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import SampleSpreadsheet from "../components/clientList/SampleSpreadsheet.svelte";
   import {onMount} from "svelte";
   import AddedOn from "../components/clientList/AddedOn.svelte";
+  import CompanyStatus from "../components/dashboard/CompanyStatus.svelte";
+  import {company_status} from "../assets/constants.json";
 
 
   const columns: TableColumns<ClientListItem> = [
@@ -42,6 +44,13 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
     value: v => v.company_name??'',
     sortable: true
   },
+    {
+      key: 'company_status',
+      title: 'Company status',
+      renderComponent: CompanyStatus,
+      value: v => company_status[v.company_status]?? '',
+      sortable: true,
+    },
   {
     key: 'added_on',
     title: "Added on",
@@ -75,7 +84,7 @@ let {processing, error} = clientList
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-        <Tooltip withArrow opened position="right" label="Upload CSV of clients">
+            <InputWrapper label="Upload CSV of clients">
             <FileUpload let:dragging multiple={false} on:input={e=>importClientListCsv(e.detail.files)}>
                 <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
                     <FilePlus/>
@@ -83,7 +92,7 @@ let {processing, error} = clientList
                     <Text underline>Browse</Text>
                 </Box>
             </FileUpload>
-        </Tooltip>
+        </InputWrapper>
     </Group>
         <Space h="md"/>
     {#await import('svelte-table').then(m=>m.default)}
