@@ -23,6 +23,7 @@ process.on('SIGINT', shutdown)
 process.on('SIGTERM', shutdown)
 async function shutdown(sig){
   const received = Date.now()
+  //todo: this isn't shutting down gracefully within 10 seconds, and Docker is forcefully stopping it. Needs to be looked into.
   workerLogger.info({signal: sig,received},"Graceful shutdown requested")
   ac.abort() // should end streams
   await Promise.allSettled([companiesStream, filingsStream])
@@ -31,5 +32,6 @@ async function shutdown(sig){
   await clientListWorker.close()
   await profileQueueScheduler.close()
   workerLogger.info({signal: sig,received},"Graceful shutdown completed, exiting")
+  workerLogger.flush()
   process.exit()
 }

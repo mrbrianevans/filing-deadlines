@@ -12,13 +12,16 @@ const fastify = Fastify({logger: serverLogger})
   await fastify.register(import('@fastify/session'), {
     secret: getEnv('SESSION_SECRET'),
     cookie: {
-      secure: false // for testing on http://localhost
+      secure: false // for testing on http://localhost. todo: should be based on an environment variable
     }
   })
   const redisUrl = new URL(getEnv('REDIS_URL'))
   await fastify.register(import('@fastify/redis'), {host: redisUrl.hostname, port: parseInt(redisUrl.port, 10) || undefined, closeClient:true })
 }
 
+fastify.decorateReply('sendError', function (error: { message: string; error: string; statusCode: number; }) {
+  return this.status(error.statusCode).send(error);
+})
 
 await fastify.register(async (fastify, opts)=>{
   // register endpoints here
@@ -34,6 +37,7 @@ process.on('SIGINT', shutdown) // quit on ctrl-c when running docker in terminal
 process.on('SIGTERM', shutdown)// quit properly on docker stop
 async function shutdown(sig: string){
   console.info('Graceful shutdown commenced', new Date().toISOString(), sig);
+  fastify.log.flush()
   await fastify.close()
   process.exit()
 }

@@ -13,7 +13,8 @@
     "@companieshouse/api-sdk-node": "^2.0.31",
     "bullmq": "^1.90.1",
     "ioredis": "^5.2.3",
-    "pino": "^8.5.0"
+    "pino": "^8.5.0",
+    "pino-loki": "^2.0.3"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

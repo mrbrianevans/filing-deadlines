@@ -6,6 +6,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "3002:3002"
     volumes:
       - client_dist:/client
       - caddy_data:/data
@@ -32,16 +33,25 @@ services:
       dockerfile: Worker.Dockerfile
     environment:
       REDIS_URL: redis://redis:6379
+      LOKI_URL: "http://loki:3100"
+      METRICS_URL: "http://metrics:9090"
     env_file:
       - .api.env
     logging:
       driver: local
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 150M
   server:
     build:
       dockerfile: Server.Dockerfile
     environment:
       REDIS_URL: redis://redis:6379
       PORT: 3000
+      LOKI_URL: "http://loki:3100"
+      METRICS_URL: "http://metrics:9090"
     env_file:
       - .api.env
       - .xero.env
@@ -49,8 +59,31 @@ services:
       - .url.env
     logging:
       driver: local
+  "metrics":
+    "build": "monitoring/prometheus"
+    logging:
+      driver: local
+    "environment":
+      "CADDY_METRICS_URL": "http://caddy:2022"
+  "loki":
+    "build": "monitoring/loki"
+    logging:
+      driver: local
+  "grafana":
+    "build": "monitoring/grafana"
+    logging:
+      driver: local
+    "volumes":
+      - "grafana_data:/var/lib/grafana"
+      - "/var/log/grafana"
+#      does NOT work having dashboards as a volume on Windows. Rather just copy them in when the image is built.
+      - "./monitoring/grafana/dashboards:/etc/grafana/dashboards"
+    "environment":
+      LOKI_URL: "http://loki:3100"
+      METRICS_URL: "http://metrics:9090"
 volumes:
   redisdata:
   caddy_data:
   caddy_config:
   client_dist:
+  grafana_data:

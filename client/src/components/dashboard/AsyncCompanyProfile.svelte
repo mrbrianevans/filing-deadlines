@@ -44,7 +44,7 @@
                         <Tooltip label="Accounting reference date">
                             Year end
                         </Tooltip></th>
-                    <td>{company.accounts.accounting_reference_date.day} {months[parseInt(company.accounts.accounting_reference_date.month)]}</td>
+                    <td>{company.accounts.accounting_reference_date.day} {months[parseInt(company.accounts.accounting_reference_date.month)-1]}</td>
                 </tr>
                 <tr>
                     <th>Date of creation</th>
