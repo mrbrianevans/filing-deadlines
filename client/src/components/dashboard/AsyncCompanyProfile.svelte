@@ -18,6 +18,7 @@
       if(c) return c; else throw new Error('Could not get company details')
     })
 
+    // displays a company profile, after async fetching its details from the API. Requires user authentication.
 
 </script>
 
@@ -43,7 +44,7 @@
                         <Tooltip label="Accounting reference date">
                             Year end
                         </Tooltip></th>
-                    <td>{company.accounts.accounting_reference_date.day} {months[company.accounts.accounting_reference_date.month]}</td>
+                    <td>{company.accounts.accounting_reference_date.day} {months[parseInt(company.accounts.accounting_reference_date.month)]}</td>
                 </tr>
                 <tr>
                     <th>Date of creation</th>
@@ -53,8 +54,10 @@
                     <th>Accounts</th>
                     <td>
                         <Stack spacing="xs">
-                            {#if company.accounts?.last_accounts}
+                            {#if company.accounts?.last_accounts?.type !== 'null'}
                                 <Text size="sm">Type: {account_type[company.accounts.last_accounts.type]}</Text>
+                            {/if}
+                            {#if company.accounts?.last_accounts?.made_up_to}
                                 <Text size="sm">Last made up to <AsyncDate date="{company.accounts.last_accounts.made_up_to}"/></Text>
                             {/if}
                             {#if company.accounts?.next_accounts?.period_end_on}
@@ -66,8 +69,22 @@
                 </tr>
                 <tr>
                     <th>Company type</th>
-                    <td>{company_type[company.company_type]}</td>
+                    <td>{company_type[company.type]}</td>
                 </tr>
+                {#if company.confirmation_statement}
+                    <tr>
+                        <th> Confirmation statement </th>
+                        <td>
+                            <Stack spacing="xs">
+                                {#if company.confirmation_statement.last_made_up_to}
+                                    <Text size="sm">Last made up to <AsyncDate date="{company.confirmation_statement.last_made_up_to}"/></Text>
+                                {/if}
+                                <Text size="sm">Next made up to <AsyncDate date="{company.confirmation_statement.next_made_up_to}"/></Text>
+                                <Text size="sm">Next due <AsyncDate date="{company.confirmation_statement.next_due}"/></Text>
+                            </Stack>
+                        </td>
+                    </tr>
+                {/if}
                 {#if company.annual_return}
                     <tr>
                         <th> Annual return </th>

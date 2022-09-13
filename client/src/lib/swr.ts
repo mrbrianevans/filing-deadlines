@@ -2,7 +2,7 @@ import type {SWROptions} from "@svelte-drama/swr/types.js";
 // import {refreshInterval, refreshOnFocus, refreshOnReconnect} from "@svelte-drama/swr/plugin";
 
 //todo: add better error handling. If there is a network error, then say so. If the server returns an error, throw an Error with the message returned.
-// This will allow it to be displayed to the user.
+// This will allow it to be displayed to the user. If the response code is 401, then refresh the user, because they may have been logged out.
 
 export const fetcher = (key) => fetch(key).then((r) => r.ok ? r.json():null)
 export const updater = (key, data) => fetch(key, {method: 'PUT', body: JSON.stringify(data), headers: {'Content-Type':'application/json'}}).then((r) => r.ok ? r.json():null)

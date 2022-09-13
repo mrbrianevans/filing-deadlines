@@ -28,6 +28,7 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   await fastify.register(import('../org/OrgPlugin.js'), {prefix: 'org'}) // organisation management
+  await fastify.register(import('../companyData/CompanyDataPlugin.js'), {prefix: 'company'}) // company data
 
 
   fastify.get('/', async (request, reply) => {

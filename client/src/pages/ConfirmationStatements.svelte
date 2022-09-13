@@ -14,16 +14,12 @@
     import CompanyName from "../components/dashboard/CompanyName.svelte";
     import CompanyStatus from "../components/dashboard/CompanyStatus.svelte";
     import {company_status, company_type} from "../assets/constants.json";
-    import NextAccountsMadeUpTo from "../components/dashboard/NextAccountsMadeUpTo.svelte";
-    import NextAccountsDueDate from "../components/dashboard/NextAccountsDueDate.svelte";
-    import LastAccountsDate from "../components/dashboard/LastAccountsDate.svelte";
     import AsyncDate from "../components/AsyncDate.svelte";
     import {getDaysLeft, getDaysLeftDuration} from '../../../fs-shared/dates.js'
     import type {
       ConfirmationStatementItem
     } from '../../../fs-shared/ConfirmationStatements.js'
     import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
-    import CompanyProfile from "../components/dashboard/CompanyProfile.svelte";
     import AsyncCompanyProfile from "../components/dashboard/AsyncCompanyProfile.svelte";
     import rowHighlights from '../components/dashboard/rowHighlights.css'
 

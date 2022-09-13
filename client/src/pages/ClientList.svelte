@@ -104,7 +104,7 @@ let {processing, error} = clientList
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-        <Tooltip label="Schedule an update to reload all the details of companies in your client list.">
+        <Tooltip label="Reload all the details of companies in your client list.">
             <ActionIcon on:click={reloadClientListDetails} loading="{reloading}"><Reload/></ActionIcon>
         </Tooltip>
     </Group>

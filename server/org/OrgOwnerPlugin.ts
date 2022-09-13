@@ -9,7 +9,7 @@ const inviteSchema: FastifySchema = {
     properties: {
       email: {
         type:'string',
-        // pattern: emailRegex.toString()
+        format: 'email' // needs testing
       }
     }
   }
