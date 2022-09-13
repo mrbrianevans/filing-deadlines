@@ -29,7 +29,7 @@
 <SvelteUIProvider {config} withNormalizeCSS withGlobalStyles  themeObserver={$isDark ? 'dark' : 'light'} fontFamily="Inter, Avenir, Helvetica, Arial, sans-serif;"
 override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={getStyles()}
 >
-  <Seo title="Filing deadlines tracker" />
+  <Seo title="Filing deadline dashboard" description="Web application for managing upcoming filing deadlines for annual accounts. Just enter your client list and the deadlines are automatically fetched from Companies House."/>
   <TypographyProvider>
     <div theme={$isDark ? 'dark' : 'light'} class="full-height">
       <AppShell>

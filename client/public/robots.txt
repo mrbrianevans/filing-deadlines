@@ -1,0 +1,5 @@
+useragent: *
+disallow: /api
+disallow: /
+allow: /$
+
