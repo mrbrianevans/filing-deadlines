@@ -1,4 +1,4 @@
-import {Queue} from "bullmq";
+import {Queue, QueueEvents} from "bullmq";
 import {
   bullConnection,
   loadFilingHistoryQueue,
@@ -9,22 +9,43 @@ import {sharedLogger} from "../loggers.js";
 
 
 async function dispatchJob(queueName: string, jobData: any, comment = 'dispatched-job', delay?: number){
-  sharedLogger.info({queueName, jobData, comment},'Dispatching job')
+  sharedLogger.info({queueName, jobData, comment,delay},'Dispatching job')
   const queue = new Queue(queueName, {connection: bullConnection})
   const job = await queue.add(comment, jobData, {delay})
   sharedLogger.info({queueName, jobData, comment, jobId: job.id,},'Dispatched job successfully')
   await queue.close()
+  return job
+}
+
+async function dispatchJobSync(queueName: string, jobData: any, comment = 'dispatched-job', timeout?: number){
+  sharedLogger.info({queueName, jobData, comment,timeout},'Dispatching job and waiting until finished')
+  const queueEvents = new QueueEvents(reloadClientListQueue, {connection: bullConnection});
+  const queue = new Queue(queueName, {connection: bullConnection})
+  const job = await queue.add(comment, jobData, {})
+  sharedLogger.info({queueName, jobData, comment, jobId: job.id,},'Dispatched job successfully')
+  const returnValue = await job.waitUntilFinished(queueEvents, timeout)
+  const state = await job.getState()
+  sharedLogger.info({queueName, jobData, comment, jobId: job.id,jobState:state},'Job finished')
+  await queue.close()
+  await queueEvents.close()
+  return returnValue
 }
 
 export async function dispatchLoadFilingHistory(companyNumber: string, limit?: number, comment = 'dispatched-filing-job'){
   // wait 5 minutes before loading filing history to avoid rate limiting on the API
-  await dispatchJob(loadFilingHistoryQueue, {companyNumber, limit}, comment, 5*60*1000)
+  return await dispatchJob(loadFilingHistoryQueue, {companyNumber, limit}, comment, 5 * 60 * 1000)
 }
 
 export async function dispatchReloadClientListDetails(orgId: string, comment = 'dispatched-reload-client-list'){
-  await dispatchJob(reloadClientListQueue, {orgId}, comment)
+  return await dispatchJob(reloadClientListQueue, {orgId}, comment)
 }
 
+export async function dispatchReloadClientListDetailsSync(orgId: string, comment = 'dispatched-reload-client-list-sync', timeout=5_000){
+  // can waitUntilFinished on job because it is usually very fast.
+  return await dispatchJobSync(reloadClientListQueue, {orgId}, comment, timeout)
+}
+
+
 export async function dispatchReloadCompanyProfiles(orgId: string, comment = 'dispatched-reload-company-profiles'){
-  await dispatchJob(reloadCompanyProfilesQueue, {}, comment)
+  return await dispatchJob(reloadCompanyProfilesQueue, {}, comment)
 }

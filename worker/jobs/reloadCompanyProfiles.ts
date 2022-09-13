@@ -11,6 +11,7 @@ import {workerLogger} from '../../backend-shared/loggers.js'
 import {bullConnection, reloadCompanyProfilesQueue} from '../../backend-shared/jobs/queueNames.js'
 import { Job, Worker } from 'bullmq'
 import {isDeepStrictEqual} from "util";
+import assert from "node:assert";
 
 
 // loop through company:number's, call API, set key in Redis. Could also check if value matched for quality control.
@@ -19,11 +20,17 @@ async function reloadCompanyProfiles(job: Job){
   logger.info('Processing job in ' + job.queueName)
   const redis = getRedisClient()
 
-  const companies = redis.scanStream({match: 'company:*'})
-  for await(const companyNumbers of companies){
-    for(const companyNumber of companyNumbers){
+  const companies = redis.scanStream({match: 'company:*:profile'})
+  for await(const companyProfileKeys of companies){
+    for(const companyKey of companyProfileKeys){
+      const [,companyNumber] = companyKey.match(/^company:(.{8}):profile$/)
+      assert(companyNumber.length === 8, 'Company number is not 8 characters long: '+companyNumber)
       const apiProfile = await getCompanyProfileFromApi(companyNumber)
       const storedProfile = await redis.get('company:'+companyNumber+':profile')
+      if(!storedProfile) {
+        logger.error({companyNumber}, 'Cant find company profile for company number from redis key scan. Exiting loop.')
+        break
+      }
       const equal = isDeepStrictEqual(apiProfile, storedProfile)
       if(!equal) logger.warn({companyNumber,storedProfile,apiProfile},'Stored profile not equal to profile from API')
       await redis.set('company:'+companyNumber+':profile', JSON.stringify(apiProfile))

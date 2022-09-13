@@ -1,6 +1,10 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import { getCompanyProfileFromApi } from "../../backend-shared/companiesHouseApi/getCompanyProfile.js";
-import {dispatchLoadFilingHistory, dispatchReloadClientListDetails} from "../../backend-shared/jobs/dispatchJobs.js";
+import {
+  dispatchLoadFilingHistory,
+  dispatchReloadClientListDetails,
+  dispatchReloadClientListDetailsSync
+} from "../../backend-shared/jobs/dispatchJobs.js";
 import type {ClientListItem} from '../../fs-shared/ClientList.js'
 import {sortClientList} from "../../fs-shared/ClientList.js";
 
@@ -56,7 +60,8 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   fastify.get('/reloadDetails',async (request, reply)=>{
-    await dispatchReloadClientListDetails(request.session.orgId, 'reloadDetails-endpoint-ClientListPlugin')
+    // waits synchronously for job to finish before return a response to the request. Max timeout of 10 seconds.
+    const output = await dispatchReloadClientListDetailsSync(request.session.orgId, 'reloadDetails-endpoint-ClientListPlugin', 10_000)
     reply.status(204).send()
   })
 }

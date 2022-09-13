@@ -28,5 +28,5 @@ async function loadFilingHistory(job: Job<{companyNumber: string, limit?: number
   }
 }
 
-
-export const startLoadFilingHistoryQueueWorker = () => new Worker(loadFilingHistoryQueue, loadFilingHistory, {connection:bullConnection})
+// will process a maximum of 100 jobs per 5 minutes. This should help avoid the API rate limit.
+export const startLoadFilingHistoryQueueWorker = () => new Worker(loadFilingHistoryQueue, loadFilingHistory, {connection:bullConnection,limiter: {max:100,duration: 5*600*1000}})

@@ -1,5 +1,6 @@
 import {getEnv} from "../utils.js";
 import {sharedLogger} from "../loggers.js";
+import {setTimeout} from "timers/promises";
 
 export async function callApi<ResponseType = any>(path: string) {
   const apiUrl = 'https://api.company-information.service.gov.uk'
@@ -14,6 +15,10 @@ export async function callApi<ResponseType = any>(path: string) {
   const rateLimit = getRateLimit(res.headers)
   sharedLogger.info({path, duration, ok, status, rateLimit },'Called Companies House API')
   if(rateLimit.remain < 100) sharedLogger.warn({...rateLimit},"Companies House API rate limit getting dangerously low")
+  if(rateLimit.remain === 0){
+    sharedLogger.error("Exhausted Companies House Rate limit. Sleeping 60 seconds.")
+    await setTimeout(60_000)
+  }
   if (ok) return await res.json() as ResponseType
     // if it is null, potentially need to warn the user about missing data
   else return null

@@ -73,9 +73,12 @@ async function addClient(){
 }
 let {processing, error} = clientList
   onMount(()=>clientList.refresh())
+  let reloading = false
   async function reloadClientListDetails(){
+  reloading = true
     await fetch('/api/user/org/member/client-list/reloadDetails')
-    setTimeout(()=>clientList.refresh(), 10_000) // refresh client list after 10 seconds because job should be complete
+    await clientList.refresh() // when request has returned, the list has been updated on the server, so refresh it here
+    reloading = false
   }
 </script>
 
@@ -102,7 +105,7 @@ let {processing, error} = clientList
             <Divider orientation='vertical' />
         </Box>
         <Tooltip label="Schedule an update to reload all the details of companies in your client list.">
-            <ActionIcon on:click={reloadClientListDetails}><Reload/></ActionIcon>
+            <ActionIcon on:click={reloadClientListDetails} loading="{reloading}"><Reload/></ActionIcon>
         </Tooltip>
     </Group>
         <Space h="md"/>
