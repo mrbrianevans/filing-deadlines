@@ -1,7 +1,10 @@
 <script lang="ts">
 
 
-    export let date
+    export let date = null
+    export let row = null
+    export let valueGetter = v => String(v)
+    $: date ??= valueGetter(row) // if date isn't provided, set it to valueGetter of row. This allows use in tables.
 </script>
 
 <span>

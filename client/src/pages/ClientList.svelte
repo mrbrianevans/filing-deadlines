@@ -14,8 +14,6 @@
     TextInput, Title,
     Tooltip
   } from "@svelteuidev/core";
-// import SvelteTable from "svelte-table";
-// import {Temporal} from '@js-temporal/polyfill'
 import type {TableColumns} from "svelte-table/src/types.js";
 import type {ClientListItem} from "../../../fs-shared/ClientList.js";
 import {clientList, importClientListCsv} from "../lib/stores/clientList.js";
@@ -31,13 +29,15 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import AddedOn from "../components/clientList/AddedOn.svelte";
   import CompanyStatus from "../components/dashboard/CompanyStatus.svelte";
   import {company_status} from "../assets/constants.json";
+  import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
 
 
 const columns: TableColumns<ClientListItem> = [
   {
     key: 'company_number',
-    title: "Registration number",
+    title: "Company number",
     value: v => v.company_number,
+    renderComponent: CompanyNumber
   },
   {
     key: 'company_name',
@@ -52,12 +52,12 @@ const columns: TableColumns<ClientListItem> = [
       value: v => company_status[v.company_status]?? '',
       sortable: true,
     },
-  {
-    key: 'added_on',
-    title: "Updated on",
-    value: v => new Date(v.added_on).getTime().toString(),
-    renderComponent: AddedOn
-  },
+  // {
+  //   key: 'added_on',
+  //   title: "Updated on",
+  //   value: v => new Date(v.added_on).getTime().toString(),
+  //   renderComponent: AddedOn
+  // },
   {
     key: 'remove',
     title: "Remove",
@@ -119,7 +119,7 @@ let {processing, error} = clientList
         {:else}
             {#if $clientList.length > 0}
                 <Text>{$clientList.length} clients</Text>
-                <SvelteTable columns="{columns}" rows={$clientList} sortBy="added_on" sortOrder="{-1}"></SvelteTable>
+                <SvelteTable columns="{columns}" rows={$clientList} sortBy="company_status" sortOrder="{-1}"></SvelteTable>
             {:else}
                 <Title order={3}>Get started</Title>
                 <SimpleGrid cols="{2}">

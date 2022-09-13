@@ -1,14 +1,15 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
   import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles} from '@svelteuidev/core';
-  import Dashboard from "./pages/Dashboard.svelte";
+  import AccountsDashboard from "./pages/AccountsDashboard.svelte";
   import {isDark} from "./lib/stores/theme.ts";
-  import Auth from "./pages/Auth.svelte";
   import NavBar from "./components/NavBar.svelte";
   import ClientList from "./pages/ClientList.svelte";
   import Home from "./pages/Home.svelte";
   import ManageOrg from "./pages/ManageOrg.svelte";
   import OrgInvite from "./pages/OrgInvite.svelte";
+  import ConfirmationStatements from "./pages/ConfirmationStatements.svelte";
+  import AuthedPage from "./pages/AuthedPage.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -44,7 +45,10 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
             <OrgInvite />
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            <AccountsDashboard />
+          </Route>
+          <Route path="/confirmation-statement-dashboard">
+            <AuthedPage><ConfirmationStatements /></AuthedPage>
           </Route>
           <Route path="/clients">
             <ClientList />
