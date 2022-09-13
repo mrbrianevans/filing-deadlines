@@ -27,6 +27,7 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
   await fastify.register(import('./OrgOwnerPlugin.js'), {prefix: 'owner'}) // secure endpoints only for the owner
   await fastify.register(import("./ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
   await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
+  await fastify.register(import('../dashboardData/ConfirmationStatementsDataPlugin.js'), {prefix: 'confirmation-statement'}) // dashboard data
 
   fastify.get('/members', async (request, reply)=> {
     return await fastify.redis.hgetall(`org:${request.session.orgId}:members`)
