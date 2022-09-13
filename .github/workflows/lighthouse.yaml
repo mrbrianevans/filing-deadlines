@@ -24,9 +24,22 @@ jobs:
         name: Run Lighthouse against built client
         uses: treosh/lighthouse-ci-action@v9
         with:
-          configPath: './lighthouserc.json'
-      - name: Comment results on commit
-        uses: peter-evans/commit-comment@v2
-        with:
-          body: ${{ toJSON(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary) }}
-
+          configPath: '.github/lighthouse/lighthouserc.json'
+          runs: 2
+          uploadArtifacts: true
+      - name: Print lighthouse score summary
+        run: |
+          echo "# Lighthouse score summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "| Metric | Scores |" >> $GITHUB_STEP_SUMMARY
+          echo "| ------ | ------ |" >> $GITHUB_STEP_SUMMARY
+          echo "${{ format('| Performance | {0} |', join(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary.performance), ', ') }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ format('| Accessibility | {0} |', join(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary.accessibility), ', ') }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ format('| Best Practices | {0} |', join(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary.best-practices), ', ') }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ format('| SEO | {0} |', join(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary.seo), ', ') }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ format('| PWA | {0} |', join(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary.pwa), ', ') }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "~~~json" >> $GITHUB_STEP_SUMMARY
+          echo '${{toJSON(fromJSON(steps.lighthouse-step.outputs.manifest).*.summary)}}' >> $GITHUB_STEP_SUMMARY
+          echo "~~~" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line

@@ -1,0 +1,11 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 2,
+      "staticDistDir": "client/dist",
+      "settings": {
+        "configPath": ".github/lighthouse/lighthouseConfig.js"
+      }
+    }
+  }
+}

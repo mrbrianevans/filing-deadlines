@@ -1,5 +1,6 @@
 # Filing deadlines
-
+[![Light house scores](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/lighthouse.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/lighthouse.yaml)
+[![build-typescript](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/build.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/build.yaml)
 
 ## Services (in `docker-compose-yaml`)
 
