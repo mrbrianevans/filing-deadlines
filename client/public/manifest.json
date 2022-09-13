@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "Filing deadline dashboard",
+  "short_name": "Filing deadlines",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#228be6",
+  "description": "Web application for managing upcoming filing deadlines for annual accounts. Just enter your client list and the deadlines are automatically fetched from Companies House.",
+  "orientation": "landscape-primary",
+  "categories": [
+    "filing deadlines",
+    "companies house",
+    "annual accounts",
+    "accounting practice software",
+    "dashboard"
+  ],
+  "icons": [
+    {
+      "src": "icon/icon500.svg",
+      "type": "image/xml+svg",
+      "sizes": "500x500"
+    },
+    {
+      "src": "icon/icon192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon/icon512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

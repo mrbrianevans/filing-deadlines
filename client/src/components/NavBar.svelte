@@ -23,7 +23,7 @@ let userProcessing = user.processing
 
 <div>
     <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem' }}>
-        <Title order={1}><Anchor root={Link} to="/" href="/" inherit>Filing deadlines</Anchor></Title>
+        <Title order={1} override={{margin:'0'}} inline><Anchor root={Link} to="/" href="/" inherit>Filing deadlines</Anchor></Title>
         <Group spacing="lg" >
             <nav>
                 <Group>
