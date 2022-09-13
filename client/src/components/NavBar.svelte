@@ -65,7 +65,7 @@ let userProcessing = user.processing
                         <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
                     </Tooltip>
                 </Group>
-                <Text>{$user.orgName??'No organisation'}</Text>
+                <Text><Anchor root={Link} to="/manage-access" href="/manage-access">{$user.orgName??'No organisation'}</Anchor></Text>
             </Stack>
         {/if}
         </div>
