@@ -103,6 +103,7 @@
 
 <div>
     <Group>
+        <Text>Confirmation statements</Text>
         <Tooltip label="Reload dashboard" withArrow>
             <ActionIcon on:click={()=>confirmationStatements.refresh()} loading="{$processing}"><Reload/></ActionIcon>
         </Tooltip>

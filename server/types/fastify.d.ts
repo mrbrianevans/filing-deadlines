@@ -24,6 +24,11 @@ declare module 'fastify' {
 
     org: {name: string}
   }
+
+  interface FastifyReply{
+    // send an error response
+    sendError(error: {message: string, error: string, statusCode: number}): void
+  }
 }
 
 export {}

@@ -34,7 +34,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const {name} = request.body
     //check name is unique
     const added = await fastify.redis.sadd('orgNames', name)
-    if(added === 0) return reply.status(400).send({message:'An organisation already exists with that name', errCode: 'duplicate-name'})
+    if(added === 0) return reply.sendError({message:'An organisation already exists with that name', error: 'Duplicate name', statusCode: 400})
 
     const orgId = randomUUID() // generate orgId
     request.session.orgId = orgId
@@ -62,7 +62,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.hset(`org:${orgIdAccepted}:members`, email, OrgMemberStatus.acceptedInvite)
       reply.status(204).send()
     }else{
-      reply.status(400).send({message: 'You\'ve been invited to a different organisation. Try again.', errCode:'org-ids-different'})
+      reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
     }
   })
 

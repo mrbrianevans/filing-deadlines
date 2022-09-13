@@ -24,6 +24,7 @@
         {:else if $dashboardData}
             {#if $dashboardData.length > 0}
                 <Group>
+                    <Text>Accounts</Text>
                     <Tooltip label="Reload dashboard" withArrow>
                         <ActionIcon on:click={()=>dashboardData.refresh()} loading="{$processing}"><Reload/></ActionIcon>
                     </Tooltip>

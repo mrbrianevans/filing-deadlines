@@ -22,8 +22,7 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const actualOwner = await fastify.redis.get(`org:${orgId}:owner`)
     if (!owner || userId !== actualOwner) {
       request.log.warn({sessionId: request.session.sessionId,owner,orgId,userId,actualOwner}, 'Rejecting request due to user not being the org owner')
-      reply.status(401).send({code: 401, message: 'You are not the owner of this organisation'})
-      return
+      return reply.sendError({message: 'You are not the owner of this organisation, and only the owner can access this.', error: 'Ownership required', statusCode: 401})
     }
     request.log = request.log.child({owner})
   })
@@ -35,12 +34,12 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const {user,org} = request
     const alreadyPending = await fastify.redis.hgetall(`invite:${email}`)
     if(alreadyPending?.orgId === orgId){
-      return reply.status(400).send({message:"This user has already been invited to your organisation",errCode:'already-invited'})
+      return reply.sendError({message:"This user has already been invited to your organisation",error:'Already invited', statusCode: 400})
     } else if(alreadyPending?.orgId) {
-      return reply.status(400).send({message:"This user has already been invited to another organisation",errCode:'already-invited-elsewhere'})
+      return reply.sendError({message:"This user has already been invited to another organisation",error:'Already invited elsewhere', statusCode: 400})
     } else {
       const currentStatus = await fastify.redis.hget(`org:${orgId}:members`, email)
-      // todo: this should also somehow check that the person isn't already a part of an organisation. Not sure how to do that with email.
+      // todo: this should also somehow check that the person isn't already a part of another organisation. Not sure how to do that with email. Probably need a new redis key for "email:{userEmail}:id" = UUID user id
       if(!currentStatus || currentStatus === OrgMemberStatus.left || currentStatus === OrgMemberStatus.removed || currentStatus === OrgMemberStatus.rejectedInvite) {
         const invite: Invite = {
           orgId: <string>orgId,
@@ -52,7 +51,7 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
         await fastify.redis.hset(`org:${orgId}:members`, email, OrgMemberStatus.pendingInvite)
         reply.status(204).send()
       }else{
-        return reply.status(400).send({message:"This user is already a part of your organisation",errCode:'already-in-organisation'})
+        return reply.sendError({message:"This user is already a part of your organisation",error:'Already in organisation', statusCode: 400})
       }
     }
   })

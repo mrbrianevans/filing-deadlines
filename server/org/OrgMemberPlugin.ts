@@ -10,13 +10,13 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
     // check ownership is legitimate
     if (!orgId) {
       request.log.warn({sessionId: request.session.sessionId,orgId}, 'Rejecting request due to user not being an org member')
-      reply.status(401).send({code: 401, message: 'You are not a member of this organisation'})
+      reply.sendError({statusCode: 401, error: 'Not in organisation', message: 'You are not a member of this organisation, but membership is required to access this. If you think this is a mistake, try logging out and signing in again.'})
       return
     }else{
       const actualOrg = await fastify.redis.get(`user:${userId}:org`)
       if(actualOrg !== orgId){
         request.log.warn({sessionOrgId: orgId, redisOrgId: actualOrg}, 'OrgId in session does not match OrgId in Redis')
-        reply.status(401).send({code: 401, message: 'There has been a problem with your membership of this organisation.'})
+        reply.sendError({statusCode: 401, error: 'Out of sync', message: 'There has been a problem with your membership of this organisation. Please log out and sign in again and retry.'})
       }
     }
     const name = <string>await fastify.redis.get(`org:${orgId}:name`)

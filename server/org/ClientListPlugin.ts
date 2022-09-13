@@ -50,7 +50,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const {companyNumber} = request.params
     const exists = await fastify.redis.hexists(`org:${request.session.orgId}:clients`, companyNumber)
     if(!exists){
-      reply.status(404).send({message: 'Not found'})
+      reply.sendError({message: 'Could not find company to delete in your client list', error: 'Not found', statusCode: 404})
     }
     await fastify.redis.hdel(`org:${request.session.orgId}:clients`, companyNumber)
     // remove company profile and filing history

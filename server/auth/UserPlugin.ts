@@ -14,13 +14,13 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
     // ensure user is logged in (if userId is set on the session, then they are logged in)
     if (!userId) {
       request.log.warn({sessionId: request.session.sessionId}, 'Rejecting request due to user not logged in')
-      reply.status(401).send({code: 401, message: 'Not logged in'})
+      reply.sendError({statusCode: 401, message: 'You need to be logged in to access this', error: 'Not logged in'})
       return
     }
     const idToken = await fastify.redis.get(`user:${userId}:id`)
     if(!idToken) {
       request.log.warn('userId exists, but couldn\'t find ID token in Redis')
-      reply.status(401).send({code: 401, message: 'Issue with account'})
+      reply.sendError({statusCode: 401, error: 'Issue with account', message: 'There is an issue with your account. Try logging out and then sign in again.'})
       return null
     }
     request.user = getUserFromIdToken(idToken)
