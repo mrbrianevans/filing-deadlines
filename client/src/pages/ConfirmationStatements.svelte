@@ -22,6 +22,10 @@
     import type {
       ConfirmationStatementItem
     } from '../../../fs-shared/ConfirmationStatements.js'
+    import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
+    import CompanyProfile from "../components/dashboard/CompanyProfile.svelte";
+    import AsyncCompanyProfile from "../components/dashboard/AsyncCompanyProfile.svelte";
+    import rowHighlights from '../components/dashboard/rowHighlights.css'
 
     const {error, processing} = confirmationStatements
     onMount(()=>confirmationStatements.refresh())
@@ -30,6 +34,7 @@
         key: 'company_number',
         title: "Company number",
         value: row => row.company_number,
+        renderComponent: CompanyNumber,
       },
       {
         key: 'company_name',
@@ -81,6 +86,23 @@
         }
       }
     ]
+
+    function getRowClass(row: ConfirmationStatementItem): string{
+      // if its overdue, highlight it bright red. If it's in the next week, a bit dimmer, next month a bit dimmer, otherwise none.
+      const daysLeft = getDaysLeft(row.confirmation_statement?.next_due)
+      if(daysLeft < 0) return 'overdue'
+      else if(daysLeft < 7) return 'within-week'
+      else if(daysLeft < 30) return 'within-month'
+      else if(daysLeft < 365) return 'within-year'
+      else return 'more-than-year'
+    }
+
+    let expanded = []
+    // expand details on row click
+    function handleRowClick(event){
+      if(event.detail.row.$expanded) expanded = []
+      else expanded = [event.detail.row.company_number]
+    }
 </script>
 
 <div>
@@ -95,7 +117,8 @@
         </Alert>
     {:else if $confirmationStatements}
         {#if $confirmationStatements.length === 0}
-            <Text>You haven't added any clients yet, so your dashboard is empty.
+            <Text>
+                You haven't added any clients yet, so your dashboard is empty.
                 Go the <Anchor root={Link} to="/clients" href="/clients" inherit>client list page</Anchor> and add some clients to get started.
                 Then data will appear in your dashboard.
             </Text>
@@ -103,7 +126,15 @@
             {#await import('svelte-table').then(m=>m.default)}
                 <Loader/>
             {:then SvelteTable}
-                <SvelteTable columns="{columns}" rows={$confirmationStatements} sortOrder="{-1}"></SvelteTable>
+                <SvelteTable columns="{columns}" rows={$confirmationStatements}
+                             sortBy="next_due_accounts" sortOrder="{1}"
+                             rowKey="company_number" classNameRow="{getRowClass}"
+                             classNameTable="dashboard-table"
+                             expandSingle="{true}"
+                             bind:expanded={expanded}
+                             on:clickRow="{handleRowClick}">
+                    <svelte:fragment slot="expanded" let:row><AsyncCompanyProfile companyNumber="{row.company_number}"/></svelte:fragment>
+                </SvelteTable>
             {/await}
         {/if}
     {:else}
@@ -112,6 +143,4 @@
 </div>
 
 
-<style>
-
-</style>
+<style src="{rowHighlights}"></style>

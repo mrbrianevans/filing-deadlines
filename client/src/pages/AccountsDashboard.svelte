@@ -7,7 +7,7 @@
   import {onMount} from "svelte";
   import PublicDisplayTable from "../components/dashboard/PublicDisplayTable.svelte";
   import DesktopDisplayTable from "../components/dashboard/DesktopDisplayTable.svelte";
-
+    import rowHighlights from '../components/dashboard/rowHighlights.css'
 
   let publicView = false
 
@@ -48,23 +48,4 @@
 
 </div>
 
-<style lang="scss">
-
-  :global(table.dashboard-table tr.overdue) {
-    background: rgba(235, 77, 75,0.9);
-  }
-
-    :global(table.dashboard-table tr.within-week) {
-      background: rgba(235, 77, 75, 0.7)
-    }
-    :global(table.dashboard-table tr.within-month) {
-      background: rgba(235, 77, 75, 0.2)
-    }
-    :global(table.dashboard-table tr.within-year) {
-      background: rgba(235, 77, 75, 0)
-    }
-    :global(table.dashboard-table tr.more-than-year) {
-      background: rgba(186, 220, 88,0.4);
-    }
-
-</style>
+<style src="{rowHighlights}"></style>

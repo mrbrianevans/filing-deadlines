@@ -3,14 +3,14 @@
   import {Anchor, Paper, Text, Title, Stack, Tooltip} from "@svelteuidev/core";
   import CompanyStatus from "./CompanyStatus.svelte";
   import {company_type,account_type} from '../../assets/constants.json'
-    import {shortMonths} from '../../../../fs-shared/dates.js'
+    import {months} from '../../../../fs-shared/dates.js'
   import {ExternalLink} from "radix-icons-svelte";
   import AsyncDate from "../AsyncDate.svelte";
 
   export let row: DashboardDataItem
 
   function formatRefDate(v){
-    return v.accounting_reference_date.day + ' ' + shortMonths[v.accounting_reference_date.month-1]
+    return v.accounting_reference_date.day + ' ' + months[v.accounting_reference_date.month-1]
   }
 </script>
 
