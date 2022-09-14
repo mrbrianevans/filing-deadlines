@@ -9,10 +9,12 @@
   import type {TableColumns} from "svelte-table/src/types.js";
 
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
+  //todo: send timespan to server from NativeSelect
   async function loadRecentFilings(timespan = '7D'){
     processing = true
     try{
-      recentFilings = await fetcher('/api/user/org/member/recent-filings')
+      const startDate = new Date(0)
+      recentFilings = await fetcher('/api/user/org/member/recent-filings?startDate='+startDate.toISOString().split('T')[0])
     }catch (e) {
       error = e
       recentFilings = null
@@ -21,7 +23,7 @@
     }
   }
   onMount(()=>loadRecentFilings())
-  const SvelteTablePromise = import('svelte-table')
+  const SvelteTablePromise = import('svelte-table').then(m=>m.default)
   const columns: TableColumns<RecentFilingsItem> = [
     {
       key: 'companyNumber',

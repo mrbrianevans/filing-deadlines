@@ -28,6 +28,7 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
   await fastify.register(import("./ClientListPlugin.js"), {prefix: 'client-list'}) // register endpoints relating to client list
   await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
   await fastify.register(import('../dashboardData/ConfirmationStatementsDataPlugin.js'), {prefix: 'confirmation-statement'}) // dashboard data
+  await fastify.register(import('../dataPlugins/recentFilings/RecentFilingsPlugin.js'), {prefix: 'recent-filings'}) // recent filings data
 
   fastify.get('/members', async (request, reply)=> {
     return await fastify.redis.hgetall(`org:${request.session.orgId}:members`)

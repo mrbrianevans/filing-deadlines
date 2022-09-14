@@ -1,10 +1,10 @@
 
 import Fastify from 'fastify'
 import { getEnv } from '../backend-shared/utils.js'
-import { serverLogger } from '../backend-shared/loggers.js'
+import {serverLogTransport} from '../backend-shared/loggers.js'
 const port = parseInt(process.env.PORT??'4004')
 
-const fastify = Fastify({logger: serverLogger})
+const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}})
 
 //register any third party plugins here
 {
@@ -37,7 +37,7 @@ process.on('SIGINT', shutdown) // quit on ctrl-c when running docker in terminal
 process.on('SIGTERM', shutdown)// quit properly on docker stop
 async function shutdown(sig: string){
   console.info('Graceful shutdown commenced', new Date().toISOString(), sig);
-  fastify.log.flush()
+  // fastify.log.flush()
   await fastify.close()
   process.exit()
 }
