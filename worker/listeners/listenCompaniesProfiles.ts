@@ -6,15 +6,15 @@ const companyListenerLogger = workerLogger.child({workerType: 'listener', stream
 
 // listen on stream, updating redis when company:companyNumber:profile exists
 export async function listenCompaniesProfiles(signal?: AbortSignal){
-  if(signal) signal.addEventListener('abort', ()=>companyListenerLogger.info("Abort requested"))
   const redis = await getRedisClient()
   for await(const event of streamEventsContinuously('companies')){
     const companyNumber = event.data.company_number
     const key = `company:${companyNumber}:profile`
-    const exists = await redis.exists(key)
-    if(!exists) continue
-    companyListenerLogger.info({key,companyNumber},'Company event for company in database')
-    await redis.set(key, JSON.stringify(event.data))
+    const orgs = await redis.smembers(`company:${companyNumber}:clientLists`)
+    if(orgs.length > 0) {
+      companyListenerLogger.info({key, companyNumber}, 'Company event for company in database')
+      await redis.set(key, JSON.stringify(event.data))
+    }
     if(signal?.aborted) {
       companyListenerLogger.info('Exiting due to abort signal')
       break

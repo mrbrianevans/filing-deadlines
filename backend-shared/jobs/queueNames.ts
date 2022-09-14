@@ -8,5 +8,6 @@ export const bullConnection = {host: redisUrl.hostname, port: parseInt(redisUrl.
 
 export const reloadCompanyProfilesQueue = 'reloadCompanyProfiles'
 export const reloadClientListQueue = 'reloadClientList'
-export const loadFilingHistoryQueue = 'loadFilingHistory'
+export const loadFilingHistoryForCompanyQueue = 'loadFilingHistory'
+export const loadFilingHistoryForClientListQueue = 'loadFilingHistoryForClientList'
 
