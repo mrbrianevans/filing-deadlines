@@ -37,6 +37,8 @@ let userProcessing = user.processing
                             <Anchor root={Link} to="/dashboard" href="/dashboard">Accounts dashboard</Anchor>
                             <DividerVertical/>
                             <Anchor root={Link} to="/confirmation-statement-dashboard" href="/confirmation-statement-dashboard">Confirmation statements</Anchor>
+                            <DividerVertical/>
+                            <Anchor root={Link} to="/recent-filings" href="/recent-filings">Recent filings</Anchor>
                         {/if}
                         {#if $user.owner}
                             <DividerVertical/>

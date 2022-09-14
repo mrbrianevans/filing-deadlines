@@ -10,6 +10,7 @@
   import OrgInvite from "./pages/OrgInvite.svelte";
   import ConfirmationStatements from "./pages/ConfirmationStatements.svelte";
   import AuthedPage from "./pages/AuthedPage.svelte";
+  import RecentFilings from "./pages/RecentFilings.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -49,6 +50,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
           </Route>
           <Route path="/confirmation-statement-dashboard">
             <AuthedPage><ConfirmationStatements /></AuthedPage>
+          </Route>
+          <Route path="/recent-filings">
+            <AuthedPage><RecentFilings /></AuthedPage>
           </Route>
           <Route path="/clients">
             <ClientList />

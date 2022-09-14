@@ -1,9 +1,10 @@
 import type {SWROptions} from "@svelte-drama/swr/types.js";
 // import {refreshInterval, refreshOnFocus, refreshOnReconnect} from "@svelte-drama/swr/plugin";
 
-//todo: add better error handling. If there is a network error, then say so. If the server returns an error, throw an Error with the message returned.
+// better error handling. If there is a network error, then say so. If the server returns an error, throw an Error with the message returned.
 // This will allow it to be displayed to the user. If the response code is 401, then refresh the user, because they may have been logged out.
-class FetchError extends Error{
+// It handles errors from fastify well, but not sure about network errors. Requires testing.
+export class FetchError extends Error{
   // status code of response
   statusCode: number
   constructor(fastifyErrorResponse: {message: string, error: string, statusCode: number} ) {
