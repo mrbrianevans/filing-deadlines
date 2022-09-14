@@ -3,9 +3,9 @@
 export interface RecentFilingsItem {
   filingDate: string,
   companyNumber: string,
+  transactionId: string
   companyName: string,
   description: string,
-  link: string
 }
 
 export interface RecentFilings {

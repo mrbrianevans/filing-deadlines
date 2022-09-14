@@ -1,12 +1,14 @@
 <script lang="ts">
 
-  import {ActionIcon, Alert, Container, Group, Loader, NativeSelect, Title, Tooltip} from "@svelteuidev/core";
+  import {ActionIcon,  Container, Group, Loader, NativeSelect, Title, Tooltip} from "@svelteuidev/core";
   import {fetcher} from "../lib/swr.js";
   import {onMount} from "svelte";
-  import {InfoCircled, Reload} from "radix-icons-svelte";
+  import {Reload} from "radix-icons-svelte";
   import ErrorAlert from "../components/ErrorAlert.svelte";
   import type {RecentFilings, RecentFilingsItem} from "../../../fs-shared/RecentFilings.js";
   import type {TableColumns} from "svelte-table/src/types.js";
+  import AsyncDate from "../components/AsyncDate.svelte";
+  import LinkToViewDocument from "../components/recentFilings/LinkToViewDocument.svelte";
 
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
   //todo: send timespan to server from NativeSelect
@@ -29,6 +31,34 @@
       key: 'companyNumber',
       value: v=>v.companyNumber,
       title: "Company number"
+    },
+    {
+      key: 'companyName',
+      value: v=>v.companyName,
+      title: "Name"
+    },
+    {
+      key: 'filingDate',
+      value: v=>v.filingDate,
+      title: "Filing date",
+      renderComponent: {
+        component: AsyncDate,
+        props: {valueGetter: v=>v.filingDate}
+      }
+    },
+    {
+      key: 'description',
+      value: v=>v.description,
+      title: "Description"
+    },
+    {
+      key: 'linkToDocument',
+      value: v=>v.transactionId,
+      title: "View document",
+      renderComponent: {
+        component: LinkToViewDocument,
+        props: {companyNumberGetter: v=>v.companyNumber, transactionIdGetter: v=>v.transactionId}
+      }
     }
   ]
 </script>

@@ -21,13 +21,14 @@ const recentFilingsSchema: FastifySchema = {
 
 const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
-  async function getFilingByCompanyNumberTransactionId(companyNumberTransactionId: string): Promise<FilingHistoryItemResource>{
+  async function getFilingByCompanyNumberTransactionId(companyNumberTransactionId: string): Promise<FilingHistoryItemResource&{companyNumber:string}>{
     const matches = companyNumberTransactionId.match(/^([A-Z\d]{8}):([a-zA-Z\d]{10,})$/)
     if(!matches) throw new Error('Key does not match expected format: "'+companyNumberTransactionId+'". Should be companyNumber:transactionId')
     const [,companyNumber, transactionId] = matches
     const filingString = await fastify.redis.hget(`company:${companyNumber}:filingHistory`, transactionId)
     if(!filingString) fastify.log.error({companyNumber, transactionId, companyNumberTransactionId, filingString}, 'Did not find expected filing transaction')
-    return JSON.parse(filingString??'null')
+    const transaction = <FilingHistoryItemResource>JSON.parse(filingString??`{transaction_id:${transactionId}`)
+    return Object.assign(transaction, {companyNumber})
   }
 
   fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: RecentFilings}>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
@@ -44,12 +45,14 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     for (const transaction of transactions) {
       const {category} = transaction
       request.log.debug({category},'Found transaction with category ' + category)
+      const companyName = await fastify.redis.get(`company:${transaction.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name)
       const filing: RecentFilingsItem = {
-        companyNumber: transaction.links?.self??'not found',
+        companyNumber: transaction.companyNumber,
         filingDate: transaction.date,
-        link: transaction.transaction_id,
+        transactionId: transaction.transaction_id,
         description: transaction.description,
-        companyName: 'need to get'}
+        companyName: companyName??''
+      }
       if(category in recentFilings) recentFilings[category].push(filing)
       else recentFilings[category] = [filing]
     }
