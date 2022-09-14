@@ -1,10 +1,8 @@
 import {Job, Worker} from "bullmq";
 import {
   bullConnection,
-  loadFilingHistoryForClientListQueue,
-  loadFilingHistoryForCompanyQueue
+  loadFilingHistoryForClientListQueue
 } from '../../backend-shared/jobs/queueNames.js'
-import {getFilingHistoryFromApi} from '../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js'
 import { getRedisClient } from "../../backend-shared/getRedisClient.js";
 import { workerLogger } from "../../backend-shared/loggers.js";
 
@@ -12,6 +10,7 @@ import { workerLogger } from "../../backend-shared/loggers.js";
 async function loadFilingHistoryForClientList(job: Job<{orgId: string}>){
   const logger = workerLogger.child({workerType:'bullmq', queueName: job.queueName,jobName: job.name, jobId: job.id, jobData: job.data})
   logger.info('Processing job in ' + job.queueName)
+  const startTime = performance.now()
   const {orgId} = job.data
 
   const redis = getRedisClient()
@@ -25,6 +24,7 @@ async function loadFilingHistoryForClientList(job: Job<{orgId: string}>){
   }
 
   await redis.quit()
+  logger.info({duration: performance.now()-startTime},'Finished job in ' + job.queueName)
 }
 
 export const startLoadFilingHistoryClientListQueueWorker = () => new Worker(loadFilingHistoryForClientListQueue, loadFilingHistoryForClientList, {connection:bullConnection})

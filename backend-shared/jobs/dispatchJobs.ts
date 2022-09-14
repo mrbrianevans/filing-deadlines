@@ -1,6 +1,6 @@
 import {Queue, QueueEvents} from "bullmq";
 import {
-  bullConnection,
+  bullConnection, loadFilingHistoryForClientListQueue,
   loadFilingHistoryForCompanyQueue,
   reloadClientListQueue,
   reloadCompanyProfilesQueue
@@ -31,9 +31,13 @@ async function dispatchJobSync(queueName: string, jobData: any, comment = 'dispa
   return returnValue
 }
 
-export async function dispatchLoadFilingHistory(companyNumber: string, limit?: number, comment = 'dispatched-filing-job'){
+export async function dispatchLoadFilingHistoryForCompany(companyNumber: string, limit?: number, comment = 'dispatched-filing-job-for-company-number'){
   // wait 5 minutes before loading filing history to avoid rate limiting on the API
   return await dispatchJob(loadFilingHistoryForCompanyQueue, {companyNumber, limit}, comment, 5 * 60 * 1000)
+}
+
+export async function dispatchLoadFilingHistoryForClientList(orgId: string, comment = 'dispatched-filing-job-for-client-list'){
+  return await dispatchJob(loadFilingHistoryForClientListQueue, {orgId}, comment)
 }
 
 export async function dispatchReloadClientListDetails(orgId: string, comment = 'dispatched-reload-client-list'){

@@ -4,3 +4,4 @@ packages:
   - './fs-shared'
   - './server'
   - './worker'
+  - './repl'

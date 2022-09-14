@@ -1,7 +1,7 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import { getCompanyProfileFromApi } from "../../backend-shared/companiesHouseApi/getCompanyProfile.js";
 import {
-  dispatchLoadFilingHistory,
+  dispatchLoadFilingHistoryForCompany,
   dispatchReloadClientListDetails,
   dispatchReloadClientListDetailsSync
 } from "../../backend-shared/jobs/dispatchJobs.js";
@@ -33,7 +33,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
       const client: ClientListItem = {company_number: companyNumber, added_on: new Date().toISOString(),company_name: profile?.company_name, company_status: profile?.company_status}
       await fastify.redis.hset(`org:${request.session.orgId}:clients`, companyNumber, JSON.stringify(client))
       // new client, dispatch event to load filing history asynchronously
-      await dispatchLoadFilingHistory(companyNumber, 100, 'new-client-added')
+      await dispatchLoadFilingHistoryForCompany(companyNumber, 100, 'new-client-added')
       reply.status(201).send()
     }else{
       reply.status(204).send({message:'Client was already on your client list'})
