@@ -26,13 +26,14 @@ async function reloadCompanyProfiles(job: Job){
       const [,companyNumber] = companyKey.match(/^company:(.{8}):profile$/)
       assert(companyNumber.length === 8, 'Company number is not 8 characters long: '+companyNumber)
       const apiProfile = await getCompanyProfileFromApi(companyNumber)
-      const storedProfile = await redis.get('company:'+companyNumber+':profile')
-      if(!storedProfile) {
+      const storedProfileString = await redis.get('company:'+companyNumber+':profile')
+      if(!storedProfileString) {
         logger.error({companyNumber}, 'Cant find company profile for company number from redis key scan. Exiting loop.')
         break
       }
+      const storedProfile = JSON.parse(storedProfileString)
       const equal = isDeepStrictEqual(apiProfile, storedProfile)
-      if(!equal) logger.warn({companyNumber,storedProfile,apiProfile},'Stored profile not equal to profile from API')
+      if(!equal) logger.warn({companyNumber,storedProfile:storedProfileString,apiProfile:JSON.stringify(apiProfile)},'Stored profile not equal to profile from API')
       await redis.set('company:'+companyNumber+':profile', JSON.stringify(apiProfile))
     }
   }

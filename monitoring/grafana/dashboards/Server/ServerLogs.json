@@ -1,25 +1,6 @@
 {
   "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
-        "type": "dashboard"
-      }
-    ]
+    "list": []
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
@@ -30,28 +11,63 @@
   "panels": [
     {
       "datasource": "loki",
+      "description": "Other logs from server component apart from incoming and completed requests, formatted by user and org on session of request.",
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 32,
+        "w": 8,
         "x": 0,
         "y": 0
       },
-      "id": 6,
+      "id": 2,
       "options": {
         "dedupStrategy": "none",
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
         "showLabels": false,
-        "showTime": false,
+        "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "9.1.5",
       "targets": [
         {
           "datasource": "loki",
           "editorMode": "builder",
-          "expr": "{component=\"server\"} |= `incoming request` | json | line_format `{{.level}} {{.reqId}} {{.msg}} {{.req_method}} {{.req_url}}`",
+          "expr": "{component=\"server\"} != `incoming request` != `request completed` | json | line_format `{{.level}} {{.reqId}} user={{if .userId}}true {{else}}false{{end}} org={{if .orgId}}true {{else}}false{{end}}   {{.msg}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Server logs",
+      "type": "logs"
+    },
+    {
+      "datasource": "loki",
+      "description": "Incoming request logs from fastify server",
+      "gridPos": {
+        "h": 32,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "datasource": "loki",
+          "editorMode": "builder",
+          "expr": "{component=\"server\"} |= `incoming request` | json | line_format `{{.level}} {{.reqId}} {{.req_method}} {{ .req_url | trunc 60 }}`",
           "queryType": "range",
           "refId": "A"
         }
@@ -61,11 +77,12 @@
     },
     {
       "datasource": "loki",
+      "description": "Outgoing reply logs from fastify server",
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
+        "h": 32,
+        "w": 8,
+        "x": 16,
+        "y": 0
       },
       "id": 4,
       "options": {
@@ -74,54 +91,25 @@
         "prettifyLogMessage": false,
         "showCommonLabels": false,
         "showLabels": false,
-        "showTime": false,
+        "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
+      "pluginVersion": "9.1.5",
       "targets": [
         {
           "datasource": "loki",
           "editorMode": "builder",
-          "expr": "{component=\"server\"} |= `request completed` | json | line_format `{{.level}} {{.reqId}} Response time: {{round .responseTime 2}}ms`",
+          "expr": "{component=\"server\"} |= `request completed` | json | line_format `{{.level}} {{.reqId}} CODE {{.res_statusCode}} in {{round .responseTime 2}}ms`",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Responses",
-      "type": "logs"
-    },
-    {
-      "datasource": "loki",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "id": 2,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": false
-      },
-      "targets": [
-        {
-          "datasource": "loki",
-          "editorMode": "code",
-          "expr": "{component=\"server\"} | json | line_format `{{.level}} {{.reqId}} {{.msg}}`",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Server logs",
+      "title": "Requests completed",
       "type": "logs"
     }
   ],
+  "refresh": "5s",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [],
@@ -129,13 +117,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Logs",
-  "uid": "B6bJ9DG4z",
-  "version": 1,
+  "title": "ServerLogs",
+  "uid": "YjGdGg74z",
+  "version": 3,
   "weekStart": ""
 }

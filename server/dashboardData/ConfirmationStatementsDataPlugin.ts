@@ -21,7 +21,7 @@ const ConfirmationStatementsDataPlugin: FastifyPluginAsync = async (fastify, opt
   // get the confirmation statement dashboard data for the current user
   fastify.get('/dashboard', async (request, reply)=>{
     const clientIds = (await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)) ?? []
-    request.log.info({numberOfClients: clientIds.length}, 'Getting company profiles for client list')
+    request.log.info({numberOfClients: clientIds.length}, 'Getting company profiles for confirmation statement dashboard')
     const companyProfiles = await Promise.all(clientIds.map(clientId=>getCompanyProfile(clientId)))
     return convertCompanyProfilesToConfirmationStatementData(companyProfiles)
   })

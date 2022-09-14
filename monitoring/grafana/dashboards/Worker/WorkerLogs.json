@@ -1,0 +1,93 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "loki",
+      "description": "Logs of listeners on streaming API",
+      "gridPos": {
+        "h": 19,
+        "w": 9,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": "loki",
+          "editorMode": "code",
+          "expr": "{component=\"worker\"} |= `` | json | label_format padStream=\"{{ .stream}}{{ repeat 3 \\\" \\\" }}\"| workerType = `listener` | line_format `{{.level}} stream={{.padStream | trunc 9}} {{.msg}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Listener worker logs",
+      "type": "logs"
+    },
+    {
+      "datasource": "loki",
+      "description": "Logs of bullmq workers and queues etc",
+      "gridPos": {
+        "h": 19,
+        "w": 9,
+        "x": 9,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": "loki",
+          "editorMode": "builder",
+          "expr": "{component=\"worker\"} |= `` | json | workerType = `bullmq` | label_format padStream=\"{{ .stream}}{{ repeat 3 \\\" \\\" }}\" | line_format `{{.level}} queue={{.queueName}} {{.msg}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "BullMQ worker logs",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "WorkerLogs",
+  "uid": "GJ1anR7Vk",
+  "version": 2,
+  "weekStart": ""
+}
