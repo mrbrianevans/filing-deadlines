@@ -1,7 +1,14 @@
 import {start} from 'node:repl'
 import { Queue, QueueEvents } from "bullmq";
 import { getRedisClient } from "../backend-shared/getRedisClient.js";
-import { dispatchLoadFilingHistoryForCompany, dispatchLoadFilingHistoryForClientList,dispatchReloadClientListDetails,dispatchReloadClientListDetailsSync,dispatchReloadCompanyProfiles } from "../backend-shared/jobs/dispatchJobs.js";
+import {
+  dispatchLoadFilingHistoryForCompany,
+  dispatchLoadFilingHistoryForClientList,
+  dispatchReloadClientListDetails,
+  dispatchReloadClientListDetailsSync,
+  dispatchReloadCompanyProfiles,
+  dispatchJobSync
+} from "../backend-shared/jobs/dispatchJobs.js";
 import {
   bullConnection,
   loadFilingHistoryForClientListQueue, loadFilingHistoryForCompanyQueue,reloadClientListQueue,reloadCompanyProfilesQueue
@@ -24,6 +31,7 @@ server.context.Queue = Queue
 server.context.QueueEvents = QueueEvents
 server.context.queueNames = queueNames
 
+server.context.dispatchJobSync = dispatchJobSync // to wait for response
 server.context.d = {dispatchLoadFilingHistoryForCompany, dispatchLoadFilingHistoryForClientList,dispatchReloadClientListDetails,dispatchReloadClientListDetailsSync,dispatchReloadCompanyProfiles}
 
 server.defineCommand('q', {

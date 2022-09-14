@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "esnext",
     "target": "ES2021",
     "sourceMap": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "skipLibCheck": true, // to fix fastify session errors
     "importsNotUsedAsValues": "error"

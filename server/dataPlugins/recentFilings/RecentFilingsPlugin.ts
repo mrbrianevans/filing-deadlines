@@ -1,6 +1,8 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import type {RecentFilings, RecentFilingsItem} from "../../../fs-shared/RecentFilings.js";
 import type {FilingHistoryItemResource} from "../../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js";
+import filingDescriptions from '../../../fs-shared/filingDescriptions.json' assert {type:'json'}
+import formatString from 'string-template'
 
 const recentFilingsSchema: FastifySchema = {
   querystring: {
@@ -31,14 +33,16 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     return Object.assign(transaction, {companyNumber})
   }
 
+  function formatFilingDescription(transaction: FilingHistoryItemResource){
+    return formatString(filingDescriptions[transaction.description], transaction.description_values)
+  }
+
   fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: RecentFilings}>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
     // logic to get recent filings
     const {startDate, endDate} = request.query
     const startDateDays = Math.floor(new Date(startDate).getTime()/86_400_000)
-    const endDateDays = Math.ceil(new Date(endDate??Date.now()).getTime()/86_400_000) // could also be '+inf' to be all higher than start date
-    request.log.debug({startDateDays, endDateDays},['Executing', 'ZRANGE', `org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays].join(' '))
-    const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays)
-    request.log.debug({companyNumberTransactionIds},"GOT "+ companyNumberTransactionIds+ ' ids')
+    const endDateDays = endDate?Math.ceil(new Date(endDate).getTime()/86_400_000):'+inf'
+    const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays, "BYSCORE")
     // get filing transaction for each ID
     const transactions = await Promise.all(companyNumberTransactionIds.map(c=>getFilingByCompanyNumberTransactionId(c)))
     const recentFilings: RecentFilings = {}
@@ -50,7 +54,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
         companyNumber: transaction.companyNumber,
         filingDate: transaction.date,
         transactionId: transaction.transaction_id,
-        description: transaction.description,
+        description: formatFilingDescription(transaction),
         companyName: companyName??''
       }
       if(category in recentFilings) recentFilings[category].push(filing)

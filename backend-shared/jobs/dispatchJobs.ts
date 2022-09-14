@@ -17,7 +17,7 @@ async function dispatchJob(queueName: string, jobData: any, comment = 'dispatche
   return job
 }
 
-async function dispatchJobSync(queueName: string, jobData: any, comment = 'dispatched-job', timeout?: number){
+export async function dispatchJobSync(queueName: string, jobData: any, comment = 'dispatched-job', timeout?: number){
   sharedLogger.info({queueName, jobData, comment,timeout},'Dispatching job and waiting until finished')
   const queueEvents = new QueueEvents(reloadClientListQueue, {connection: bullConnection});
   const queue = new Queue(queueName, {connection: bullConnection})

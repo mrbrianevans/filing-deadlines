@@ -9,14 +9,16 @@
   import type {TableColumns} from "svelte-table/src/types.js";
   import AsyncDate from "../components/AsyncDate.svelte";
   import LinkToViewDocument from "../components/recentFilings/LinkToViewDocument.svelte";
+  import FilingDescription from "../components/recentFilings/FilingDescription.svelte";
 
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
-  //todo: send timespan to server from NativeSelect
-  async function loadRecentFilings(timespan = '7D'){
+
+  async function loadRecentFilings(timespan = 'P7D'){
     processing = true
     try{
-      const startDate = new Date(0)
-      recentFilings = await fetcher('/api/user/org/member/recent-filings?startDate='+startDate.toISOString().split('T')[0])
+      const Temporal = await import('@js-temporal/polyfill').then(m=>m.Temporal)
+      const startDate = Temporal.Now.plainDateISO().subtract(timespan)
+      recentFilings = await fetcher('/api/user/org/member/recent-filings?startDate='+startDate.toString())
     }catch (e) {
       error = e
       recentFilings = null
@@ -49,7 +51,11 @@
     {
       key: 'description',
       value: v=>v.description,
-      title: "Description"
+      title: "Description",
+      renderComponent: {
+        component: FilingDescription,
+        props: {getFilingDescription: v=>v.description}
+      }
     },
     {
       key: 'linkToDocument',
@@ -61,22 +67,25 @@
       }
     }
   ]
+  const timespans = {'7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D'}
+  let selectedTimespan = '7 days'
+  $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
 </script>
 
-<Container>
+<Container size="xl">
     <Title order={2}>Recent filings</Title>
 
     <Group>
-        <NativeSelect data={['7 days', '14 days', '30 days', '60 days']}></NativeSelect>
+        <NativeSelect data={['7 days', '14 days', '30 days', '60 days']} bind:value={selectedTimespan}></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
-            <ActionIcon on:click={()=>loadRecentFilings()} loading="{processing}"><Reload/></ActionIcon>
+            <ActionIcon on:click={()=>loadRecentFilings(timespans[selectedTimespan])} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
     </Group>
     {#if error}
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
         {#each Object.keys(recentFilings) as filingType}
-            <Title order="{4}">{filingType}</Title>
+            <Title order="{4}" transform='capitalize'>{filingType}</Title>
             {#await SvelteTablePromise}
                 <Loader/>
             {:then SvelteTable}

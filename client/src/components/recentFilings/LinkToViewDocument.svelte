@@ -8,7 +8,7 @@
 </script>
 
 
-<Anchor external href="https://find-and-update.company-information.service.gov.uk/company/{companyNumberGetter(row)}/filing-history/{transactionIdGetter(row)}/document?format=pdf&download=0"><ExternalLink/></Anchor>
+<Anchor external href="https://find-and-update.company-information.service.gov.uk/company/{companyNumberGetter(row)}/filing-history/{transactionIdGetter(row)}/document?format=pdf&download=0">View <ExternalLink/></Anchor>
 
 
 <style>

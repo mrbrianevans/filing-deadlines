@@ -94,9 +94,11 @@ importers:
       '@fastify/redis': ^6.0.0
       '@fastify/session': ^9.0.0
       '@types/node': ^18.0.0
+      '@types/string-template': ^1.0.2
       fastify: ^4.5.3
       jwt-decode: ^3.1.2
       pino-loki: ^2.0.3
+      string-template: ^1.0.0
       typescript: ^4.7.4
     dependencies:
       '@fastify/cookie': 8.1.0
@@ -106,8 +108,10 @@ importers:
       fastify: 4.5.3
       jwt-decode: 3.1.2
       pino-loki: 2.0.3
+      string-template: 1.0.0
     devDependencies:
       '@types/node': 18.7.15
+      '@types/string-template': 1.0.2
       typescript: 4.8.2
 
   worker:
@@ -448,6 +452,10 @@ packages:
     resolution: {integrity: sha512-7uz3yU+LooBq4yNOzlZD9PU9/1Eu0rTD1MjQ6apOVEoHsPrMUrFw7W8XrvWtesm2vK67SBK9AyJcOXtMpl9bgQ==}
     dependencies:
       '@types/node': 18.7.15
+    dev: true
+
+  /@types/string-template/1.0.2:
+    resolution: {integrity: sha512-7VFuFekVzbr0uktqfBmsJc/CqjwnXWWOc5mHn7rajxzhLO9aM9nMMhtpa+90UK1GW6C0ctQF/9Fh0qJBwjqNXg==}
     dev: true
 
   /abort-controller/3.0.0:
@@ -1908,6 +1916,10 @@ packages:
   /stealthy-require/1.1.1:
     resolution: {integrity: sha512-ZnWpYnYugiOVEY5GkcuJK1io5V8QmNYChG62gSit9pQVGErXtrKuPC55ITaVSukmMta5qpMU7vqLt2Lnni4f/g==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /string-template/1.0.0:
+    resolution: {integrity: sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==}
     dev: false
 
   /strip-indent/3.0.0:
