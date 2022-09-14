@@ -23,6 +23,11 @@ services:
       - redisdata:/data
     logging:
       driver: local
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 200M
   client:
     build:
       dockerfile: Client.Dockerfile
@@ -59,6 +64,11 @@ services:
       - .url.env
     logging:
       driver: local
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 350M
   "metrics":
     "build": "monitoring/prometheus"
     logging:
@@ -76,8 +86,6 @@ services:
     "volumes":
       - "grafana_data:/var/lib/grafana"
       - "/var/log/grafana"
-#      does NOT work having dashboards as a volume on Windows. Rather just copy them in when the image is built.
-      - "./monitoring/grafana/dashboards:/etc/grafana/dashboards"
     "environment":
       LOKI_URL: "http://loki:3100"
       METRICS_URL: "http://metrics:9090"
