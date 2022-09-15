@@ -10,7 +10,10 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Logs of listeners on streaming API",
       "gridPos": {
         "h": 19,
@@ -31,7 +34,10 @@
       },
       "targets": [
         {
-          "datasource": "loki",
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
           "editorMode": "code",
           "expr": "{component=\"worker\"} |= `` | json | label_format padStream=\"{{ .stream}}{{ repeat 3 \\\" \\\" }}\"| workerType = `listener` | line_format `{{.level}} stream={{.padStream | trunc 9}} {{.msg}}`",
           "queryType": "range",
@@ -42,7 +48,10 @@
       "type": "logs"
     },
     {
-      "datasource": "loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Logs of bullmq workers and queues etc",
       "gridPos": {
         "h": 19,
@@ -63,7 +72,10 @@
       },
       "targets": [
         {
-          "datasource": "loki",
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
           "editorMode": "builder",
           "expr": "{component=\"worker\"} |= `` | json | workerType = `bullmq` | label_format padStream=\"{{ .stream}}{{ repeat 3 \\\" \\\" }}\" | line_format `{{.level}} queue={{.queueName}} {{.msg}}`",
           "queryType": "range",

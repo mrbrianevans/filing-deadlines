@@ -10,7 +10,10 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Other logs from server component apart from incoming and completed requests, formatted by user and org on session of request.",
       "gridPos": {
         "h": 32,
@@ -32,7 +35,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "loki",
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
           "editorMode": "builder",
           "expr": "{component=\"server\"} != `incoming request` != `request completed` | json | line_format `{{.level}} {{.reqId}} user={{if .userId}}true {{else}}false{{end}} org={{if .orgId}}true {{else}}false{{end}}   {{.msg}}`",
           "queryType": "range",
@@ -43,7 +49,10 @@
       "type": "logs"
     },
     {
-      "datasource": "loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Incoming request logs from fastify server",
       "gridPos": {
         "h": 32,
@@ -65,7 +74,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "loki",
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
           "editorMode": "builder",
           "expr": "{component=\"server\"} |= `incoming request` | json | line_format `{{.level}} {{.reqId}} {{.req_method}} {{ .req_url | trunc 60 }}`",
           "queryType": "range",
@@ -76,7 +88,10 @@
       "type": "logs"
     },
     {
-      "datasource": "loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Outgoing reply logs from fastify server",
       "gridPos": {
         "h": 32,
@@ -98,7 +113,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "loki",
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
           "editorMode": "builder",
           "expr": "{component=\"server\"} |= `request completed` | json | line_format `{{.level}} {{.reqId}} CODE {{.res_statusCode}} in {{round .responseTime 2}}ms`",
           "queryType": "range",

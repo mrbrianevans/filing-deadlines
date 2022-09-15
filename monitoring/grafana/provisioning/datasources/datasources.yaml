@@ -4,6 +4,8 @@ datasources:
   - name: Loki
     type: loki
     url: $LOKI_URL #env var
+    uid: 4d8546cdf33d # hard-coded to allow referencing in dashboard
   - name: Metrics
     type: prometheus
     url: $METRICS_URL #env var
+    uid: 86e4142ca441 # hard-coded to allow referencing in dashboard

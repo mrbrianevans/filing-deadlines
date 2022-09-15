@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import {ActionIcon,  Container, Group, Loader, NativeSelect, Title, Tooltip} from "@svelteuidev/core";
+  import {ActionIcon, Alert, Container, Group, Loader, NativeSelect, Text, Title, Tooltip} from "@svelteuidev/core";
   import {fetcher} from "../lib/swr.js";
   import {onMount} from "svelte";
   import {Reload} from "radix-icons-svelte";
@@ -70,11 +70,13 @@
   const timespans = {'7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D'}
   let selectedTimespan = '7 days'
   $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
+  const featureLive = false
 </script>
 
 <Container size="xl">
     <Title order={2}>Recent filings</Title>
 
+    {#if featureLive}
     <Group>
         <NativeSelect data={['7 days', '14 days', '30 days', '60 days']} bind:value={selectedTimespan}></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
@@ -92,6 +94,12 @@
                     <SvelteTable columns={columns} rows={recentFilings[filingType]}/>
             {/await}
         {/each}
+    {/if}
+        {:else}
+        <Alert>
+            <Text inherit>This feature is not yet ready, but coming soon. Try again tomorrow :)</Text>
+            <Text inherit>It will show the recent filings for your clients made to Companies House, broken down by the type of filing (accounts, confirmation statement etc).</Text>
+        </Alert>
     {/if}
 
 

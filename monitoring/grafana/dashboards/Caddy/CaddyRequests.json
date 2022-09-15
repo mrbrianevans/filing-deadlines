@@ -10,7 +10,10 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "Hasn't been tested to show downtime correctly.",
       "fieldConfig": {
         "defaults": {
@@ -87,7 +90,10 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "up",
           "legendFormat": "{{job}}",
@@ -99,7 +105,10 @@
       "type": "status-history"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -144,7 +153,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "rate(caddy_http_requests_total{handler=\"file_server\"}[$__rate_interval])",
           "legendFormat": "__auto",
@@ -156,7 +168,10 @@
       "type": "gauge"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "Includes grafana",
       "fieldConfig": {
         "defaults": {
@@ -202,7 +217,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "rate(caddy_http_requests_total{handler=\"reverse_proxy\"}[$__rate_interval])",
           "legendFormat": "__auto",
@@ -214,7 +232,10 @@
       "type": "gauge"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "Prometheus",
       "fieldConfig": {
         "defaults": {
@@ -260,7 +281,10 @@
       "pluginVersion": "9.1.5",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "rate(caddy_http_requests_total{handler=\"metrics\"}[$__rate_interval])",
           "legendFormat": "__auto",
@@ -272,7 +296,10 @@
       "type": "gauge"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "Caddy metrics of total requests to file_server. Doesn't include API endpoints.",
       "fieldConfig": {
         "defaults": {
@@ -347,7 +374,10 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "rate(caddy_http_requests_total{handler=\"file_server\"}[$__rate_interval])",
           "key": "Q-51ff6bbc-ddd7-441c-bed2-8bb8f77688d4-0",
@@ -359,7 +389,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "Caddy metrics of total requests to reverse_proxy. Unfortunately includes grafana traffic as well. Not sure how to avoid this.",
       "fieldConfig": {
         "defaults": {
@@ -434,7 +467,10 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "rate(caddy_http_requests_total{handler=\"reverse_proxy\"}[$__rate_interval])",
           "key": "Q-51ff6bbc-ddd7-441c-bed2-8bb8f77688d4-0",
@@ -446,7 +482,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "86e4142ca441"
+      },
       "description": "To reverse proxy, includes grafana. Numbers aren't accurate",
       "fieldConfig": {
         "defaults": {
@@ -517,7 +556,10 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "86e4142ca441"
+          },
           "editorMode": "builder",
           "expr": "avg by(method) (rate(caddy_http_request_duration_seconds_sum{handler=\"reverse_proxy\"}[$__rate_interval]))",
           "legendFormat": "__auto",

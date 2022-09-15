@@ -33,6 +33,11 @@ services:
       dockerfile: Client.Dockerfile
     volumes:
       - client_dist:/filing-deadlines/client/dist # this MUST match the workdir set in the Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'
+          memory: 1000M # vite uses loads of memory to build
   worker:
     build:
       dockerfile: Worker.Dockerfile
@@ -49,7 +54,7 @@ services:
       resources:
         limits:
           cpus: '0.50'
-#          memory: 150M
+          memory: 250M
   server:
     build:
       dockerfile: Server.Dockerfile
@@ -77,10 +82,14 @@ services:
       driver: local
     "environment":
       "CADDY_METRICS_URL": "http://caddy:2022"
+    "volumes":
+      - "prom_data:/prometheus"
   "loki":
     "build": "monitoring/loki"
     logging:
       driver: local
+    "volumes":
+      - "loki_data:/loki"
   "grafana":
     "build": "monitoring/grafana"
     logging:
@@ -107,3 +116,5 @@ volumes:
   caddy_config:
   client_dist:
   grafana_data:
+  loki_data:
+  prom_data:
