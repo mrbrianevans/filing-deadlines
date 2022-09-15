@@ -15,13 +15,13 @@ async function loadFilingHistoryForClientList(job: Job<{orgId: string}>){
 
   const redis = getRedisClient()
 
-  for await(const companyNumbers of redis.hscanStream(`org:${orgId}:clients`)){
-    await Promise.all(companyNumbers.map(companyNumber=>redis.sadd(`company:${companyNumber}:clientLists`, orgId)))
-    for(const companyNumber of companyNumbers){
-      const filings = await redis.hvals(`company:${companyNumber}:filingHistory`)
-      await Promise.all(filings.map(f=>JSON.parse(f??'{}')).map(f=>redis.zadd(`org:${orgId}:clientFilings`,new Date(f.date).getTime()/86_400_000, `${companyNumber}:${f.transaction_id}`)))
-    }
+  const companyNumbers = await redis.hkeys(`org:${orgId}:clients`)
+  await Promise.all(companyNumbers.map(companyNumber=>redis.sadd(`company:${companyNumber}:clientLists`, orgId)))
+  for(const companyNumber of companyNumbers){
+    const filings = await redis.hvals(`company:${companyNumber}:filingHistory`)
+    await Promise.all(filings.map(f=>JSON.parse(f??'{}')).map(f=>redis.zadd(`org:${orgId}:clientFilings`,new Date(f.date).getTime()/86_400_000, `${companyNumber}:${f.transaction_id}`)))
   }
+
 
   await redis.quit()
   logger.info({duration: performance.now()-startTime},'Finished job in ' + job.queueName)
