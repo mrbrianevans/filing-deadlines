@@ -38,7 +38,7 @@ export const clientList = createClientList()
 
 
 export async function importClientListCsv(csv){
-  console.log("Import CSV", csv.name, csv.type)
+  // console.log("Import CSV", csv.name, csv.type)
   const papa = await import('papaparse')
   const papaOptions: Partial<ParseLocalConfig<unknown, any>> = {
     worker: false, delimiter: ',', skipEmptyLines:true, header: true, transformHeader(header: string): string {
@@ -48,4 +48,7 @@ export async function importClientListCsv(csv){
   const rows:ParseResult<{ companyNumber: string }> = await new Promise((resolve, reject) => papa.parse(csv, {complete: resolve, error: reject,...papaOptions }))
   const companyNumbers = rows.data.map(r=>r.companyNumber)
   await clientList.addNew(companyNumbers)
+  if(companyNumbers.length > 100)
+    alert('You have uploaded more than 100 clients, which may take a few minutes to load all of their filing history from Companies House. ' +
+      'Until then, the Recent filings page may not have complete data.')
 }

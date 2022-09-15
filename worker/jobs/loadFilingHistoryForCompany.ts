@@ -17,6 +17,7 @@ async function loadFilingHistoryForCompany(job: Job<{companyNumber: string, limi
       // loop through SMEMBERS  company:{companyNumber}:clientLists of orgIds, and for each one: ZADD org:${orgId}:clientFilings {daysSinceEpoch} {companyNumber:transactionId}
       const orgs = await redis.smembers(`company:${companyNumber}:clientLists`)
       for (const orgId of orgs) {
+        // this could be replaced with a single call to ZADD with multiple members, but it gets messy with the scores.
         await Promise.all(filingHistory.items.map(f=>redis.zadd(`org:${orgId}:clientFilings`, new Date(f.date).getTime()/86_400_000, `${companyNumber}:${f.transaction_id}`)))
       }
     }

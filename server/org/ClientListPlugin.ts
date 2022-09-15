@@ -46,11 +46,16 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(!exists){
       return reply.sendError({message: 'Could not find company to delete in your client list', error: 'Not found', statusCode: 404})
     }
-    await fastify.redis.srem(`company:${companyNumber}:clientLists`, request.session.orgId)
-    await fastify.redis.hdel(`org:${request.session.orgId}:clients`, companyNumber)
-    // remove company profile and filing history. not sure this is right, the company could belong to another clientList
-    await fastify.redis.del('company:'+companyNumber+':profile')
-    await fastify.redis.del('company:'+companyNumber+':filingHistory')
+    await fastify.redis.srem(`company:${companyNumber}:clientLists`, request.session.orgId) // remove org from company tracking list
+    await fastify.redis.hdel(`org:${request.session.orgId}:clients`, companyNumber) // remove company from org client list
+    // remove filings from Sorted Set of recent filings
+    const filings = await fastify.redis.hkeys(`company:${companyNumber}:filingHistory`)
+    await fastify.redis.zrem(`org:${request.session.orgId}:clientFilings`, filings.map(f=>`${companyNumber}:${f}`))
+    // remove company profile and filing history if the company isn't in any clientLists anymore.
+    if(await fastify.redis.scard(`company:${companyNumber}:clientLists`) === 0) {
+      await fastify.redis.del('company:' + companyNumber + ':profile')
+      await fastify.redis.del('company:' + companyNumber + ':filingHistory')
+    }
     reply.status(204).send()
   })
 

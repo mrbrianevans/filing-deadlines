@@ -70,7 +70,7 @@
   const timespans = {'7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D'}
   let selectedTimespan = '7 days'
   $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
-  const featureLive = false
+  const featureLive = true
 </script>
 
 <Container size="xl">

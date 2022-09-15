@@ -38,9 +38,7 @@ let userProcessing = user.processing
                             <DividerVertical/>
                             <Anchor root={Link} to="/confirmation-statement-dashboard" href="/confirmation-statement-dashboard">Confirmation statements</Anchor>
                             <DividerVertical/>
-                            <Tooltip label="Coming soon">
-                                <Button href="/recent-filings" disabled>Recent filings</Button>
-                            </Tooltip>
+                            <Anchor root={Link} to="/recent-filings" href="/recent-filings">Recent filings</Anchor>
                             <DividerVertical/>
                             <Tooltip label="Coming soon">
                                 <Button href="/registered-office-address" disabled>Registered office address</Button>
