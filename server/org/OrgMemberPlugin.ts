@@ -1,6 +1,4 @@
-import type {FastifyPluginAsync, FastifySchema} from "fastify";
-import {Invite, OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
-
+import type {FastifyPluginAsync} from "fastify";
 
 
 const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
@@ -29,6 +27,7 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
   await fastify.register(import('../dashboardData/DashboardDataPlugin.js'), {prefix: 'dashboard-data'}) // dashboard data
   await fastify.register(import('../dashboardData/ConfirmationStatementsDataPlugin.js'), {prefix: 'confirmation-statement'}) // dashboard data
   await fastify.register(import('../dataPlugins/recentFilings/RecentFilingsPlugin.js'), {prefix: 'recent-filings'}) // recent filings data
+  await fastify.register(import('./RegisteredAddressPlugin.js'), {prefix: 'registered-address'}) // registered office address endpoints
 
   fastify.get('/members', async (request, reply)=> {
     return await fastify.redis.hgetall(`org:${request.session.orgId}:members`)

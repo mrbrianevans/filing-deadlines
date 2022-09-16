@@ -5,7 +5,7 @@ import type {ConfirmationStatementsData} from '../../../../fs-shared/Confirmatio
 
 function createConfirmationStatements(){
   const key = '/api/user/org/member/confirmation-statement/dashboard'
-  const { data: {subscribe}, error, refresh, update, processing } = swr<ConfirmationStatementsData|null>(key, {...readableSwrOptions, plugins: [refreshInterval({ interval: 10*1000 })]})
+  const { data: {subscribe}, error, refresh, update, processing } = swr<ConfirmationStatementsData|null>(key, {...readableSwrOptions, plugins: [refreshInterval({ interval: 120*1000 })]})
 
   return {subscribe, processing, refresh, error}
 }

@@ -27,9 +27,9 @@ export const readableSwrOptions: SWROptions<any> = {
   // plugins have been disabled because they lead to lazy development. API calls should only be made when necessary.
   // plugins: [refreshInterval({ interval: 60*1000 }), refreshOnFocus(), refreshOnReconnect()]
 }
-
+type WritableSWROptions = SWROptions<any> & {updater: typeof updater}
 /** Standard options for an endpoint that can GET and POST */
-export const writableSwrOptions: SWROptions<any> = {
+export const writableSwrOptions: WritableSWROptions = {
   ...readableSwrOptions,
   updater
 }

@@ -27,9 +27,6 @@ let userProcessing = user.processing
         <Group spacing="lg" >
             <nav>
                 <Group>
-<!--                    this home link has been replaced by making the "Filing deadlines" H1 a link to home page-->
-<!--                    <Anchor root={Link} to="/">Home</Anchor>-->
-<!--                    <DividerVertical/>-->
                     {#if $user}
                         {#if $user.orgName}
                             <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
@@ -40,9 +37,7 @@ let userProcessing = user.processing
                             <DividerVertical/>
                             <Anchor root={Link} to="/recent-filings" href="/recent-filings">Recent filings</Anchor>
                             <DividerVertical/>
-                            <Tooltip label="Coming soon">
-                                <Button href="/registered-office-address" disabled>Registered office address</Button>
-                            </Tooltip>
+                            <Anchor href="/registered-office-address" to="/registered-office-address" root={Link}>Registered office address</Anchor>
                         {/if}
                         {#if $user.owner}
                             <DividerVertical/>
