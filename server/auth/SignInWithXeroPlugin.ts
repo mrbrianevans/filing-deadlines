@@ -49,7 +49,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
         // if there is a pending invite, send the user to a special page for accepting the invite.
         const pendingInvite = await fastify.redis.exists(`invite:${decodedIdToken.email}`)
         if(pendingInvite) return reply.redirect('/org-invite')
-        else return reply.redirect('/manage-access') // the user isn't in an org and doesn't have an invite, so let them create an org
+        else return reply.redirect('/manage-organisation') // the user isn't in an org and doesn't have an invite, so let them create an org
       }
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.

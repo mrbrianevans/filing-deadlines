@@ -40,7 +40,7 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
           <NavBar/>
         </Header>
         <slot>
-          <Route path="/manage-access">
+          <Route path="/manage-organisation">
             <ManageOrg />
           </Route>
           <Route path="/org-invite">

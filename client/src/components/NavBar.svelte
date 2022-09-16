@@ -41,7 +41,7 @@ let userProcessing = user.processing
                         {/if}
                         {#if $user.owner}
                             <DividerVertical/>
-                            <Anchor root={Link} to="/manage-access" href="/manage-access">Manage access</Anchor>
+                            <Anchor root={Link} to="/manage-organisation" href="/manage-organisation">Manage organisation</Anchor>
                         {/if}
                     {/if}
                 </Group>
@@ -68,7 +68,7 @@ let userProcessing = user.processing
                         <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
                     </Tooltip>
                 </Group>
-                <Text><Anchor root={Link} to="/manage-access" href="/manage-access">{$user.orgName??'No organisation'}</Anchor></Text>
+                <Text><Anchor root={Link} to="/manage-organisation" href="/manage-organisation">{$user.orgName??'No organisation'}</Anchor></Text>
             </Stack>
         {/if}
         </div>

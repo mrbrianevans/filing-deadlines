@@ -1,7 +1,6 @@
 <script lang="ts">
 
-  import {Button, Container, Group, Loader, Text, TextInput, Title} from "@svelteuidev/core";
-  import {fetcher} from "../lib/swr.js";
+  import {Button, Container, Group, Loader, Text, TextInput, Title, Checkbox, Space, Tooltip} from "@svelteuidev/core";
   import {onMount} from "svelte";
   import {companiesAtAddress, orgAddress} from "../lib/stores/orgAddress.js";
   import ErrorAlert from "../components/ErrorAlert.svelte";
@@ -19,8 +18,12 @@
     <Title order={2}>Registered office address</Title>
 
     {#if $orgAddress}
-        <Text>Showing {$companiesAtAddress?.length??''} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
         {#if $companiesAtAddress}
+            <Text>Showing {$companiesAtAddress?.length??''} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
+            <Space h="xs"/>
+            <Tooltip label="Feature not available yet">
+                <Checkbox disabled label="Show results which aren't in client list"></Checkbox>
+            </Tooltip>
             <OfficeAddressResultsTable data={$companiesAtAddress} />
         {:else if $companiesAtAddressLoading}
             <Loader/>

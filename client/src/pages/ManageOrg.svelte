@@ -47,8 +47,7 @@ let {processing: addressLoading} = orgAddress
 </script>
 
 <Container>
-    <Title order={2}>Manage access</Title>
-    <Text color="dimmed">Invite other users to view/edit your client list and dashboard.</Text>
+    <Title order={2}>Manage organisation</Title>
     {#if errorCreating}
         <Space h="sm"/>
         <Alert color="red" >
@@ -64,7 +63,7 @@ let {processing: addressLoading} = orgAddress
                     <Text>You can add members to allow them to access your client list, or you can go straight to the <Anchor root={Link} to="/clients" href="/clients" inherit>client list</Anchor> add start adding some clients.</Text>
                 </Alert>
             {/if}
-            <Title order="{3}">Organisation registered office address</Title>
+            <Title order="{3}">Registered office address</Title>
             <Text color="dimmed">This is required for the registered office address features.</Text>
             <Group>
                 <TextInput label="Post code" bind:value={newAddress.postCode}/>
@@ -86,7 +85,11 @@ let {processing: addressLoading} = orgAddress
                 </Alert>
                 <Space h="sm"/>
             {/if}
+            {#if $user.owner}
+                <Text color="dimmed">Members can edit the client list and view all the dashboards.</Text>
+                <Space h="xs"/>
             <Group><TextInput placeholder="Email address" bind:value={inviteEmail} invalid="{errorInviting}" /> <Button on:click={inviteUser} loading="{creating}">Invite</Button></Group>
+            {/if}
             <table class="members">
                 {#each Object.entries($orgMembers??{}) as member}
                     <tr><td>{member[0]}</td><td>{OrgMemberStatusPretty[member[1]]}</td><td><Button disabled color="red">Remove</Button></td></tr>

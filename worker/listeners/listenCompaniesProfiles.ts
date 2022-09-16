@@ -12,7 +12,8 @@ export async function listenCompaniesProfiles(signal?: AbortSignal){
     const key = `company:${companyNumber}:profile`
     const orgs = await redis.smembers(`company:${companyNumber}:clientLists`)
     if(orgs.length > 0) {
-      companyListenerLogger.info({key, companyNumber}, 'Company event for company in database')
+      const previousCompany = await redis.get(key)
+      companyListenerLogger.info({key, companyNumber, event: JSON.stringify(event), inClientLists:orgs, previousCompany}, 'Company event for company in database')
       await redis.set(key, JSON.stringify(event.data))
     }
     if(signal?.aborted) {
