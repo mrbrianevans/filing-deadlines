@@ -10,7 +10,7 @@ async function submitIdea(){
   try {
     success = undefined
     loading = true
-    success = await poster('/api/user/featureRequest', {featureTitle, featureDescription})
+    success = await poster('/api/user/feature-request', {featureTitle, featureDescription})
     if(success) {
       featureTitle = ''
       featureDescription = ''
@@ -33,6 +33,7 @@ async function submitIdea(){
     </InputWrapper>
     <Space h="xs"/>
     <Button on:click={submitIdea} loading={loading}>Submit</Button>
+    <Space h="xs"/>
     {#if success === true}
         <Alert color="green">
             <Text inherit>Thank you for submitting a feature request. </Text>
