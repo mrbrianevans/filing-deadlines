@@ -35,6 +35,7 @@ importers:
       papaparse: ^5.3.2
       radix-icons-svelte: ^1.2.1
       sass: ^1.54.8
+      sentence-case: ^3.0.4
       svelte: 3.47.0
       svelte-check: ^2.8.0
       svelte-navigator: ^3.2.2
@@ -53,6 +54,7 @@ importers:
       camelcase: 7.0.0
       papaparse: 5.3.2
       radix-icons-svelte: 1.2.1
+      sentence-case: 3.0.4
       svelte-navigator: 3.2.2_j474tivcladuhqporqjsggflze
       svelte-table: 0.5.0
       sveltefileuploadcomponent: 0.1.0
@@ -1840,6 +1842,14 @@ packages:
       lru-cache: 6.0.0
     dev: false
 
+  /sentence-case/3.0.4:
+    resolution: {integrity: sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==}
+    dependencies:
+      no-case: 3.0.4
+      tslib: 2.4.0
+      upper-case-first: 2.0.2
+    dev: false
+
   /set-cookie-parser/2.5.1:
     resolution: {integrity: sha512-1jeBGaKNGdEq4FgIrORu/N570dwoPYio8lSoYLWmX7sQ//0JY08Xh9o5pBcgmHQ/MbsYp/aZnOe1s1lIsbLprQ==}
     dev: false
@@ -2123,6 +2133,12 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       random-bytes: 1.0.0
+    dev: false
+
+  /upper-case-first/2.0.2:
+    resolution: {integrity: sha512-514ppYHBaKwfJRK/pNC6c/OxfGa0obSnAl106u97Ed0I625Nin96KAjttZF6ZL3e1XLtphxnqrOi9iWgm+u+bg==}
+    dependencies:
+      tslib: 2.4.0
     dev: false
 
   /uri-js/4.4.1:

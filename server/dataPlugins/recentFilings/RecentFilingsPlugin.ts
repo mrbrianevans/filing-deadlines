@@ -43,13 +43,15 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const startDateDays = Math.floor(new Date(startDate).getTime()/86_400_000)
     const endDateDays = endDate?Math.ceil(new Date(endDate).getTime()/86_400_000):'+inf'
     const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays, "BYSCORE")
+    request.log.info({numberOfTransactions: companyNumberTransactionIds.length},`Found ${companyNumberTransactionIds.length} transaction IDs of recent filings for companies on this org's client list`)
     // get filing transaction for each ID
     const transactions = await Promise.all(companyNumberTransactionIds.map(c=>getFilingByCompanyNumberTransactionId(c)))
+    const companyNames = await Promise.all(transactions.map(t=>fastify.redis.get(`company:${t.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name).then(name=>[t.transaction_id, name]))).then(Object.fromEntries)
     const recentFilings: RecentFilings = {}
     for (const transaction of transactions) {
       const {category} = transaction
-      request.log.debug({category},'Found transaction with category ' + category)
-      const companyName = await fastify.redis.get(`company:${transaction.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name)
+      const companyName = companyNames[transaction.transaction_id]
+      if(!companyName) request.log.warn({companyName, transactionId: transaction.transaction_id, companyNumber : transaction.companyNumber}, 'Could not find company name for filing transaction')
       const filing: RecentFilingsItem = {
         companyNumber: transaction.companyNumber,
         filingDate: transaction.date,
@@ -60,6 +62,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
       if(category in recentFilings) recentFilings[category].push(filing)
       else recentFilings[category] = [filing]
     }
+    request.log.info(`Returning ${Object.values(recentFilings).map(f=>f.length).reduce((p,c)=>c+p)} recent filings in ${Object.keys(recentFilings).length} categories`)
     return recentFilings
   })
 
