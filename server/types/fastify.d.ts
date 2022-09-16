@@ -1,5 +1,6 @@
 import { OAuth2Namespace } from '@fastify/oauth2';
 import type {IdToken} from "./token.js";
+import type {CustomFastifyError} from "./CustomFastifyError.js";
 
 
 declare module 'fastify' {
@@ -27,7 +28,7 @@ declare module 'fastify' {
 
   interface FastifyReply{
     // send an error response
-    sendError(error: {message: string, error: string, statusCode: number}): void
+    sendError(error: CustomFastifyError): void
   }
 }
 
