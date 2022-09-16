@@ -9,9 +9,7 @@
 
   const {error: addressError, processing: addressLoading} = orgAddress
   const {error: companiesAtAddressError, processing: companiesAtAddressLoading} = companiesAtAddress
-  onMount(()=>{
-    orgAddress.refresh()
-  })
+  onMount(()=>orgAddress.refresh())
   let newAddress = {postCode: '', addressLine1: ''}
   $: if($orgAddress) companiesAtAddress.refresh()
 

@@ -34,6 +34,12 @@ let columns: TableColumns<RegisteredAddressResult> = [
     title: 'Company type',
     value: v => company_type[v.company_type]?? ''
   },
+  {
+    key: 'office_address',
+    title: 'Registered office address',
+    value: ({registered_office_address:r}) => [[r.premises, r.address_line_1, r.address_line_2], [r.locality, r.region, r.postal_code, r.country]].map(p=>p.filter(s=>s).join(', ')).filter(s=>s).join('\n'),
+    class: 'keep-line-breaks'
+  },
 ]
 export let data: RegisteredAddressResults = []
 </script>
@@ -45,5 +51,7 @@ export let data: RegisteredAddressResults = []
 {/await}
 
 <style>
-
+:global(.keep-line-breaks){
+    white-space: pre-wrap;
+}
 </style>

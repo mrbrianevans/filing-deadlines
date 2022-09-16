@@ -7,6 +7,8 @@ import { orgMembers} from "../lib/stores/org.js";
 import {fetcher, poster} from "../lib/swr.js";
 import {onMount} from "svelte";
 import {OrgMemberStatusPretty} from '../../../fs-shared/OrgMemberStatus.js'
+import {orgAddress} from "../lib/stores/orgAddress.js";
+import type {OfficeAddress} from "../../../fs-shared/OfficeAddress.js";
 
 
 let newOrgName = ''
@@ -33,9 +35,15 @@ async function inviteUser(){
   await orgMembers.refresh()
 }
 
+let newAddress: OfficeAddress = {postCode: '', addressLine1: ''}
 onMount(async ()=>{
-  await Promise.allSettled([orgMembers.refresh(), user.refresh()])
+  await Promise.allSettled([orgMembers.refresh(), user.refresh(),orgAddress.refresh()])
+  newAddress.addressLine1 = $orgAddress?.addressLine1 ?? ''
+  newAddress.postCode = $orgAddress?.postCode ?? ''
+  const unsub = orgAddress.subscribe(oa => newAddress = oa ?? {postCode: '', addressLine1: ''})
+  return () => unsub()
 })
+let {processing: addressLoading} = orgAddress
 </script>
 
 <Container>
@@ -56,6 +64,14 @@ onMount(async ()=>{
                     <Text>You can add members to allow them to access your client list, or you can go straight to the <Anchor root={Link} to="/clients" href="/clients" inherit>client list</Anchor> add start adding some clients.</Text>
                 </Alert>
             {/if}
+            <Title order="{3}">Organisation registered office address</Title>
+            <Text color="dimmed">This is required for the registered office address features.</Text>
+            <Group>
+                <TextInput label="Post code" bind:value={newAddress.postCode}/>
+                <TextInput label="Address line 1" bind:value={newAddress.addressLine1}/>
+                <Button on:click={()=>orgAddress.update(prev=>Object.assign(prev??{}, newAddress))} loading={$addressLoading}>Set address</Button>
+            </Group>
+
             <Title order={3}>Members of {$user.orgName}</Title>
             {#if errorInviting}
                 <Alert color="red" >
