@@ -39,11 +39,13 @@ let userProcessing = user.processing
                             <DividerVertical/>
                             <Anchor href="/registered-office-address" to="/registered-office-address" root={Link}>Registered office address</Anchor>
                         {/if}
-                        {#if $user.owner}
-                            <DividerVertical/>
-                            <Anchor root={Link} to="/manage-organisation" href="/manage-organisation">Manage organisation</Anchor>
-                        {/if}
+                        <!--{#if $user.owner}-->
+                        <!--    <DividerVertical/>-->
+                        <!--    <Anchor root={Link} to="/manage-organisation" href="/manage-organisation">Manage organisation</Anchor>-->
+                        <!--{/if}-->
                     {/if}
+                    <DividerVertical/>
+                    <Anchor href="/feature-request" to="/feature-request" root={Link}>Request a feature</Anchor>
                 </Group>
             </nav>
             <Tooltip label="{$isDark ? 'Change to light theme':'Change to dark theme'}" position="left">

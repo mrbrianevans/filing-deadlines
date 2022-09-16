@@ -12,6 +12,7 @@
   import AuthedPage from "./pages/AuthedPage.svelte";
   import RecentFilings from "./pages/RecentFilings.svelte";
   import RegisteredOfficeAddress from "./pages/RegisteredOfficeAddress.svelte";
+  import SuggestFeature from "./pages/SuggestFeature.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -42,6 +43,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
         <slot>
           <Route path="/manage-organisation">
             <ManageOrg />
+          </Route>
+          <Route path="/feature-request">
+            <SuggestFeature />
           </Route>
           <Route path="/org-invite">
             <OrgInvite />
