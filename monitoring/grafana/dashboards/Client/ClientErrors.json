@@ -1,0 +1,67 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 10,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
+      "description": "Auto-sent and user-reported errors",
+      "gridPos": {
+        "h": 32,
+        "w": 10,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
+          "editorMode": "builder",
+          "expr": "{component=\"server\"} |= `Client side error` | json",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Client error logs",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "ClientErrors",
+  "uid": "0ls0eN7Vk",
+  "version": 1,
+  "weekStart": ""
+}
