@@ -42,16 +42,16 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
         </Header>
         <slot>
           <Route path="/manage-organisation">
-            <ManageOrg />
+            <AuthedPage><ManageOrg /></AuthedPage>
           </Route>
           <Route path="/feature-request">
-            <SuggestFeature />
+            <AuthedPage><SuggestFeature /></AuthedPage>
           </Route>
           <Route path="/org-invite">
-            <OrgInvite />
+            <AuthedPage><OrgInvite /></AuthedPage>
           </Route>
           <Route path="/dashboard">
-            <AccountsDashboard />
+            <AuthedPage><AccountsDashboard /></AuthedPage>
           </Route>
           <Route path="/confirmation-statement-dashboard">
             <AuthedPage><ConfirmationStatements /></AuthedPage>
@@ -63,7 +63,7 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
             <AuthedPage><RegisteredOfficeAddress /></AuthedPage>
           </Route>
           <Route path="/clients">
-            <ClientList />
+            <AuthedPage> <ClientList /></AuthedPage>
           </Route>
           <Route path="/">
             <Home />

@@ -12,8 +12,11 @@ const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}})
   await fastify.register(import('@fastify/session'), {
     secret: getEnv('SESSION_SECRET'),
     cookie: {
-      secure: false // for testing on http://localhost. todo: should be based on an environment variable
-    }
+      secure: false,// for testing on http://localhost. todo: should be based on an environment variable
+      maxAge: 86400_000*30
+    },
+    saveUninitialized: false,
+    // store // todo: set store to Redis so that sessions are persisted after server restarts.
   })
   const redisUrl = new URL(getEnv('REDIS_URL'))
   await fastify.register(import('@fastify/redis'), {host: redisUrl.hostname, port: parseInt(redisUrl.port, 10) || undefined, closeClient:true })

@@ -3,6 +3,9 @@
 import {user} from "../lib/stores/user.js";
 import {Anchor, Text} from "@svelteuidev/core";
 import {Link} from "svelte-navigator";
+import {onMount} from "svelte";
+
+onMount(()=>user.refresh())
 </script>
 
 <div>

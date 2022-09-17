@@ -21,9 +21,17 @@
         {#if $companiesAtAddress}
             <Text>Showing {$companiesAtAddress?.length??''} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
             <Space h="xs"/>
-            <Tooltip label="Feature not available yet">
-                <Checkbox disabled label="Show results which aren't in client list"></Checkbox>
-            </Tooltip>
+            <Group>
+                <Tooltip label="Feature not available yet">
+                    <Checkbox disabled label="Show results which aren't in client list"></Checkbox>
+                </Tooltip>
+                <Tooltip label="Feature not available yet">
+                    <Button disabled>Export to CSV</Button>
+                </Tooltip>
+                <Tooltip label="Feature not available yet">
+                    <Button color="green" disabled>Export to XLSX</Button>
+                </Tooltip>
+            </Group>
             <OfficeAddressResultsTable data={$companiesAtAddress} />
         {:else if $companiesAtAddressLoading}
             <Loader/>
