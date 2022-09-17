@@ -14,6 +14,7 @@ import {
   loadFilingHistoryForClientListQueue, loadFilingHistoryForCompanyQueue,reloadClientListQueue,reloadCompanyProfilesQueue
 } from '../backend-shared/jobs/queueNames.js'
 import {backupClientLists} from "./backupClientLists.js";
+import {getFeatureRequests} from "./getFeatureRequests.js";
 
 if(process.argv.slice(1).includes('--help')) console.log("This is a custom repl for managing the database and queues. Try\n\n\t" +
   "docker compose exec repl node index.js")
@@ -33,6 +34,7 @@ server.context.QueueEvents = QueueEvents
 server.context.queueNames = queueNames
 
 server.context.backupClientLists = ()=>backupClientLists(redis)
+server.context.getFeatureRequests = ()=>getFeatureRequests(redis)
 
 server.context.exit = ()=>{shutdown('exit()');return 'exiting...'} // could be a Proxy to allow for simply "exit" rather than "exit()"
 

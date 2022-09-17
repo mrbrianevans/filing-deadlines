@@ -8,6 +8,7 @@ importers:
       '@types/node': ^18.0.0
       bullmq: ^1.90.1
       ioredis: ^5.2.3
+      jwt-decode: ^3.1.2
       pino: ^8.5.0
       pino-loki: ^2.0.3
       typescript: ^4.7.4
@@ -15,6 +16,7 @@ importers:
       '@companieshouse/api-sdk-node': 2.0.31
       bullmq: 1.90.1
       ioredis: 5.2.3
+      jwt-decode: 3.1.2
       pino: 8.5.0
       pino-loki: 2.0.3
     devDependencies:
@@ -98,7 +100,6 @@ importers:
       '@types/node': ^18.0.0
       '@types/string-template': ^1.0.2
       fastify: ^4.5.3
-      jwt-decode: ^3.1.2
       pino-loki: ^2.0.3
       string-template: ^1.0.0
       typescript: ^4.7.4
@@ -108,7 +109,6 @@ importers:
       '@fastify/redis': 6.0.0
       '@fastify/session': 9.0.0
       fastify: 4.5.3
-      jwt-decode: 3.1.2
       pino-loki: 2.0.3
       string-template: 1.0.0
     devDependencies:

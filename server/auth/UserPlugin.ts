@@ -1,11 +1,6 @@
 import type {FastifyPluginAsync} from "fastify";
-import jwtDecode from "jwt-decode";
 import type { User } from "../../fs-shared/User.js";
-import type { IdToken } from "../types/token.js";
-
-function getUserFromIdToken(idToken: string){
-  return jwtDecode(idToken) as IdToken
-}
+import { getUserFromIdToken } from "../../backend-shared/jwtTokens.js";
 
 const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.decorateRequest('user', null)
