@@ -30,6 +30,7 @@ await fastify.register(async (fastify, opts)=>{
   // register endpoints here
   await fastify.register(import('./auth/SignInWithXeroPlugin.js'), {prefix: 'sign-in/xero'})
   await fastify.register(import('./auth/UserPlugin.js'), {prefix: 'user'})
+  await fastify.register(import('./plugins/ErrorLoggingPlugin.js'), {prefix: 'error'})
 }, {prefix: 'api'})
 
 await fastify.listen({port, host: '::'})

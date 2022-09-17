@@ -12,6 +12,9 @@ export class FetchError extends Error{
     this.name = fastifyErrorResponse.error
     this.statusCode = fastifyErrorResponse.statusCode
   }
+  toJSON(){
+    return {message: this.message, error: this.name, statusCode:this.statusCode}
+  }
 }
 export const fetcher = (key) => fetch(key).then(async (r) => {
   if(r.ok)  return r.json()
