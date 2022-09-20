@@ -50,9 +50,10 @@ async function shutdown(sig){
   workerLogger.info({signal: sig,received},"Graceful shutdown requested")
   const timeout = setTimeoutCallback(()=>process.exit(1), 10_000) // just in case
   ac.abort() // should end streams
+  await Promise.allSettled(toClose.map(bullInstance => bullInstance.close()))
+  workerLogger.info({signal: sig,received},"Graceful shutdown bullmq instances closed")
   await Promise.allSettled([companiesStream, filingsStream])
   workerLogger.info({signal: sig,received},"Graceful shutdown streams ended")
-  await Promise.allSettled(toClose.map(bullInstance => bullInstance.close()))
   workerLogger.info({signal: sig,received},"Graceful shutdown completed, exiting")
   console.log(new Date(), {signal: sig,received},"Graceful shutdown completed, exiting")
   workerLogger.flush()

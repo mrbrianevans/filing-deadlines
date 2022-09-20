@@ -1,6 +1,7 @@
 # Filing deadlines
 [![Light house scores](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/lighthouse.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/lighthouse.yaml)
-[![build-typescript](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/build.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/build.yaml)
+[![Build and run server](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/server.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/server.yaml)
+[![Build client](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/client.yaml/badge.svg)](https://github.com/mrbrianevans/filing-deadlines/actions/workflows/client.yaml)
 
 ## Services (in `docker-compose-yaml`)
 

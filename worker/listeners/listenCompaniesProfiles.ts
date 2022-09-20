@@ -15,6 +15,9 @@ export async function listenCompaniesProfiles(signal?: AbortSignal){
       const previousCompany = await redis.get(key)
       companyListenerLogger.info({key, companyNumber, event: JSON.stringify(event), inClientLists:orgs, previousCompany}, 'Company event for company in database')
       await redis.set(key, JSON.stringify(event.data))
+      for (const orgId of orgs) {
+        await redis.xadd(`org:${orgId}:notifications`, '*', 'companyNumber', companyNumber, 'stream', 'companies', 'event', JSON.stringify(event))
+      }
     }
     if(signal?.aborted) {
       companyListenerLogger.info('Exiting due to abort signal')

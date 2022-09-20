@@ -14,6 +14,7 @@ export async function listenFilings(signal?: AbortSignal){
       const f = event.data
       for (const orgId of orgs) {
         await redis.zadd(`org:${orgId}:clientFilings`, new Date(f.date).getTime() / 86_400_000, `${companyNumber}:${f.transaction_id}`)
+        await redis.xadd(`org:${orgId}:notifications`, '*', 'companyNumber', companyNumber, 'stream', 'filings', 'transactionId', f.transaction_id, 'event', JSON.stringify(event))
       }
       const key = `company:${companyNumber}:filingHistory`
       const filingExists = await redis.hexists(key, event.resource_id)
