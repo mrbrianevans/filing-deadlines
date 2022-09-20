@@ -1,0 +1,70 @@
+name: 'Build and run server'
+on: # rebuild any PRs and any branch changes
+  pull_request:
+  push:
+# spin up the server and request a health status endpoint, to ensure that all fastify plugins could register.
+# For example regex schema mistakes are only caught when the plugin registers, not in typescript compile.
+jobs:
+  server-component:
+    runs-on: ubuntu-latest
+    container: node:18
+    services:
+      loki:
+#        todo: ideally, there would be some way of outputting all logs to the github action summary
+        image: grafana/loki:latest
+        # Set health checks to wait until loki has started
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: pnpm
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build server typescript
+        run: pnpm run build
+        working-directory: server
+
+      - name: Build worker typescript
+        run: pnpm run build
+        working-directory: worker
+
+      - name: Startup fastify server
+        run: node index.js
+        working-directory: server
+        env:
+          REDIS_URL: redis://redis:6379
+          PORT: 3000
+          LOKI_URL: "http://loki:3100"
+          SESSION_SECRET: 'test-session-secret-with-length-greater-than-32-chars'
+          XERO_REDIRECT_URL: 'https://localhost:3000/api/sign-in/xero/callback'
+          XERO_CLIENT_ID: 'test-client-id-xxxxxxxxxxxxxxxxx'
+          XERO_CLIENT_SECRET: 'test-client-secret-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+      - name: Startup worker
+        run: node index.js
+        working-directory: worker
+        env:
+          REDIS_URL: redis://redis:6379
+          CH_STREAM_KEY: ${{ secrets.CH_STREAM_KEY }}
+          LOKI_URL: "http://loki:3100"

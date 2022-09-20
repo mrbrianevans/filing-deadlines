@@ -19,6 +19,12 @@ REST API written in NodeJS with Fastify, serving data endpoints to the frontend.
 ### Worker
 Background worker (with BullMQ), running jobs to load the database and keep it up-to-date.
 
+### REPL
+Read-Evaluate-Print-Loop for administering the server side processes. Can interact with BullMQ jobs and Redis data.
+```bash
+docker compose exec repl node index.js
+```
+
 
 ## Code sharing
 There is some shared code between services to avoid duplication (DRY).

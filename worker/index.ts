@@ -60,3 +60,5 @@ async function shutdown(sig){
   clearTimeout(timeout)
   process.exit()
 }
+
+if(process.env.CI) setTimeoutCallback(shutdown, 2500, 'timeout') // shutdown after 2.5 seconds if running on a CI server

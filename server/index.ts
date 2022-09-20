@@ -45,3 +45,5 @@ async function shutdown(sig: string){
   await fastify.close()
   process.exit()
 }
+
+if(process.env.CI) setTimeout(shutdown, 2500, 'timeout') // shutdown after 2.5 seconds if running on a CI server
