@@ -8,6 +8,7 @@ import CompanyName from "../dashboard/CompanyName.svelte";
 import CompanyStatus from "../dashboard/CompanyStatus.svelte";
 import {company_status, company_type} from "../../assets/constants.json";
 import ErrorAlert from "../ErrorAlert.svelte";
+import AsyncTable from "../AsyncTable.svelte";
 
 let columns: TableColumns<RegisteredAddressResult> = [
   {
@@ -45,13 +46,7 @@ let columns: TableColumns<RegisteredAddressResult> = [
 export let data: RegisteredAddressResults = []
 </script>
 
-{#await import('svelte-table').then(m=>m.default)}
-    <Loader/>
-{:then SvelteTable}
-    <SvelteTable columns={columns} rows={data} />
-{:catch e}
-    <ErrorAlert error="{e}"/>
-{/await}
+<AsyncTable columns="{columns}" rows="{data}"/>
 
 <style>
 :global(.keep-line-breaks){

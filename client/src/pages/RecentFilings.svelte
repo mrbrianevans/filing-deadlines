@@ -11,6 +11,7 @@
   import LinkToViewDocument from "../components/recentFilings/LinkToViewDocument.svelte";
   import FilingDescription from "../components/recentFilings/FilingDescription.svelte";
   import { sentenceCase } from "sentence-case";
+  import AsyncTable from "../components/AsyncTable.svelte";
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
   let showingFilingsSince
   async function loadRecentFilings(timespan = 'P7D'){
@@ -29,7 +30,7 @@
     }
   }
   onMount(()=>loadRecentFilings())
-  const SvelteTablePromise = import('svelte-table').then(m=>m.default)
+
   const columns: TableColumns<RecentFilingsItem> = [
     {
       key: 'companyNumber',
@@ -89,13 +90,7 @@
     {:else if recentFilings}
         {#each Object.keys(recentFilings) as filingType}
             <Title order="{4}">{sentenceCase(filingType)}</Title>
-            {#await SvelteTablePromise}
-                <Loader/>
-            {:then SvelteTable}
-                    <SvelteTable columns={columns} rows={recentFilings[filingType]}/>
-            {:catch e}
-                <ErrorAlert error="{e}"/>
-            {/await}
+            <AsyncTable columns={columns} rows={recentFilings[filingType]}/>
         {/each}
     {/if}
 
