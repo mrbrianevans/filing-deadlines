@@ -7,6 +7,7 @@
     import {Loader} from "@svelteuidev/core";
     import NextAccountsDueDate from "./NextAccountsDueDate.svelte";
     import NextAccountsMadeUpTo from "./NextAccountsMadeUpTo.svelte";
+    import ErrorAlert from "../ErrorAlert.svelte";
 
     function getDaysLeft(date: string){
       return Math.floor((new Date(date) - Date.now())/(86400*1000))
@@ -63,6 +64,8 @@
                      classNameTable="dashboard-table public"
         >
         </SvelteTable>
+    {:catch e}
+        <ErrorAlert error="{e}"/>
     {/await}
 </div>
 

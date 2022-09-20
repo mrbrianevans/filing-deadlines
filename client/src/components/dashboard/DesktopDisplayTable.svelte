@@ -11,6 +11,7 @@
   import LastAccountsDate from "./LastAccountsDate.svelte";
   import CompanyNumber from "./CompanyNumber.svelte";
   import NextAccountsMadeUpTo from "./NextAccountsMadeUpTo.svelte";
+  import ErrorAlert from "../ErrorAlert.svelte";
 
 
   const columns: TableColumns<DashboardDataItem> = [
@@ -95,6 +96,8 @@
         >
             <svelte:fragment slot="expanded" let:row><CompanyProfile row="{row}"/></svelte:fragment>
         </SvelteTable>
+    {:catch e}
+        <ErrorAlert error="{e}"/>
     {/await}
 
 

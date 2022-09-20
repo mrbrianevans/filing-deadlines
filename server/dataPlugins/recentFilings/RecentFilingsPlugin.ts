@@ -62,7 +62,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
       if(category in recentFilings) recentFilings[category].push(filing)
       else recentFilings[category] = [filing]
     }
-    request.log.info(`Returning ${Object.values(recentFilings).map(f=>f.length).reduce((p,c)=>c+p)} recent filings in ${Object.keys(recentFilings).length} categories`)
+    request.log.info(`Returning ${Object.values(recentFilings).map(f=>f.length).reduce((p,c)=>c+p,0)} recent filings in ${Object.keys(recentFilings).length} categories`)
     return recentFilings
   })
 

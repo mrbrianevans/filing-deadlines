@@ -93,6 +93,8 @@
                 <Loader/>
             {:then SvelteTable}
                     <SvelteTable columns={columns} rows={recentFilings[filingType]}/>
+            {:catch e}
+                <ErrorAlert error="{e}"/>
             {/await}
         {/each}
     {/if}

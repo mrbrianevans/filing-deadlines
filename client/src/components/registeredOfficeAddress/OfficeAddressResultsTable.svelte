@@ -7,6 +7,7 @@ import CompanyNumber from "../dashboard/CompanyNumber.svelte";
 import CompanyName from "../dashboard/CompanyName.svelte";
 import CompanyStatus from "../dashboard/CompanyStatus.svelte";
 import {company_status, company_type} from "../../assets/constants.json";
+import ErrorAlert from "../ErrorAlert.svelte";
 
 let columns: TableColumns<RegisteredAddressResult> = [
   {
@@ -48,6 +49,8 @@ export let data: RegisteredAddressResults = []
     <Loader/>
 {:then SvelteTable}
     <SvelteTable columns={columns} rows={data} />
+{:catch e}
+    <ErrorAlert error="{e}"/>
 {/await}
 
 <style>

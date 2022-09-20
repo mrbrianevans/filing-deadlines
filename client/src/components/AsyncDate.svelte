@@ -3,8 +3,7 @@
     export let row = null
     export let valueGetter = v => String(v)
     export let defaultValue = ''
-    $: date ??= valueGetter(row) // if date isn't provided, set it to valueGetter of row. This allows use in tables.
-    //this component doesn't handle if the value can't be parsed by new Date(). Ideally, it should just display the original value in that case.
+    $: date ??= valueGetter && row ? valueGetter.call(row) : null // if date isn't provided, set it to valueGetter of row. This allows use in tables.
 </script>
 
 <span>

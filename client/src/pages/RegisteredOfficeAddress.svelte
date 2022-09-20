@@ -1,6 +1,18 @@
 <script lang="ts">
 
-  import {Button, Container, Group, Loader, Text, TextInput, Title, Checkbox, Space, Tooltip} from "@svelteuidev/core";
+  import {
+    Button,
+    Container,
+    Group,
+    Loader,
+    Text,
+    TextInput,
+    Title,
+    Checkbox,
+    Space,
+    Tooltip,
+    Switch
+  } from "@svelteuidev/core";
   import {onMount} from "svelte";
   import {companiesAtAddress, orgAddress} from "../lib/stores/orgAddress.js";
   import ErrorAlert from "../components/ErrorAlert.svelte";
@@ -24,6 +36,9 @@
             <Group>
                 <Tooltip label="Feature not available yet">
                     <Checkbox disabled label="Show results which aren't in client list"></Checkbox>
+                </Tooltip>
+                <Tooltip label="Feature not available yet">
+                    <Checkbox disabled label="Hide dissolved"></Checkbox>
                 </Tooltip>
                 <Tooltip label="Feature not available yet">
                     <Button disabled>Export to CSV</Button>

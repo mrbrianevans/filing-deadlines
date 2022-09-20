@@ -30,6 +30,7 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import CompanyStatus from "../components/dashboard/CompanyStatus.svelte";
   import {company_status} from "../assets/constants.json";
   import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
+  import ErrorAlert from "../components/ErrorAlert.svelte";
 
 
 const columns: TableColumns<ClientListItem> = [
@@ -139,6 +140,8 @@ let {processing, error} = clientList
                 </SimpleGrid>
             {/if}
         {/if}
+    {:catch e}
+        <ErrorAlert error="{e}"/>
     {/await}
         {:else}
         <Text>You need to be logged in to manage a client list. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" href="/" inherit>home page</Anchor></Text>

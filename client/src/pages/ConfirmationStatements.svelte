@@ -22,6 +22,7 @@
     import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
     import AsyncCompanyProfile from "../components/dashboard/AsyncCompanyProfile.svelte";
     import rowHighlights from '../components/dashboard/rowHighlights.css'
+    import ErrorAlert from "../components/ErrorAlert.svelte";
 
     const {error, processing} = confirmationStatements
     onMount(()=>confirmationStatements.refresh())
@@ -132,6 +133,8 @@
                              on:clickRow="{handleRowClick}">
                     <svelte:fragment slot="expanded" let:row><AsyncCompanyProfile companyNumber="{row.company_number}"/></svelte:fragment>
                 </SvelteTable>
+            {:catch e}
+                <ErrorAlert error="{e}"/>
             {/await}
         {/if}
     {:else}
