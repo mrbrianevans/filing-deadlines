@@ -1,0 +1,41 @@
+name: 'Build and push frontend docker image'
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'client/**'
+      - 'fs-shared/**'
+      - 'Frontend.Dockerfile'
+      - 'caddy/Caddyfile'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: registry.digitalocean.com/fdcr
+          username: ${{ secrets.CR_TOKEN }}
+          password: ${{ secrets.CR_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        id: docker-build
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: registry.digitalocean.com/fdcr/filing-deadlines/frontend:latest
+          file: Frontend.Dockerfile
+
+      - name: "Print summary"
+        run: |
+          echo "# Docker build and push summary" >> $GITHUB_STEP_SUMMARY
+          echo "Image ID: ${{ steps.docker-build.outputs.imageid }}"  >> $GITHUB_STEP_SUMMARY
+          echo "Digest: ${{ steps.docker-build.outputs.digest }}"  >> $GITHUB_STEP_SUMMARY
+          echo "Metadata: ${{ toJSON(fromJSON(steps.docker-build.outputs.metadata)) }}"  >> $GITHUB_STEP_SUMMARY
+

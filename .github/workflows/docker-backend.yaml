@@ -1,9 +1,16 @@
-name: 'Build and push docker images'
+name: 'Build and push backend docker image'
 
 on:
   push:
     branches:
       - 'master'
+    paths:
+      - 'backend-shared/**'
+      - 'fs-shared/**'
+      - 'repl/**'
+      - 'server/**'
+      - 'worker/**'
+      - 'Backend.Dockerfile'
 
 jobs:
   docker:
@@ -29,7 +36,7 @@ jobs:
       - name: "Print summary"
         run: |
           echo "# Docker build and push summary" >> $GITHUB_STEP_SUMMARY
-          echo "Image ID: ${{ steps.docker-build.imageid }}"  >> $GITHUB_STEP_SUMMARY
-          echo "Digest: ${{ steps.docker-build.digest }}"  >> $GITHUB_STEP_SUMMARY
-#          echo "Metadata: ${{ toJSON(fromJSON(steps.docker-build.metadata)) }}"  >> $GITHUB_STEP_SUMMARY
+          echo "Image ID: ${{ steps.docker-build.outputs.imageid }}"  >> $GITHUB_STEP_SUMMARY
+          echo "Digest: ${{ steps.docker-build.outputs.digest }}"  >> $GITHUB_STEP_SUMMARY
+          echo "Metadata: ${{ toJSON(fromJSON(steps.docker-build.outputs.metadata)) }}"  >> $GITHUB_STEP_SUMMARY
 
