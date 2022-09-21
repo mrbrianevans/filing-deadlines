@@ -1,22 +1,29 @@
 
 import Fastify from 'fastify'
 import { getEnv } from '../backend-shared/utils.js'
+import { getRedisClient } from '../backend-shared/getRedisClient.js'
 import {serverLogTransport} from '../backend-shared/loggers.js'
+import connectRedis from 'connect-redis'
+import fastifySession from '@fastify/session'
 const port = parseInt(process.env.PORT??'4004')
 
 const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}})
 
+const RedisStore = connectRedis(fastifySession as any)
 //register any third party plugins here
 {
   await fastify.register(import('@fastify/cookie'))
   await fastify.register(import('@fastify/session'), {
     secret: getEnv('SESSION_SECRET'),
     cookie: {
-      secure: false,// for testing on http://localhost. todo: should be based on an environment variable
+      secure: getEnv('SITE_ADDRESS').startsWith('https'),
       maxAge: 86400_000*30
     },
     saveUninitialized: false,
-    // store // todo: set store to Redis so that sessions are persisted after server restarts.
+    // set store to Redis so that sessions are persisted after server restarts
+    store: new RedisStore({
+      client: getRedisClient()
+    }) as any
   })
   const redisUrl = new URL(getEnv('REDIS_URL'))
   await fastify.register(import('@fastify/redis'), {host: redisUrl.hostname, port: parseInt(redisUrl.port, 10) || undefined, closeClient:true })

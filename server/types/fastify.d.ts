@@ -8,12 +8,13 @@ declare module 'fastify' {
     xeroOauth: OAuth2Namespace;
   }
 
+  // these variables can be undefined, but they are checked in pre-handler
   interface Session {
     // the id of the currently signed in user
-    userId?: string
+    userId: string
 
     // the id of the organisation that the user is a part of
-    orgId?: string
+    orgId: string
 
     // whether the user is the owner of their organisation or not
     owner?: boolean

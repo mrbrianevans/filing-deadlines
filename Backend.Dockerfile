@@ -1,6 +1,6 @@
 FROM node:18 AS builder
 
-RUN corepack enable && corepack prepare pnpm@7.11.0 --activate && pnpm config set store-dir /home/node/.pnpm-store
+RUN corepack enable && corepack prepare pnpm@7.12.1 --activate && pnpm config set store-dir /home/node/.pnpm-store
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch
@@ -24,7 +24,7 @@ RUN pnpm run build
 
 FROM node:18-alpine
 
-RUN corepack enable && corepack prepare pnpm@7.11.0 --activate && pnpm config set store-dir /home/node/.pnpm-store
+RUN corepack enable && corepack prepare pnpm@7.12.1 --activate && pnpm config set store-dir /home/node/.pnpm-store
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch --prod

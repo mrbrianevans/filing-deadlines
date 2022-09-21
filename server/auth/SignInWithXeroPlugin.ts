@@ -39,7 +39,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.set('user:'+request.session.userId+':id', id_token)
       await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
       if(refresh_token) await fastify.redis.set('user:'+request.session.userId+':refresh_token', refresh_token)
-      request.session.orgId = await fastify.redis.get(`user:${request.session.userId}:org`)
+      request.session.orgId = <string>await fastify.redis.get(`user:${request.session.userId}:org`)
       if(request.session.orgId) {
         request.session.owner = await fastify.redis.get(`org:${request.session.orgId}:owner`).then(o => o === request.session.userId)
         // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
