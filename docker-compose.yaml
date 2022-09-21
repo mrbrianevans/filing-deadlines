@@ -2,14 +2,14 @@ version: '3.9'
 # this docker compose is for building all the images during development. This was the previous way of running the project.
 services:
   caddy:
-    build: caddy
+    build:
+      dockerfile: Frontend.Dockerfile
     restart: on-failure
     ports:
       - "80:80"
       - "443:443"
       - "3002:3002"
     volumes:
-      - client_dist:/client
       - caddy_data:/data
       - caddy_config:/config
     environment:
@@ -19,29 +19,15 @@ services:
     logging:
       driver: local
   redis:
-    build: redis
+    image: redis/redis-stack-server
     volumes:
       - redisdata:/data
     logging:
       driver: local
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 200M
-  client:
-    build:
-      dockerfile: Client.Dockerfile
-    volumes:
-      - client_dist:/filing-deadlines/client/dist # this MUST match the workdir set in the Dockerfile
-    deploy:
-      resources:
-        limits:
-          cpus: '0.80'
-          memory: 1000M # vite uses loads of memory to build
   worker:
     build:
-      dockerfile: Worker.Dockerfile
+      dockerfile: Backend.Dockerfile
+    working_dir: /filing-deadlines/worker
     environment:
       REDIS_URL: redis://redis:6379
       LOKI_URL: "http://loki:3100"
@@ -51,14 +37,10 @@ services:
       driver: local
     depends_on:
       - redis
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 250M
   server:
     build:
-      dockerfile: Server.Dockerfile
+      dockerfile: Backend.Dockerfile
+    working_dir: /filing-deadlines/server
     environment:
       REDIS_URL: redis://redis:6379
       PORT: 3000
@@ -72,13 +54,9 @@ services:
       driver: local
     depends_on:
       - redis
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 350M
   "metrics":
-    "build": "monitoring/prometheus"
+    build:
+      context: monitoring/prometheus
     logging:
       driver: local
     "environment":
@@ -86,13 +64,15 @@ services:
     "volumes":
       - "prom_data:/prometheus"
   "loki":
-    "build": "monitoring/loki"
+    build:
+      context: monitoring/loki
     logging:
       driver: local
     "volumes":
       - "loki_data:/loki"
   "grafana":
-    "build": "monitoring/grafana"
+    build:
+      context: monitoring/grafana
     logging:
       driver: local
     "volumes":
@@ -103,7 +83,9 @@ services:
       METRICS_URL: "http://metrics:9090"
   repl:
     build:
-      dockerfile: Repl.Dockerfile
+      dockerfile: Backend.Dockerfile
+    command: node index.js
+    working_dir: /filing-deadlines/repl
     depends_on:
       - redis
     "environment":
@@ -111,20 +93,11 @@ services:
       LOKI_URL: "http://loki:3100"
     tty: true
     stdin_open: true
-  backend:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
-    command: node index.js
-    working_dir: /filing-deadlines/repl
-    "environment":
-      REDIS_URL: redis://redis:6379
-      LOKI_URL: "http://loki:3100"
-    tty: true
-    stdin_open: true
+
 volumes:
   redisdata:
   caddy_data:
   caddy_config:
-  client_dist:
   grafana_data:
   loki_data:
   prom_data:

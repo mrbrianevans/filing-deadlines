@@ -9,7 +9,6 @@ services:
       - "443:443"
       - "3002:3002"
     volumes:
-      - client_dist:/client
       - caddy_data:/data
       - caddy_config:/config
     environment:
@@ -91,7 +90,6 @@ volumes:
   redisdata:
   caddy_data:
   caddy_config:
-  client_dist:
   grafana_data:
   loki_data:
   prom_data:
