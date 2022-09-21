@@ -57,9 +57,10 @@ jobs:
           PORT: 3000
           LOKI_URL: "http://loki:3100"
           SESSION_SECRET: 'test-session-secret-with-length-greater-than-32-chars'
-          XERO_REDIRECT_URL: 'https://localhost:3000/api/sign-in/xero/callback'
+          XERO_REDIRECT_URL: 'http://localhost:3000/api/sign-in/xero/callback'
           XERO_CLIENT_ID: 'test-client-id-xxxxxxxxxxxxxxxxx'
           XERO_CLIENT_SECRET: 'test-client-secret-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          SITE_ADDRESS: "http://localhost:3000"
 
       - name: Startup worker
         run: node index.js

@@ -48,7 +48,10 @@ process.on('SIGTERM', shutdown)
 async function shutdown(sig){
   const received = Date.now()
   workerLogger.info({signal: sig,received},"Graceful shutdown requested")
-  const timeout = setTimeoutCallback(()=>process.exit(1), 10_000) // just in case
+  const timeout = setTimeoutCallback(()=> {
+    console.log("Forcefully shutting down because 10 second timeout for graceful shutdown exceeded")
+    process.exit(1)
+  }, 10_000) // just in case
   ac.abort() // should end streams
   await Promise.allSettled(toClose.map(bullInstance => bullInstance.close()))
   workerLogger.info({signal: sig,received},"Graceful shutdown bullmq instances closed")
