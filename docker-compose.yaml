@@ -1,7 +1,8 @@
 version: '3.9'
+# this docker compose is for building all the images during development. This was the previous way of running the project.
 services:
   caddy:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/frontend
+    build: caddy
     restart: on-failure
     ports:
       - "80:80"
@@ -18,7 +19,7 @@ services:
     logging:
       driver: local
   redis:
-    image: redis/redis-stack-server
+    build: redis
     volumes:
       - redisdata:/data
     logging:
@@ -28,9 +29,19 @@ services:
         limits:
           cpus: '0.50'
           memory: 200M
+  client:
+    build:
+      dockerfile: Client.Dockerfile
+    volumes:
+      - client_dist:/filing-deadlines/client/dist # this MUST match the workdir set in the Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'
+          memory: 1000M # vite uses loads of memory to build
   worker:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
-    working_dir: /filing-deadlines/worker
+    build:
+      dockerfile: Worker.Dockerfile
     environment:
       REDIS_URL: redis://redis:6379
       LOKI_URL: "http://loki:3100"
@@ -46,8 +57,8 @@ services:
           cpus: '0.50'
           memory: 250M
   server:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
-    working_dir: /filing-deadlines/server
+    build:
+      dockerfile: Server.Dockerfile
     environment:
       REDIS_URL: redis://redis:6379
       PORT: 3000
@@ -67,7 +78,7 @@ services:
           cpus: '0.50'
           memory: 350M
   "metrics":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/metrics
+    "build": "monitoring/prometheus"
     logging:
       driver: local
     "environment":
@@ -75,13 +86,13 @@ services:
     "volumes":
       - "prom_data:/prometheus"
   "loki":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/loki
+    "build": "monitoring/loki"
     logging:
       driver: local
     "volumes":
       - "loki_data:/loki"
   "grafana":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/grafana
+    "build": "monitoring/grafana"
     logging:
       driver: local
     "volumes":
@@ -91,8 +102,8 @@ services:
       LOKI_URL: "http://loki:3100"
       METRICS_URL: "http://metrics:9090"
   repl:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
-    working_dir: /filing-deadlines/repl
+    build:
+      dockerfile: Repl.Dockerfile
     depends_on:
       - redis
     "environment":
@@ -100,7 +111,15 @@ services:
       LOKI_URL: "http://loki:3100"
     tty: true
     stdin_open: true
-
+  backend:
+    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
+    command: node index.js
+    working_dir: /filing-deadlines/repl
+    "environment":
+      REDIS_URL: redis://redis:6379
+      LOKI_URL: "http://loki:3100"
+    tty: true
+    stdin_open: true
 volumes:
   redisdata:
   caddy_data:

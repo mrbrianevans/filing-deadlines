@@ -2,6 +2,10 @@ name: 'Build client'
 on: # rebuild any PRs and any branch changes
   pull_request:
   push:
+    paths:
+      - 'client/**'
+      - 'fs-shared/**'
+
 jobs:
   build-client:
     runs-on: ubuntu-latest

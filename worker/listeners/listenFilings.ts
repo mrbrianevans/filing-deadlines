@@ -6,7 +6,10 @@ const filingListenerLogger = workerLogger.child({workerType: 'listener', stream:
 // listen on stream, updating redis when company:companyNumber:filingHistory exists
 export async function listenFilings(signal?: AbortSignal){
   const redis = await getRedisClient()
-  for await(const event of streamEventsContinuously('filings')){
+  const eventStream = streamEventsContinuously('filings', signal)
+  const forceStop = ()=>setTimeout(()=>{console.log('Force stop filings by throwing error');throw new Error('Filings stream didn\'t end in time')}, 1500)
+  signal?.addEventListener('abort', forceStop) // wait a max of 500ms before returning
+  for await(const event of eventStream){
     // insert will create a new bloom filter if it doesn't already exist and then add the transactionId to the filter, returns 1 if the event is probably new, or 0 if its definitely not new.
     const [eventIsNew] = <boolean[]>await redis.call('BF.INSERT', 'streams:filings:idsFilter', 'CAPACITY', 100_000_000,'ERROR', 0.001,'ITEMS', event.resource_id)
     if(eventIsNew) { // avoids processing duplicates and sending duplicate notifications
@@ -30,6 +33,7 @@ export async function listenFilings(signal?: AbortSignal){
       } // company is on some client lists
     }// event is new
     if(signal?.aborted) {
+      signal?.removeEventListener('abort', forceStop) // break from the loop naturally instead of force-stopping
       filingListenerLogger.info('Exiting due to abort signal')
       break
     } // signal aborted
