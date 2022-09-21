@@ -34,7 +34,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       const decodedAccessToken = decodeAccessToken(access_token)
       const decodedIdToken = getUserFromIdToken(id_token)
       request.session.userId = decodedIdToken.xero_userid
-      request.log.info({userId: request.session.userId}, 'User logged in')
+      request.log.info({userId: request.session.userId}, 'User logged in with Xero')
       // this could be improved by storing the user id token as a hash. would require converting some non-string fields. or could be stored as stringified JSON.
       await fastify.redis.set('user:'+request.session.userId+':id', id_token)
       await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
@@ -54,7 +54,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       }
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.
-      request.log.error(e)
+      request.log.error(e, "Error signing user in with Xero")
       reply.redirect('/')
     }
   })

@@ -1,79 +1,127 @@
 <script lang="ts">
 
-import {Link} from "svelte-navigator";
-import {toggleTheme,isDark} from "../lib/stores/theme.js";
-import {
-  ActionIcon,
-  Anchor, Box,
-  Button,
-  Center,
-  Group,
-  Loader,
-  Navbar,
-  SimpleGrid, Stack,
-  Switch,
-  Text, ThemeIcon, Title,
-  Tooltip
-} from "@svelteuidev/core";
-import {user} from "../lib/stores/user.js";
-import {Exit, Sun, DividerVertical, Moon} from "radix-icons-svelte";
-import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
-let userProcessing = user.processing
+  import {Link} from "svelte-navigator";
+  import {isDark, toggleTheme} from "../lib/stores/theme.js";
+  import {
+    ActionIcon,
+    Anchor,
+    Box,
+    Button,
+    createStyles,
+    Divider,
+    Group,
+    Loader,
+    Menu,
+    Stack,
+    Text,
+    Title,
+    Tooltip
+  } from "@svelteuidev/core";
+  import {user} from "../lib/stores/user.js";
+  import {Exit, HamburgerMenu, Moon, Sun} from "radix-icons-svelte";
+  import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
+  import AnchoredLink from "./AnchoredLink.svelte";
+
+  let userProcessing = user.processing
+
+  const useStyles = createStyles(theme => ({
+    root: {
+      color: 'red',
+      '&.itemHovered': {
+        backgroundColor: 'transparent', // don't change color on hover, because the button doesn't navigate to the link
+        cursor: 'default' // don't give a pointer cursor when there is nothing to click. The link will have a pointer.
+      },
+    [`& a`]: {
+        padding: '2px 6px',
+        borderRadius: '4px',
+        backgroundColor: 'rgb(248, 249, 250)' ,
+      [`${theme.dark} &`]: {
+        backgroundColor: 'rgba(92, 95, 102, 0.35)'
+      }
+      }
+    }
+  }));
+  const {classes} = useStyles();
 </script>
 
 <div>
     <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem' }}>
-        <Title order={1} override={{margin:'0'}} inline><Anchor root={Link} to="/" href="/" inherit>Filing deadlines</Anchor></Title>
-        <Group spacing="lg" >
-            <nav>
-                <Group>
-                    {#if $user}
-                        {#if $user.orgName}
-                            <Anchor root={Link} to="/clients" href="/clients">Client list</Anchor>
-                            <DividerVertical/>
-                            <Anchor root={Link} to="/dashboard" href="/dashboard">Accounts dashboard</Anchor>
-                            <DividerVertical/>
-                            <Anchor root={Link} to="/confirmation-statement-dashboard" href="/confirmation-statement-dashboard">Confirmation statements</Anchor>
-                            <DividerVertical/>
-                            <Anchor root={Link} to="/recent-filings" href="/recent-filings">Recent filings</Anchor>
-                            <DividerVertical/>
-                            <Anchor href="/registered-office-address" to="/registered-office-address" root={Link}>Registered office address</Anchor>
-                        {/if}
-                        <!--{#if $user.owner}-->
-                        <!--    <DividerVertical/>-->
-                        <!--    <Anchor root={Link} to="/manage-organisation" href="/manage-organisation">Manage organisation</Anchor>-->
-                        <!--{/if}-->
+        <Title inline order={1} override={{margin:'0'}}>
+            <Anchor href="/" inherit root={Link} to="/">Filing deadlines</Anchor>
+        </Title>
+        <Group spacing="lg">
+            {#if $user}
+                <Menu size="xl" closeOnItemClick="{true}">
+                    <Button slot="control">
+                        <HamburgerMenu slot="leftIcon"/>
+                        Menu
+                    </Button>
+                    <Menu.Item class={classes.root} root="span">
+                        <Anchor href="/" to="/" root={Link}>Home page</Anchor>
+                    </Menu.Item>
+                    <Divider/>
+                    {#if $user.orgName}
+                        <Menu.Label>Dashboards</Menu.Label>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/clients">Client list</AnchoredLink>
+                        </Menu.Item>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/dashboard">Accounts dashboard</AnchoredLink>
+                        </Menu.Item>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/confirmation-statement-dashboard">Confirmation statements
+                            </AnchoredLink>
+                        </Menu.Item>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/recent-filings">Recent filings</AnchoredLink>
+                        </Menu.Item>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/registered-office-address">
+                                Registered office address
+                            </AnchoredLink>
+                        </Menu.Item>
+                        <Divider/>
                     {/if}
-                    <DividerVertical/>
-                    <Anchor href="/feature-request" to="/feature-request" root={Link}>Request a feature</Anchor>
-                </Group>
-            </nav>
-            <Tooltip label="{$isDark ? 'Change to light theme':'Change to dark theme'}" position="left">
-        <ActionIcon on:click={toggleTheme} variant="filled" aria-label={$isDark ? 'Change to light theme':'Change to dark theme'} >
-            {#if $isDark}
-                <Sun/>
-            {:else }
-                <Moon/>
+                    {#if $user.owner}
+                        <Menu.Label>Manage</Menu.Label>
+                        <Menu.Item class={classes.root} root="span">
+                            <AnchoredLink href="/manage-organisation">
+                                Manage organisation
+                            </AnchoredLink>
+                        </Menu.Item>
+                        <Divider/>
+                    {/if}
+                    <Menu.Item class={classes.root} root="span">
+                        <AnchoredLink href="/feature-request">Request a feature</AnchoredLink>
+                    </Menu.Item>
+                    <Menu.Item icon="{$isDark ? Sun : Moon}"
+                               on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</Menu.Item>
+                    <Divider/>
+                    <Menu.Item icon="{Exit}" on:click={user.logout} color="red">Logout</Menu.Item>
+                </Menu>
             {/if}
-        </ActionIcon>
-            </Tooltip>
-        <div>
-        {#if $userProcessing}
-            <Loader/>
-        {:else if $user === null || $user === undefined}
-            <SignInWithXeroButton/>
-        {:else}
-            <Stack spacing="xs">
-                <Group>
-                    <Text>Logged in as {$user.name}</Text>
-                    <Tooltip label="Logout" position="left">
-                        <ActionIcon on:click={user.logout}  aria-label={'logout'} color="red"><Exit/></ActionIcon>
-                    </Tooltip>
-                </Group>
-                <Text><Anchor root={Link} to="/manage-organisation" href="/manage-organisation">{$user.orgName??'No organisation'}</Anchor></Text>
-            </Stack>
-        {/if}
-        </div>
+            <div>
+                {#if $userProcessing}
+                    <Loader/>
+                {:else if $user === null || $user === undefined}
+                    <SignInWithXeroButton/>
+                {:else}
+                    <Stack spacing="xs">
+                        <Group>
+                            <Text>Logged in as {$user.name}</Text>
+                            <Tooltip label="Logout" position="left">
+                                <ActionIcon on:click={user.logout} aria-label={'logout'} color="red">
+                                    <Exit/>
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group>
+                        <Text>
+                            <Anchor root={Link} to="/manage-organisation"
+                                    href="/manage-organisation">{$user.orgName ?? 'No organisation'}</Anchor>
+                        </Text>
+                    </Stack>
+                {/if}
+            </div>
         </Group>
 
     </Box>

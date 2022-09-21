@@ -41,29 +41,33 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
           <NavBar/>
         </Header>
         <slot>
-          <Route path="/manage-organisation">
-            <AuthedPage><ManageOrg /></AuthedPage>
-          </Route>
-          <Route path="/feature-request">
-            <AuthedPage><SuggestFeature /></AuthedPage>
-          </Route>
-          <Route path="/org-invite">
-            <AuthedPage><OrgInvite /></AuthedPage>
-          </Route>
-          <Route path="/dashboard">
-            <AuthedPage><AccountsDashboard /></AuthedPage>
-          </Route>
-          <Route path="/confirmation-statement-dashboard">
-            <AuthedPage><ConfirmationStatements /></AuthedPage>
-          </Route>
-          <Route path="/recent-filings">
-            <AuthedPage><RecentFilings /></AuthedPage>
-          </Route>
-          <Route path="/registered-office-address">
-            <AuthedPage><RegisteredOfficeAddress /></AuthedPage>
-          </Route>
-          <Route path="/clients">
-            <AuthedPage> <ClientList /></AuthedPage>
+          <Route path="/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
+            <AuthedPage>
+              <Route path="/manage-organisation">
+                <ManageOrg />
+              </Route>
+              <Route path="/feature-request">
+                <SuggestFeature />
+              </Route>
+              <Route path="/org-invite">
+                <OrgInvite />
+              </Route>
+              <Route path="/dashboard">
+                <AccountsDashboard />
+              </Route>
+              <Route path="confirmation-statement-dashboard">
+                <ConfirmationStatements />
+              </Route>
+              <Route path="/recent-filings">
+                <RecentFilings />
+              </Route>
+              <Route path="/registered-office-address">
+                <RegisteredOfficeAddress />
+              </Route>
+              <Route path="/clients">
+                <ClientList />
+              </Route>
+            </AuthedPage>
           </Route>
           <Route path="/">
             <Home />
