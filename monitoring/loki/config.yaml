@@ -25,6 +25,12 @@ schema_config:
         prefix: index_
         period: 24h
 
+query_range:
+  split_queries_by_interval: 0
+
+frontend:
+  max_outstanding_per_tenant: 1024
+
 ruler:
   alertmanager_url: http://localhost:9093
 
