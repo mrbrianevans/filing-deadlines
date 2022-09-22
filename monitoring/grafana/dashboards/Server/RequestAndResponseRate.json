@@ -225,6 +225,75 @@
         "type": "loki",
         "uid": "4d8546cdf33d"
       },
+      "description": "Trying to show how many requests are taking long to be responded. Showing the maximum response times in the intervals.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 400
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 7,
+      "options": {
+        "bucketOffset": 0,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
+          "editorMode": "builder",
+          "expr": "max by(res_statusCode) (max_over_time({component=\"server\"} |= `request completed` | json | unwrap responseTime [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Histogram of response times",
+      "type": "histogram"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
       "description": "Response time of requests as measured by fastify",
       "fieldConfig": {
         "defaults": {
@@ -281,8 +350,8 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 24,
-        "x": 0,
+        "w": 12,
+        "x": 12,
         "y": 20
       },
       "id": 5,
@@ -306,7 +375,7 @@
             "uid": "4d8546cdf33d"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({component=\"server\"} |= `request completed` | json duration=\"responseTime\" | unwrap duration [$__interval])",
+          "expr": "avg(avg_over_time({component=\"server\"} |= `request completed` | json duration=\"responseTime\" | unwrap duration [$__interval]))",
           "legendFormat": "{{component}} {{hostname}}",
           "queryType": "range",
           "refId": "A"
@@ -331,6 +400,6 @@
   "timezone": "",
   "title": "RequestsAndResponseRate",
   "uid": "S3eW717Vk",
-  "version": 4,
+  "version": 7,
   "weekStart": ""
 }

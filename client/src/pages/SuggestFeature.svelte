@@ -1,19 +1,41 @@
 <script lang="ts">
 
-  import {Input, InputWrapper, Text, TextInput, Title, Container, Button, Space, Badge, Alert} from "@svelteuidev/core";
+  import {
+    Alert,
+    Button,
+    Container,
+    Input,
+    InputWrapper,
+    NativeSelect,
+    Space,
+    Text,
+    TextInput,
+    Title
+  } from "@svelteuidev/core";
   import {poster} from "../lib/swr.js";
+  import type {Feedback} from '../../../fs-shared/Feedback.js'
+  import {FeedbackType} from "../../../fs-shared/Feedback.js";
 
-let featureTitle = ''
-let featureDescription = ''
+  const feedbackTypes: Record<string, FeedbackType> = {
+    'New feature': FeedbackType.FEATURE_REQUEST,
+    'Enhancement': FeedbackType.ENHANCEMENT,
+    'Comment': FeedbackType.COMMENT,
+    'Report a problem': FeedbackType.PROBLEM
+  }
+
+let title = ''
+let description = ''
+let feedbackTypeDesc = 'Comment'
   let success, loading
 async function submitIdea(){
   try {
     success = undefined
     loading = true
-    success = await poster('/api/user/feature-request', {featureTitle, featureDescription})
+    const feedback: Feedback = {title,  description,feedbackType: feedbackTypes[feedbackTypeDesc]}
+    success = await poster('/api/user/feedback', feedback)
     if(success) {
-      featureTitle = ''
-      featureDescription = ''
+      title = ''
+      description = ''
     }
   }finally {
     loading = false
@@ -23,12 +45,13 @@ async function submitIdea(){
 </script>
 
 <Container>
-    <Title order={2}>Suggest a new feature</Title>
-    <Text>Do you have an idea of a new feature that would be useful, or a way an existing feature could be improved? Request it to be added.</Text>
+    <Title order={2}>Give feedback to the developer</Title>
+    <Text>Feedback from users helps to improve the site. You can request a new feature be added, or an existing one improved, or you can give comments on a feature or report something that went wrong.</Text>
 
-    <TextInput bind:value={featureTitle} label="Title" placeholder="Summarise your idea in a few words"></TextInput>
+    <TextInput bind:value={title} label="Title" placeholder="Summarise your feedback in a few words"></TextInput>
+    <NativeSelect data={Object.keys(feedbackTypes)} bind:value={feedbackTypeDesc}></NativeSelect>
     <InputWrapper label="Description">
-        <Input root="textarea" bind:value={featureDescription} placeholder="Describe in detail what you idea is, how useful it would be, and what you would use it for" multiline
+        <Input root="textarea" bind:value={description} placeholder="Your feedback goes here..." multiline
                override={{'& .input': {height:300,resize:'vertical'}}}/>
     </InputWrapper>
     <Space h="xs"/>
@@ -36,7 +59,7 @@ async function submitIdea(){
     <Space h="xs"/>
     {#if success === true}
         <Alert color="green">
-            <Text inherit>Thank you for submitting a feature request. </Text>
+            <Text inherit>Thank you for submitting feedback. </Text>
         </Alert>
     {:else if success === false}
         <Alert color="red">

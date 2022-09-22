@@ -92,7 +92,7 @@
                         <Divider/>
                     {/if}
                     <Menu.Item class={classes.root} root="span">
-                        <AnchoredLink href="/feature-request">Request a feature</AnchoredLink>
+                        <AnchoredLink href="/feedback">Give feedback</AnchoredLink>
                     </Menu.Item>
                     <Menu.Item icon="{$isDark ? Sun : Moon}"
                                on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</Menu.Item>

@@ -46,7 +46,7 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <Route path="/manage-organisation">
                 <ManageOrg />
               </Route>
-              <Route path="/feature-request">
+              <Route path="/feedback">
                 <SuggestFeature />
               </Route>
               <Route path="/org-invite">

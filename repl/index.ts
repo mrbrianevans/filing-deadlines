@@ -14,7 +14,7 @@ import {
   loadFilingHistoryForClientListQueue, loadFilingHistoryForCompanyQueue,reloadClientListQueue,reloadCompanyProfilesQueue
 } from '../backend-shared/jobs/queueNames.js'
 import {backupClientLists} from "./backupClientLists.js";
-import {getFeatureRequests} from "./getFeatureRequests.js";
+import {getFeedback} from "./getFeedback.js";
 import {getUser} from "./getUserAndOrg.js";
 
 if(process.argv.slice(1).includes('--help')) console.log("This is a custom repl for managing the database and queues. Try\n\n\t" +
@@ -35,8 +35,8 @@ server.context.QueueEvents = QueueEvents
 server.context.queueNames = queueNames
 
 server.context.backupClientLists = ()=>backupClientLists(redis)
-server.context.getFeatureRequests = ()=>getFeatureRequests(redis)
-server.context.getUser = (userId: string)=>getUser(redis, userId)
+server.context.getFeedback = ()=>getFeedback(redis)
+server.context.getUser = (userId: string)=>getUser(redis, userId).then(console.log)
 
 server.context.exit = ()=>{shutdown('exit()');return 'exiting...'} // could be a Proxy to allow for simply "exit" rather than "exit()"
 

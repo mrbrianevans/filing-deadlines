@@ -24,7 +24,7 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   await fastify.register(import('../org/OrgPlugin.js'), {prefix: 'org'}) // organisation management
   await fastify.register(import('../companyData/CompanyDataPlugin.js'), {prefix: 'company'}) // company data
-  await fastify.register(import('./FeatureRequestPlugin.js'), {prefix: 'feature-request'}) // feature requests
+  await fastify.register(import('../plugins/FeedbackPlugin.js'), {prefix: 'feedback'}) // eg: feature requests
 
 
   fastify.get('/', async (request, reply) => {

@@ -1,6 +1,17 @@
 <script lang="ts">
 
-  import {ActionIcon, Alert, Container, Group, Loader, NativeSelect, Text, Title, Tooltip} from "@svelteuidev/core";
+  import {
+    ActionIcon,
+    Alert,
+    Button,
+    Container,
+    Group,
+    Loader,
+    NativeSelect,
+    Text,
+    Title,
+    Tooltip
+  } from "@svelteuidev/core";
   import {fetcher} from "../lib/swr.js";
   import {onMount} from "svelte";
   import {Reload} from "radix-icons-svelte";
@@ -70,7 +81,7 @@
       }
     }
   ]
-  const timespans = {'7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D'}
+  const timespans = {'7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '180 days': 'P180D'}
   let selectedTimespan = '7 days'
   $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
 </script>
@@ -79,11 +90,14 @@
     <Title order={2}>Recent filings</Title>
 
     <Group>
-        <NativeSelect data={['7 days', '14 days', '30 days', '60 days']} bind:value={selectedTimespan}></NativeSelect>
+        <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan}></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
             <ActionIcon on:click={()=>loadRecentFilings(timespans[selectedTimespan])} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
         {#if showingFilingsSince}<Text>Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
+        <Tooltip label="Feature not available">
+            <Button disabled>Export to CSV</Button>
+        </Tooltip>
     </Group>
     {#if error}
         <ErrorAlert error="{error}"/>
