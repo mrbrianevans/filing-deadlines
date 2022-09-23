@@ -26,8 +26,11 @@
 
   const useStyles = createStyles(theme => ({
     root: {
-      color: 'red',
-      '&.itemHovered': {
+      '&.itemHovered.svelteui-Menu-item': {
+        backgroundColor: 'transparent', // don't change color on hover, because the button doesn't navigate to the link
+        cursor: 'default' // don't give a pointer cursor when there is nothing to click. The link will have a pointer.
+      },
+      [`${theme.dark}  &.itemHovered.svelteui-Menu-item`]: {
         backgroundColor: 'transparent', // don't change color on hover, because the button doesn't navigate to the link
         cursor: 'default' // don't give a pointer cursor when there is nothing to click. The link will have a pointer.
       },
