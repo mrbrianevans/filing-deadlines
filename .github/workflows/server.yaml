@@ -69,10 +69,10 @@ jobs:
           SITE_ADDRESS: "http://localhost:3000"
 
 # because the worker doesn't finish in time, it exits with a failure status code, failing the job
-#      - name: Startup worker
-#        run: node index.js
-#        working-directory: worker
-#        env:
-#          REDIS_URL: redis://redis:6379
-#          CH_STREAM_KEY: ${{ secrets.CH_STREAM_KEY }}
-#          LOKI_URL: "http://loki:3100"
+      - name: Startup worker
+        run: node index.js
+        working-directory: worker
+        env:
+          REDIS_URL: redis://redis:6379
+          CH_STREAM_KEY: ${{ secrets.CH_STREAM_KEY }}
+          LOKI_URL: "http://loki:3100"
