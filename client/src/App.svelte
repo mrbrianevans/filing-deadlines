@@ -13,6 +13,7 @@
   import RecentFilings from "./pages/RecentFilings.svelte";
   import RegisteredOfficeAddress from "./pages/RegisteredOfficeAddress.svelte";
   import SuggestFeature from "./pages/SuggestFeature.svelte";
+  import Notifications from "./pages/Notifications.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -66,6 +67,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               </Route>
               <Route path="/clients">
                 <ClientList />
+              </Route>
+              <Route path="/notifications">
+                <Notifications />
               </Route>
             </AuthedPage>
           </Route>

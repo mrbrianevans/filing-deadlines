@@ -97,9 +97,15 @@
                     <Menu.Item class={classes.root} root="span">
                         <AnchoredLink href="/feedback">Give feedback</AnchoredLink>
                     </Menu.Item>
+                    <Divider/>
+                    <Menu.Label>Settings</Menu.Label>
                     <Menu.Item icon="{$isDark ? Sun : Moon}"
                                on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</Menu.Item>
-                    <Divider/>
+                    <Menu.Item class={classes.root} root="span">
+                        <AnchoredLink href="/notifications">
+                            Notifications
+                        </AnchoredLink>
+                    </Menu.Item>
                     <Menu.Item icon="{Exit}" on:click={user.logout} color="red">Logout</Menu.Item>
                 </Menu>
             {/if}
