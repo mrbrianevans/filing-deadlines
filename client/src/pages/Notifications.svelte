@@ -1,31 +1,39 @@
 <script lang="ts">
 
-  import {Container, Text, Title, Switch, Button, Group, Stack, Space, Notification as SvelteNotification} from "@svelteuidev/core";
+  import {
+    Container,
+    Text,
+    Title,
+    Switch,
+    Button,
+    Group,
+    Stack,
+    Space,
+    Notification as SvelteNotification,
+    Checkbox,
+    Alert
+  } from "@svelteuidev/core";
+  import NotificationPermissionButton from "../components/NotificationPermissionButton.svelte";
+  import {} from "radix-icons-svelte";
 
-  const webNotificationsWork = "Notification" in window
-  const testWebNotification = webNotificationsWork ? async () => {
-    if(Notification.permission === 'denied'){
-      notificationTypes[0].notification = {title:'Permission denied', body: 'You have denied permission to show notifications. If you wish to receive notifications, please allow them.', loading: true}
-        const newPermish = await Notification.requestPermission()
-      notificationTypes[0].notification = {title:'Permission set to '+newPermish, body: 'You have updated browser permissions to show notifications.', loading: false}
-    }else if(Notification.permission === 'default'){
-      notificationTypes[0].notification = {title:'Permission not yet granted', body: 'You have not yet granted permission to show notifications. If you wish to receive notifications, please allow them.', loading: true}
-      const newPermish = await Notification.requestPermission()
-      notificationTypes[0].notification = {title:'Permission set to '+newPermish, body: 'You have updated browser permissions to show notifications.', loading: false}
+  let permission // updated web-notification permission
+  const testWebNotification =  async () => {
+    if(permission === 'denied'){
+      notificationTypes[0].notification = {title:'Permission denied', body: 'You have denied permission to show notifications. If you wish to receive notifications, please allow them and try again.'}
+    }else if(permission === 'default'){
+      notificationTypes[0].notification = {title:'Permission not yet granted', body: 'You have not yet granted permission to show notifications. If you wish to receive notifications, please allow them and try again.'}
     }
-    if(Notification.permission === 'granted') {
-      new Notification('This is an example notification', {})
-    }else{
-      notificationTypes[0].notification = {title: 'You have not enabled notifications', body: 'Unable to show you any web notifications because you have not enabled them. Try test again and allow notifications when asked by your browser.'}
+    if(permission === 'granted') {
+      new Notification('This is an example notification. ', {body:'The real ones will look a bit different to this and contain useful information.'})
     }
-  }: undefined
+  }
 
   function switchOnWebNotifications(){
     //todo: send an API request to turn them on for this user
   }
 
-  let notificationTypes = [
-    {label:"Web notifications of company filings", enabled: false, testNotification:testWebNotification, canBeEnabled: webNotificationsWork, switchOn: switchOnWebNotifications},
+  $: notificationTypes = [
+    {label:"Web notifications of company filings", enabled: false, testNotification:testWebNotification, canBeEnabled: false && permission === 'granted', switchOn: switchOnWebNotifications},
     {label:"Email notifications of company filings", enabled: false, canBeEnabled: false},
     {label:"Email notifications of upcoming deadlines", enabled: false, canBeEnabled: false}
   ]
@@ -40,9 +48,17 @@
     <Space h="sm"/>
 
     <Stack>
+        <Group>
+            <Text>Web notifications permission: </Text>
+            <NotificationPermissionButton bind:permission/>
+        </Group>
+        <Alert title="Coming soon..." color="green">
+            <Text inherit mb="xs">Notifications are coming soon, but aren't quite ready yet. Check back tomorrow.</Text>
+            <Text inherit mb="xs">For now you can just test what type of notifications they are.</Text>
+        </Alert>
         {#each notificationTypes as notificationType}
             <Group>
-                <Switch label={notificationType.label} checked={notificationType.canBeEnabled?notificationType.enabled:false} disabled="{!notificationType.canBeEnabled}"/>
+                <Checkbox label={notificationType.label} checked={notificationType.canBeEnabled?notificationType.enabled:false} disabled="{!notificationType.canBeEnabled}"/>
                 <Button on:click={notificationType.testNotification} variant="subtle" disabled="{!notificationType.testNotification}">Test notification</Button>
             </Group>
             {#if notificationType.notification}
