@@ -6,6 +6,7 @@ export interface RecentFilingsItem {
   transactionId: string
   companyName: string,
   description: string,
+  subcategory?: string
 }
 
 export interface RecentFilings {

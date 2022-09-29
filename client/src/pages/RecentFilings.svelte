@@ -2,7 +2,7 @@
 
   import {
     ActionIcon,
-    Alert,
+    Alert, Badge,
     Button,
     Container,
     Group,
@@ -103,7 +103,8 @@
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
         {#each Object.keys(recentFilings) as filingType}
-            <Title order="{4}">{sentenceCase(filingType)}</Title>
+            <Title order="{4}">{sentenceCase(filingType)} ({recentFilings[filingType].length})</Title>
+            {#each [...new Set(recentFilings[filingType].filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
             <AsyncTable columns={columns} rows={recentFilings[filingType]}/>
         {/each}
     {/if}

@@ -40,16 +40,18 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: RecentFilings}>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
     // logic to get recent filings
     const {startDate, endDate} = request.query
+    const currentDateDays = Math.floor(new Date().getTime()/86_400_000)
     const startDateDays = Math.floor(new Date(startDate).getTime()/86_400_000)
-    const endDateDays = endDate?Math.ceil(new Date(endDate).getTime()/86_400_000):'+inf'
-    const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays, "BYSCORE")
+    const endDateDays = endDate?Math.ceil(new Date(endDate).getTime()/86_400_000):undefined
+    request.log.info({startDate, endDate, startDateDaysAgo: currentDateDays - startDateDays, endDateDaysAgo: currentDateDays - (endDateDays??0)},'Recent filings requested for date range')
+    const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays??'+inf', "BYSCORE")
     request.log.info({numberOfTransactions: companyNumberTransactionIds.length},`Found ${companyNumberTransactionIds.length} transaction IDs of recent filings for companies on this org's client list`)
     // get filing transaction for each ID
     const transactions = await Promise.all(companyNumberTransactionIds.map(c=>getFilingByCompanyNumberTransactionId(c)))
     const companyNames = await Promise.all(transactions.map(t=>fastify.redis.get(`company:${t.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name).then(name=>[t.transaction_id, name]))).then(Object.fromEntries)
     const recentFilings: RecentFilings = {}
     for (const transaction of transactions) {
-      const {category} = transaction
+      const {category, subcategory} = transaction
       const companyName = companyNames[transaction.transaction_id]
       if(!companyName) request.log.warn({companyName, transactionId: transaction.transaction_id, companyNumber : transaction.companyNumber}, 'Could not find company name for filing transaction')
       const filing: RecentFilingsItem = {
@@ -57,7 +59,8 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
         filingDate: transaction.date,
         transactionId: transaction.transaction_id,
         description: formatFilingDescription(transaction),
-        companyName: companyName??''
+        companyName: companyName??'',
+        subcategory
       }
       if(category in recentFilings) recentFilings[category].push(filing)
       else recentFilings[category] = [filing]
