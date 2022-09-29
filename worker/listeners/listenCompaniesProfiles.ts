@@ -18,9 +18,8 @@ export async function listenCompaniesProfiles(signal?: AbortSignal){
       const previousCompany = await redis.get(key)
       companyListenerLogger.info({key, companyNumber, event: JSON.stringify(event), inClientLists:orgs, previousCompany}, 'Company event for company in database')
       await redis.set(key, JSON.stringify(event.data))
-      for (const orgId of orgs) {
-        await redis.xadd(`org:${orgId}:notifications`, '*', 'companyNumber', companyNumber, 'stream', 'companies', 'event', JSON.stringify(event))
-      }
+      // todo: only add to stream if there is a difference between event.Company and previousCompany to avoid duplicates or empty events
+      await redis.xadd(`notifications:companyProfile`, '*', 'companyNumber', companyNumber, 'event', JSON.stringify(event))
     }
     if(signal?.aborted) {
       signal?.removeEventListener('abort', forceStop) // break from the loop naturally instead of force-stopping

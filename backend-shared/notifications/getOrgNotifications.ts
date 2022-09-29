@@ -1,17 +1,17 @@
 import {getRedisClient} from "../getRedisClient.js";
 
 
-export async function getOrgNotificationCount(orgId: string){
+export async function getFilingNotificationCount(){
   const redis = getRedisClient()
-  const count = await redis.xlen(`org:${orgId}:notifications`)
+  const count = await redis.xlen(`notifications:filing`)
   await redis.quit()
   return count
 }
 
 
-export async function waitForNotification(orgId: string){
+export async function waitForFilingNotification(){
   const redis = getRedisClient()
-  const event = await redis.xread('BLOCK', 0, 'STREAMS',`org:${orgId}:notifications`, '$')
+  const event = await redis.xread('BLOCK', 0, 'STREAMS',`notifications:filing`, '$')
   await redis.quit()
   if(event){
     const [key, items] = event[0]

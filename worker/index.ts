@@ -15,6 +15,7 @@ import {setTimeout as setTimeoutCallback} from 'node:timers'
 import {startLoadFilingHistoryClientListQueueWorker} from "./jobs/loadFilingHistoryForClientList.js";
 import {logEvents} from "./jobs/jobLogger.js";
 import {clearTimeout} from "timers";
+import {listenToFilingNotifications} from "./listeners/listenNotifications.js";
 
 const queueNames = [loadFilingHistoryForClientListQueue,loadFilingHistoryForCompanyQueue,reloadClientListQueue,reloadCompanyProfilesQueue]
 const toClose: {close(): Promise<void>}[] = []
@@ -41,6 +42,7 @@ const ac = new AbortController()
 const {signal} = ac
 const companiesStream = listenCompaniesProfiles(signal)
 const filingsStream = listenFilings(signal)
+const notificationStream = listenToFilingNotifications(signal)
 
 // close all streams and redis connections on shutdown
 process.on('SIGINT', shutdown)
@@ -55,7 +57,7 @@ async function shutdown(sig){
   ac.abort() // should end streams
   await Promise.allSettled(toClose.map(bullInstance => bullInstance.close()))
   workerLogger.info({signal: sig,received},"Graceful shutdown bullmq instances closed")
-  await Promise.allSettled([companiesStream, filingsStream])
+  await Promise.allSettled([companiesStream, filingsStream, notificationStream])
   workerLogger.info({signal: sig,received},"Graceful shutdown streams ended")
   workerLogger.info({signal: sig,received},"Graceful shutdown completed, exiting")
   console.log(new Date(), {signal: sig,received},"Graceful shutdown completed, exiting")
