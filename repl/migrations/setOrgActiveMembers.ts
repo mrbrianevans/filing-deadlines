@@ -1,11 +1,11 @@
-import {RedisClient} from "bullmq";
+import type {RedisClientType} from '../../backend-shared/getRedisClient.js'
 
 /**
  * Loops through users, getting their organisation and adding their userId to that organisations "activeMembers" Set.
  */
-export async function setOrgActiveMembers(redis: RedisClient){
+export async function setOrgActiveMembers(redis: RedisClientType){
 
-  const userKeys = await redis.scan('user:*:org')
+  const userKeys = redis.scanStream({match:'user:*:org'})
   for await(const users of userKeys){
     const userArray = users instanceof Array ? users: [users]
     for(const user of userArray){

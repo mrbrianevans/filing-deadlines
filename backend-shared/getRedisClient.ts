@@ -5,3 +5,4 @@ import {getEnv} from "./utils.js";
 export const getRedisClient = (prefix?: string) => {
   return new Redis(getEnv('REDIS_URL'), {keyPrefix: prefix})
 };
+export type RedisClientType = Redis

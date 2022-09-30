@@ -83,6 +83,7 @@
   ]
   const timespans = {'1 day': 'P1D','3 days': 'P3D','7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '6 months': 'P6M'}
   let selectedTimespan = '7 days' // default to 7 days
+  // todo: get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
   $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
 </script>
 

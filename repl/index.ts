@@ -25,6 +25,8 @@ if(process.argv.slice(1).includes('--help')) console.log("This is a custom repl 
 const server = start({
   prompt: '$ '
 })
+// save history to file to persist backward search across restarts of REPL
+await new Promise((resolve, reject) => server.setupHistory('./replHistory.log', (err, repl)=>err?reject(err):resolve(repl)))
 
 const queueNames = [loadFilingHistoryForClientListQueue,loadFilingHistoryForCompanyQueue,reloadClientListQueue,reloadCompanyProfilesQueue]
 const queues = Object.fromEntries(queueNames.map(q=>[q, new Queue(q, {connection: bullConnection})]))
