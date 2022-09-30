@@ -3,6 +3,7 @@
   import {sentenceCase} from "sentence-case";
   import {Reload} from "radix-icons-svelte";
   import {onMount} from "svelte";
+  import {poster} from "../lib/swr.js";
 
   const webNotificationsWork = "Notification" in window
 
@@ -19,13 +20,18 @@
     permission = getPermission()
     if(permission === 'default')
       permission = await Notification.requestPermission()
-    //todo: if permission is granted, it needs to be sent to the backend server so that it knows it can send notifications.
   }
   const colors = {
     'default': 'orange',
     granted: 'green',
     denied: 'red', 'not-supported': 'red'
   }
+
+  // if permission is granted/changed, it needs to be sent to the backend server so that it knows it can send notifications.
+  async function onUpdate(newPermission){
+    await poster('/api/user/notifications/permissions', {permission: newPermission})
+  }
+  $: onUpdate(permission)
 </script>
 
 <Group spacing="xs">

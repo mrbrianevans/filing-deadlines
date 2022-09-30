@@ -18,7 +18,7 @@ function createUserStore(){
     navigate('/') // redirect the user to the home page after logging out
   }
 
-  return {subscribe,logout, processing, refresh}
+  return {subscribe,logout, processing, refresh, error}
 }
 
 export const user = createUserStore()

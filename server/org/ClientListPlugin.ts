@@ -43,6 +43,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.delete<{Params: {companyNumber: string}}>('/:companyNumber', async (request, reply)=>{
     const {companyNumber} = request.params
     const exists = await fastify.redis.hexists(`org:${request.session.orgId}:clients`, companyNumber)
+    request.log.info({companyNumber, existsInClientList:exists}, "Deleting company from client list")
     if(!exists){
       return reply.sendError({message: 'Could not find company to delete in your client list', error: 'Not found', statusCode: 404})
     }
@@ -60,6 +61,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   fastify.get('/reloadDetails',async (request, reply)=>{
+    request.log.info('User requested reload of client list details')
     // waits synchronously for job to finish before return a response to the request. Max timeout of 10 seconds.
     const output = await dispatchReloadClientListDetailsSync(request.session.orgId, 'reloadDetails-endpoint-ClientListPlugin', 10_000)
     reply.status(204).send()

@@ -4,7 +4,6 @@
     Container,
     Text,
     Title,
-    Switch,
     Button,
     Group,
     Stack,
@@ -14,7 +13,10 @@
     Alert
   } from "@svelteuidev/core";
   import NotificationPermissionButton from "../components/NotificationPermissionButton.svelte";
-  import {} from "radix-icons-svelte";
+
+  import {notificationNames} from '../../../fs-shared/Notifications.js'
+  import {notificationPreferences} from "../lib/stores/notificationPreferences.js";
+  import AnchoredLink from "../components/AnchoredLink.svelte";
 
   let permission // updated web-notification permission
   const testWebNotification =  async () => {
@@ -27,15 +29,17 @@
       new Notification('This is an example notification. ', {body:'The real ones will look a bit different to this and contain useful information.'})
     }
   }
-
-  function switchOnWebNotifications(){
-    //todo: send an API request to turn them on for this user
-  }
+// could make it simply that when the user switches browser notifications on, permission is requested and the request is only sent to the server if permission is granted. might be simpler for the user.
+    async function updatePreference(notificationName){
+    if($notificationPreferences)
+      await notificationPreferences.setPreference(notificationName, !$notificationPreferences[notificationName])
+    }
 
   $: notificationTypes = [
-    {label:"Web notifications of company filings", enabled: false, testNotification:testWebNotification, canBeEnabled: false && permission === 'granted', switchOn: switchOnWebNotifications},
-    {label:"Email notifications of company filings", enabled: false, canBeEnabled: false},
-    {label:"Email notifications of upcoming deadlines", enabled: false, canBeEnabled: false}
+    {label:"Web notifications of company filings", testNotification:testWebNotification, canBeEnabled: permission === 'granted', notificationName: notificationNames.webFilings},
+    {label:"Email notifications of company filings", canBeEnabled: false, notificationName: notificationNames.emailFilings},
+    {label:"Email notifications of upcoming accounts deadlines", canBeEnabled: false, notificationName: notificationNames.emailUpcomingAccountsDeadlines},
+    {label:"Email notifications of upcoming confirmation statement deadlines", canBeEnabled: false, notificationName: notificationNames.emailUpcomingConfStatDeadlines}
   ]
 </script>
 
@@ -53,12 +57,15 @@
             <NotificationPermissionButton bind:permission/>
         </Group>
         <Alert title="Coming soon..." color="green">
-            <Text inherit mb="xs">Notifications are coming soon, but aren't quite ready yet. Check back tomorrow.</Text>
-            <Text inherit mb="xs">For now you can just test what type of notifications they are.</Text>
+            <Text inherit mb="xs">More notification types are coming soon. You can see the planned options on this page, but can't enable all of them yet.</Text>
+            <Text inherit mb="xs">If there is a particular type of notification that would help you, send a request on the <AnchoredLink href="/feedback">feedback form</AnchoredLink> to have it added.</Text>
         </Alert>
         {#each notificationTypes as notificationType}
             <Group>
-                <Checkbox label={notificationType.label} checked={notificationType.canBeEnabled?notificationType.enabled:false} disabled="{!notificationType.canBeEnabled}"/>
+                <Checkbox label={notificationType.label}
+                          checked={$notificationPreferences?.[notificationType.notificationName]}
+                          on:change={()=>updatePreference(notificationType.notificationName)}
+                          disabled="{!notificationType.canBeEnabled || !$notificationPreferences}"/>
                 <Button on:click={notificationType.testNotification} variant="subtle" disabled="{!notificationType.testNotification}">Test notification</Button>
             </Group>
             {#if notificationType.notification}
