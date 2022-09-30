@@ -31,3 +31,26 @@ self.addEventListener('push', function(event) {
         self.registration.showNotification(notification.title, notification.options)
     );
 });
+
+self.addEventListener('notificationclick', (event) => {
+    console.log('Notification clicked ', event.notification.title);
+    event.notification.close();
+
+    // This looks to see if the target URL is already open and
+    // focuses if it is
+    if(event.notification.data && typeof event.notification.data === 'object' && 'url' in event.notification.data) {
+        const openUrl = event.notification.data.url
+        event.waitUntil(clients.matchAll({
+            type: "window"
+        }).then((clientList) => {
+            console.log({clientList, openUrl})
+            for (const client of clientList) {
+                if (new URL(client.url).pathname === openUrl && 'focus' in client)
+                    return client.focus();
+            }
+            // allow server to send a URL to open when the user clicks the notification
+            if (clients.openWindow)
+                return clients.openWindow(openUrl);
+        }));
+    }
+});

@@ -8,7 +8,7 @@ import {navigate} from "svelte-navigator";
 
 function createUserStore(){
   const key = '/api/user'
-  const { data: {subscribe}, error, refresh, update, processing } = swr<User|null>(key, readableSwrOptions)
+  const { data: {subscribe}, refresh, update, processing } = swr<User|null>(key, readableSwrOptions)
 
   async function logout(){
     await fetch('/api/user/logout')
@@ -18,7 +18,7 @@ function createUserStore(){
     navigate('/') // redirect the user to the home page after logging out
   }
 
-  return {subscribe,logout, processing, refresh, error}
+  return {subscribe,logout, processing, refresh}
 }
 
 export const user = createUserStore()

@@ -1,6 +1,8 @@
 import type {FastifyInstance, FastifyPluginAsync, FastifySchema} from "fastify";
-import webPush, {PushSubscription} from 'web-push'
+import type {PushSubscription} from 'web-push'
+import webPush from 'web-push'
 import {notificationNames} from '../../fs-shared/Notifications.js'
+import {sendWebNotification} from '../../backend-shared/notifications/sendWebNotification.js'
 import assert from "assert";
 
 const setPreferenceSchema: FastifySchema = {
@@ -108,7 +110,6 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const origin = new URL(subscription.endpoint).origin
     request.log.info({origin},'User set notification subscription for Push API')
     await fastify.redis.set(`user:${request.session.userId}:notifications:subscription`, JSON.stringify(subscription))
-    request.log.debug('User set notification endpoint to '+ subscription.endpoint)
     reply.status(204).send()
   })
 
@@ -117,13 +118,16 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const userSubscription: PushSubscription|undefined = await fastify.redis.get(`user:${request.session.userId}:notifications:subscription`).then(JSON.parse)
     request.log.info({hasSubscription: Boolean(userSubscription)}, 'User requested a test web push notification')
     if(userSubscription) {
-      // todo: extract this logic of sending a notification to backend-shared
-      const notification = {title: 'Test notification', options: {body: 'This is a test notification sent from the server'}}
-      request.log.debug('sending notification to User notification endpoint '+userSubscription.endpoint)
-      console.time('Send notification')
-      const result = await webPush.sendNotification(userSubscription, JSON.stringify(notification), {vapidDetails: {privateKey: fastify.privateVapidKey, publicKey: fastify.publicVapidKey, subject: 'https://github.com/mrbrianevans/filing-deadlines/issues'}})
-      console.timeEnd('Send notification')
-      return {sent: true}
+      try {
+        const notification = {
+          title: 'Test notification',
+          options: {body: 'This is a test notification sent from the server', data: {url: '/notifications'}}
+        }
+        await sendWebNotification({userId: request.session.userId, notification})
+        return {sent: true}
+      }catch (e) {
+        reply.sendError({error: 'Failed to send notification', message: e.message, statusCode: 500})
+      }
     }else{
       return reply.sendError({error: 'Permission not granted', message: 'You haven\'t granted permission to show notifications, so you can\'t get a test notification sent', statusCode: 400})
     }

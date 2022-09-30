@@ -22,7 +22,7 @@
   import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
   import AnchoredLink from "./AnchoredLink.svelte";
 
-  let userProcessing = user.processing, userError = user.error
+  let userProcessing = user.processing
 
   const useStyles = createStyles(theme => ({
     root: {
@@ -112,8 +112,6 @@
             <div>
                 {#if $userProcessing}
                     <Loader/>
-                {:else if $userError}
-                    <Text>Error, please refresh.</Text>
                 {:else if $user === null || $user === undefined}
                     <SignInWithXeroButton/>
                 {:else}

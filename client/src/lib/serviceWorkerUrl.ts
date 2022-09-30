@@ -1,1 +1,2 @@
-export const serviceWorkerUrl = new URL('../sw.js', import.meta.url)
+
+export const serviceWorkerUrl = new URL('sw.js', window.location.origin)
