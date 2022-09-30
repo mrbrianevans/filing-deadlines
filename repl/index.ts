@@ -16,6 +16,7 @@ import {
 import {backupClientLists} from "./backupClientLists.js";
 import {getFeedback} from "./getFeedback.js";
 import {getUser} from "./getUserAndOrg.js";
+import {setOrgActiveMembers} from "./migrations/setOrgActiveMembers.js";
 
 if(process.argv.slice(1).includes('--help')) console.log("This is a custom repl for managing the database and queues. Try\n\n\t" +
   "docker compose exec repl node index.js")
@@ -39,6 +40,10 @@ server.context.getFeedback = ()=>getFeedback(redis)
 server.context.getUser = (userId: string)=>getUser(redis, userId).then(console.log)
 
 server.context.exit = ()=>{shutdown('exit()');return 'exiting...'} // could be a Proxy to allow for simply "exit" rather than "exit()"
+
+server.context.migrations = {
+  setOrgActiveMembers: ()=>setOrgActiveMembers(redis)
+}
 
 server.context.dispatchJobSync = dispatchJobSync // to wait for response
 server.context.d = {dispatchLoadFilingHistoryForCompany, dispatchLoadFilingHistoryForClientList,dispatchReloadClientListDetails,dispatchReloadClientListDetailsSync,dispatchReloadCompanyProfiles}

@@ -45,6 +45,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     await fastify.redis.set(`user:${userId}:org`, orgId)
     const {user} = request
     await fastify.redis.hset(`org:${orgId}:members`, user.email, OrgMemberStatus.owner)
+    await fastify.redis.sadd(`org:${orgId}:activeMembers`, request.session.userId)
     reply.status(204).send()
   })
 
@@ -60,6 +61,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.del(`invite:${email}`)
       await fastify.redis.set(`user:${userId}:org`, orgIdAccepted)
       await fastify.redis.hset(`org:${orgIdAccepted}:members`, email, OrgMemberStatus.acceptedInvite)
+      await fastify.redis.sadd(`org:${orgIdAccepted}:activeMembers`, request.session.userId)
       reply.status(204).send()
     }else{
       reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})

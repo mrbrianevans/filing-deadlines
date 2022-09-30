@@ -37,6 +37,7 @@ Upon creation, a random orgId is generated, and these keys are set in Redis:
 - `org:{orgId}:name` the name provider by the creating user
 - `org:{orgId}:owner` the userId of the user who created the organisation (they are the owner)
 - `org:{orgId}:members` a Hash of email addresses to invite statuses, initialised to only the owner (who cannot be removed)
+- `org:{orgId}:activeMembers` a Set of userIds of the active members in an organisation
 - `org:{orgId}:clients` the client list hash for this organisation, not initialised to any value (starts empty).
 
 Set the orgId on the user's session, and the users orgId key in Redis (`user:{userId}:org`=`orgId`).
@@ -76,7 +77,7 @@ Even though there is only one invite, the orgId is included in the request to pr
 
 The action required is to clear the pending invite (`DEL` `invite:{email}`), and to set the user orgId (`user:{userId}:org`).
 
-Update the org member list to reflect that the invitation is accepted.
+Update the org member list to reflect that the invitation is accepted, and add the userId to `org:{orgId}:activeMembers`.
 
 ## Reject invitation
 If a user clicks reject on the invitation, then this endpoint should be called.
@@ -95,7 +96,7 @@ Update the org member list to reflect that the invitation is rejected.
 Only the owner can remove members from their organisation.
 
 When a user is removed, the organisations members Hash (`org:{orgId}:members`) must be updated to status removed, 
-and their orgId (`user:{userId}:org`) must be removed. 
+and their orgId (`user:{userId}:org`) must be removed. The userId must be removed from `org:{orgId}:activeMembers`.
 If the user had not yet accepted the invitation, their invite must also be removed (`invite:{email}`).
 
 Assert that the user being removed is NOT the owner of the organisation, and that the user requesting the removal IS the owner.
@@ -104,6 +105,7 @@ Assert that the user being removed is NOT the owner of the organisation, and tha
 A user can choose to leave an organisation after accepting an invitation.
 
 This will nullify the users orgId (`user:{userId}:org`) and update the org member list (`org:{orgId}:members`) to status left.
+The userId must be removed from `org:{orgId}:activeMembers`.
 
 ## Deleting an organisation
 The owner of an organisation can delete their organisation, removing all members and client list and any associated data.
