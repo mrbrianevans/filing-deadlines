@@ -3,7 +3,8 @@
   import {sentenceCase} from "sentence-case";
   import {Reload} from "radix-icons-svelte";
   import {onMount} from "svelte";
-  import {poster} from "../lib/swr.js";
+  import {fetcher, poster} from "../lib/swr.js";
+  import {serviceWorkerUrl} from "../lib/serviceWorkerUrl.js";
 
   const webNotificationsWork = "Notification" in window
 
@@ -30,6 +31,23 @@
   // if permission is granted/changed, it needs to be sent to the backend server so that it knows it can send notifications.
   async function onUpdate(newPermission){
     await poster('/api/user/notifications/permissions', {permission: newPermission})
+    if(newPermission === 'granted') {
+      const registration = await navigator.serviceWorker.getRegistration(serviceWorkerUrl)
+      if (registration) {
+        const subscriptionExists = await registration.pushManager.getSubscription()
+        if(!subscriptionExists){
+          const vapidKey = await fetcher(`/api/user/notifications/vapidKey`)
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: vapidKey
+          })
+          await poster(`/api/user/notifications/subscription`, subscription.toJSON())
+        }
+      } else {
+        // serious error cause SW hasn't been registered
+        await poster('/api/error', {message: 'service worker hasn\'t been registered, preventing a Push Subscription from being created when Notifications permission was granted.', component: 'NotificationPermissionButton', error:'no service worker'})
+      }
+    }
   }
   $: onUpdate(permission)
 </script>

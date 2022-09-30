@@ -89,7 +89,7 @@
       const daysLeft = getDaysLeft(row.confirmation_statement?.next_due)
       if(daysLeft < 0) return 'overdue'
       else if(daysLeft < 7) return 'within-week'
-      else if(daysLeft < 30) return 'within-month'
+      else if(daysLeft < 14) return 'within-month'
       else if(daysLeft < 365) return 'within-year'
       else return 'more-than-year'
     }
