@@ -23,8 +23,10 @@ jobs:
           cache-dependency-path: 'pnpm-lock.yaml'
       - name: Install dependencies
         run: pnpm install
+      - run: echo "~~~" >> $GITHUB_STEP_SUMMARY
       - name: Build client with Vite
         run: pnpm run build >> $GITHUB_STEP_SUMMARY
         working-directory: client
         env:
           NO_COLOR: 1
+      - run: echo "~~~" >> $GITHUB_STEP_SUMMARY
