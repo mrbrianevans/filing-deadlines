@@ -34,6 +34,7 @@
     "sentence-case": "^3.0.4",
     "svelte-navigator": "^3.2.2",
     "svelte-table": "^0.5.0",
-    "sveltefileuploadcomponent": "^0.1.0"
+    "sveltefileuploadcomponent": "^0.1.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.12/xlsx-0.18.12.tgz"
   }
 }

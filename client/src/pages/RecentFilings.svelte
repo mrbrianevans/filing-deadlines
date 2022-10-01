@@ -26,6 +26,7 @@
   import {exportRecentFilingsPdf} from "../lib/exportFormats/exportRecentFilingsPdf.js";
   import {user} from "../lib/stores/user.js";
   import {downloadBlob} from "../lib/exportFormats/downloadBlob.js";
+  import {exportRecentFilingsXlsx} from "../lib/exportFormats/exportRecentFilingsXlsx.js";
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
   let showingFilingsSince
   async function loadRecentFilings(timespan = 'P7D'){
@@ -93,6 +94,9 @@
     const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], $user.name)
     downloadBlob(blob, 'recent filings.pdf')
   }
+  async function exportXlsx(){
+    await exportRecentFilingsXlsx(recentFilings)
+  }
 </script>
 
 <Container size="xl">
@@ -104,14 +108,14 @@
             <ActionIcon on:click={()=>loadRecentFilings(timespans[selectedTimespan])} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
         {#if showingFilingsSince}<Text>Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
-        <Tooltip label="Feature not available">
-            <Button disabled>Export to CSV</Button>
+        <Tooltip label="Export this data to an Excel spreadsheet">
+            <Button on:click={exportXlsx}>Export to XLSX</Button>
         </Tooltip>
-        <Tooltip label="Feature not available">
+        <Tooltip label="Export this data to a PDF document">
             <Button on:click={exportPdf}>Export to PDF</Button>
         </Tooltip>
         <Tooltip label="Feature not available">
-            <Button on:click={exportPdf}>Export image</Button>
+            <Button disabled>Export image</Button>
         </Tooltip>
     </Group>
     {#if error}
