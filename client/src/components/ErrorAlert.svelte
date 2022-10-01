@@ -7,6 +7,7 @@
   import {onMount} from "svelte";
   import {user} from "../lib/stores/user.js";
   import {navigate,} from "svelte-navigator";
+  import AnchoredLink from "./AnchoredLink.svelte";
 
   export let error: FetchError
 

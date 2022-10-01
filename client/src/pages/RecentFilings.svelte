@@ -44,7 +44,11 @@
       processing = false
     }
   }
-  onMount(()=>loadRecentFilings())
+  onMount(()=> {
+    // get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
+    const queryPeriod = new URLSearchParams(window.location.search).get('p') || undefined
+    loadRecentFilings(queryPeriod)
+  })
 
   const columns: TableColumns<RecentFilingsItem> = [
     {
@@ -86,16 +90,19 @@
     }
   ]
   const timespans = {'1 day': 'P1D','3 days': 'P3D','7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '6 months': 'P6M'}
-  let selectedTimespan = '7 days' // default to 7 days
-  // todo: get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
-  $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
-  let tablesSection, link
+  let selectedTimespan // this is the human-readable string eg 7 days, starts undefined
+  $: loadRecentFilings(selectedTimespan?timespans[selectedTimespan]:undefined) // should reload data when selectedTimespan changes
+  let exportingPdf = false, exportingXlsx = false
   async function exportPdf(){
+    exportingPdf = true
     const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], $user.name)
     downloadBlob(blob, 'recent filings.pdf')
+    exportingPdf = false
   }
   async function exportXlsx(){
+    exportingXlsx = true
     await exportRecentFilingsXlsx(recentFilings)
+    exportingXlsx = false
   }
 </script>
 
@@ -103,17 +110,13 @@
     <Title order={2}>Recent filings</Title>
 
     <Group>
-        <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan}></NativeSelect>
+        <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan} placeholder="Choose time period"></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
             <ActionIcon on:click={()=>loadRecentFilings(timespans[selectedTimespan])} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
         {#if showingFilingsSince}<Text>Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
-        <Tooltip label="Export this data to an Excel spreadsheet">
-            <Button on:click={exportXlsx}>Export to XLSX</Button>
-        </Tooltip>
-        <Tooltip label="Export this data to a PDF document">
-            <Button on:click={exportPdf}>Export to PDF</Button>
-        </Tooltip>
+        <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{!recentFilings || error || processing}">Export to XLSX</Button>
+        <Button on:click={exportPdf} variant="outline" color="red" loading="{exportingPdf}" disabled="{!recentFilings || error || processing}">Export to PDF</Button>
         <Tooltip label="Feature not available">
             <Button disabled>Export image</Button>
         </Tooltip>
@@ -121,7 +124,7 @@
     {#if error}
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
-        <div bind:this={tablesSection}>
+        <div>
             {#each Object.keys(recentFilings) as filingType}
                 <Title order="{4}">{sentenceCase(filingType)} ({recentFilings[filingType].length})</Title>
                 {#each [...new Set(recentFilings[filingType].filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
