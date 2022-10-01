@@ -26,3 +26,5 @@ jobs:
       - name: Build client with Vite
         run: pnpm run build >> $GITHUB_STEP_SUMMARY
         working-directory: client
+        env:
+          NO_COLOR: 1

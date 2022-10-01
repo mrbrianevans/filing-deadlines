@@ -1,19 +1,9 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
-  import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles} from '@svelteuidev/core';
-  import AccountsDashboard from "./pages/AccountsDashboard.svelte";
+  import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles, Loader} from '@svelteuidev/core';
   import {isDark} from "./lib/stores/theme.ts";
   import NavBar from "./components/NavBar.svelte";
-  import ClientList from "./pages/ClientList.svelte";
   import Home from "./pages/Home.svelte";
-  import ManageOrg from "./pages/ManageOrg.svelte";
-  import OrgInvite from "./pages/OrgInvite.svelte";
-  import ConfirmationStatements from "./pages/ConfirmationStatements.svelte";
-  import AuthedPage from "./pages/AuthedPage.svelte";
-  import RecentFilings from "./pages/RecentFilings.svelte";
-  import RegisteredOfficeAddress from "./pages/RegisteredOfficeAddress.svelte";
-  import SuggestFeature from "./pages/SuggestFeature.svelte";
-  import Notifications from "./pages/Notifications.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -39,39 +29,16 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
     <div theme={$isDark ? 'dark' : 'light'} class="full-height">
       <AppShell>
         <Header slot="header">
-          <NavBar/>
+            <NavBar />
         </Header>
         <slot>
           <Route path="/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
-            <AuthedPage>
-              <Route path="/manage-organisation">
-                <ManageOrg />
-              </Route>
-              <Route path="/feedback">
-                <SuggestFeature />
-              </Route>
-              <Route path="/org-invite">
-                <OrgInvite />
-              </Route>
-              <Route path="/dashboard">
-                <AccountsDashboard />
-              </Route>
-              <Route path="confirmation-statement-dashboard">
-                <ConfirmationStatements />
-              </Route>
-              <Route path="/recent-filings">
-                <RecentFilings />
-              </Route>
-              <Route path="/registered-office-address">
-                <RegisteredOfficeAddress />
-              </Route>
-              <Route path="/clients">
-                <ClientList />
-              </Route>
-              <Route path="/notifications">
-                <Notifications />
-              </Route>
-            </AuthedPage>
+            {#await import('./pages/AuthedPagesRoutes.svelte').then(m=>m.default) }
+              <Loader/>
+              {:then AuthedPagesRoutes}
+              <!-- Async Load the authed pages -->
+              <AuthedPagesRoutes />
+            {/await}
           </Route>
           <Route path="/">
             <Home />

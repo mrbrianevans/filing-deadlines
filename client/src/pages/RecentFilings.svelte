@@ -44,10 +44,12 @@
       processing = false
     }
   }
+  const timespans = {'1 day': 'P1D','3 days': 'P3D','7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '6 months': 'P6M'}
+  let selectedTimespan // this is the human-readable string eg 7 days, starts undefined
+  const getTimespan = ()=>selectedTimespan?timespans[selectedTimespan]:(new URLSearchParams(window.location.search).get('p') || undefined)
   onMount(()=> {
     // get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
-    const queryPeriod = new URLSearchParams(window.location.search).get('p') || undefined
-    loadRecentFilings(queryPeriod)
+    loadRecentFilings(getTimespan())
   })
 
   const columns: TableColumns<RecentFilingsItem> = [
@@ -89,9 +91,7 @@
       }
     }
   ]
-  const timespans = {'1 day': 'P1D','3 days': 'P3D','7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '6 months': 'P6M'}
-  let selectedTimespan // this is the human-readable string eg 7 days, starts undefined
-  $: loadRecentFilings(selectedTimespan?timespans[selectedTimespan]:undefined) // should reload data when selectedTimespan changes
+  $: loadRecentFilings(getTimespan()) // should reload data when selectedTimespan changes
   let exportingPdf = false, exportingXlsx = false
   async function exportPdf(){
     exportingPdf = true
@@ -112,7 +112,7 @@
     <Group>
         <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan} placeholder="Choose time period"></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
-            <ActionIcon on:click={()=>loadRecentFilings(timespans[selectedTimespan])} loading="{processing}"><Reload/></ActionIcon>
+            <ActionIcon on:click={()=>loadRecentFilings(getTimespan())} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
         {#if showingFilingsSince}<Text>Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
         <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{!recentFilings || error || processing}">Export to XLSX</Button>
