@@ -1,7 +1,7 @@
 <script lang="ts">
 
   import {poster} from "../lib/swr.js";
-  import type {FetchError} from "../lib/swr.js";
+  import {FetchError} from "../lib/swr.js";
   import {Alert, Button, SimpleGrid, Text} from "@svelteuidev/core";
   import {InfoCircled, SewingPinFilled} from "radix-icons-svelte";
   import {onMount} from "svelte";
@@ -11,18 +11,22 @@
 
   export let error: FetchError
 
+  function getErrorJson(e){
+    if(e instanceof FetchError) return e.toJSON()
+    else if(e instanceof Error) return {name: e.name, message: e.message, stack: e.stack}
+  }
 
   let reporting = false, reported = false, logged = false
   async function reportError(){
     reporting = true
     try{
-      reported = await poster('/api/error/report', error.toJSON())
+      reported = await poster('/api/error/report', getErrorJson(error))
     }finally {
       reporting = false
     }
   }
   async function sendError(){
-    logged = await poster('/api/error', error.toJSON())
+    logged = await poster('/api/error', getErrorJson(error))
   }
   onMount(()=> {
     if(error.statusCode === 401) {
@@ -38,7 +42,7 @@
         <div>
             <Text inherit>{error.message}</Text>
 
-            <Text color="dimmed" inherit size="xs">Error code: {error.statusCode}</Text>
+            <Text color="dimmed" inherit size="xs">Error code: {error.statusCode??error.code??'UNKNOWN'}</Text>
 
             {#if logged}<Text color="dimmed" inherit size="xs">This error has been logged on the server.</Text> {/if}
 

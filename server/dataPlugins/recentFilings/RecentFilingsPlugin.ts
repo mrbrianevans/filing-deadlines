@@ -1,5 +1,5 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
-import type {RecentFilings, RecentFilingsItem} from "../../../fs-shared/RecentFilings.js";
+import type { RecentFilings, RecentFilingsItem} from "../../../fs-shared/RecentFilings.js";
 import type {FilingHistoryItemResource} from "../../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js";
 import filingDescriptions from '../../../fs-shared/filingDescriptions.json' assert {type:'json'}
 import formatString from 'string-template'
@@ -34,6 +34,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
   }
 
   function formatFilingDescription(transaction: FilingHistoryItemResource){
+    //todo: format dates properly and add currency to end for statement-of-capital
     return formatString(filingDescriptions[transaction.description], transaction.description_values)
   }
 
@@ -49,7 +50,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     // get filing transaction for each ID
     const transactions = await Promise.all(companyNumberTransactionIds.map(c=>getFilingByCompanyNumberTransactionId(c)))
     const companyNames = await Promise.all(transactions.map(t=>fastify.redis.get(`company:${t.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name).then(name=>[t.transaction_id, name]))).then(Object.fromEntries)
-    const recentFilings: RecentFilings = {}
+    const recentFilings: RecentFilings = []
     for (const transaction of transactions) {
       const {category, subcategory} = transaction
       const companyName = companyNames[transaction.transaction_id]
@@ -60,12 +61,12 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
         transactionId: transaction.transaction_id,
         description: formatFilingDescription(transaction),
         companyName: companyName??'',
+        filingType: category,
         subcategory
       }
-      if(category in recentFilings) recentFilings[category].push(filing)
-      else recentFilings[category] = [filing]
+      recentFilings.push(filing)
     }
-    request.log.info(`Returning ${Object.values(recentFilings).map(f=>f.length).reduce((p,c)=>c+p,0)} recent filings in ${Object.keys(recentFilings).length} categories`)
+    request.log.info(`Returning ${recentFilings.length} recent filings`)
     return recentFilings
   })
 

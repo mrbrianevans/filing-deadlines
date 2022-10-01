@@ -40,11 +40,12 @@ export async function exportRecentFilingsPdf(recentFilings: RecentFilings, start
       {name: 'description', prompt: 'Filing description', align: 'left', padding: 3, width: 190}
     ]
     let offset = 30
-    for(const group in recentFilings){
+    const groups =  [...new Set(recentFilings.map(f=>f.filingType))]
+    for(const group of groups){
       doc.setFontSize(16)
       doc.text(sentenceCase(group), 10, offset, {})
       doc.setFontSize(12)
-      const rows = recentFilings[group].map(({subcategory, description, ...f})=>({...f, description: description.replaceAll(/\*\*/g, '')}))
+      const rows = recentFilings.filter(f=>f.filingType===group).map(({subcategory, description, ...f})=>({...f, description: description.replaceAll(/\*\*/g, '')}))
       doc.table(10, offset+3, rows, columns, {autoSize: false})
       offset = 10
       doc.addPage()

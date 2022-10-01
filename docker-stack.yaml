@@ -2,7 +2,7 @@ version: '3.9'
 # run docker swarm init && docker stack deploy -c docker-stack.yaml
 services:
   caddy:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/frontend
+    image: registry.digitalocean.com/fdcr/filing-deadlines/frontend:latest
     restart: on-failure
     ports:
       - "80:80"
@@ -24,7 +24,7 @@ services:
     logging:
       driver: local
   worker:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
+    image: registry.digitalocean.com/fdcr/filing-deadlines/backend:latest
     working_dir: /filing-deadlines/worker
     environment:
       REDIS_URL: redis://redis:6379
@@ -36,7 +36,7 @@ services:
     depends_on:
       - redis
   server:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
+    image: registry.digitalocean.com/fdcr/filing-deadlines/backend:latest
     working_dir: /filing-deadlines/server
     environment:
       REDIS_URL: redis://redis:6379
@@ -52,7 +52,7 @@ services:
     depends_on:
       - redis
   "metrics":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/metrics
+    image: registry.digitalocean.com/fdcr/filing-deadlines/metrics:latest
     logging:
       driver: local
     "environment":
@@ -60,13 +60,13 @@ services:
     "volumes":
       - "prom_data:/prometheus"
   "loki":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/loki
+    image: registry.digitalocean.com/fdcr/filing-deadlines/loki:latest
     logging:
       driver: local
     "volumes":
       - "loki_data:/loki"
   "grafana":
-    image: registry.digitalocean.com/fdcr/filing-deadlines/grafana
+    image: registry.digitalocean.com/fdcr/filing-deadlines/grafana:latest
     logging:
       driver: local
     "volumes":
@@ -76,7 +76,7 @@ services:
       LOKI_URL: "http://loki:3100"
       METRICS_URL: "http://metrics:9090"
   repl:
-    image: registry.digitalocean.com/fdcr/filing-deadlines/backend
+    image: registry.digitalocean.com/fdcr/filing-deadlines/backend:latest
     working_dir: /filing-deadlines/repl
     depends_on:
       - redis
