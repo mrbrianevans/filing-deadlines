@@ -23,6 +23,9 @@
   import FilingDescription from "../components/recentFilings/FilingDescription.svelte";
   import { sentenceCase } from "sentence-case";
   import AsyncTable from "../components/AsyncTable.svelte";
+  import {exportRecentFilingsPdf} from "../lib/exportFormats/exportRecentFilingsPdf.js";
+  import {user} from "../lib/stores/user.js";
+  import {downloadBlob} from "../lib/exportFormats/downloadBlob.js";
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
   let showingFilingsSince
   async function loadRecentFilings(timespan = 'P7D'){
@@ -85,6 +88,11 @@
   let selectedTimespan = '7 days' // default to 7 days
   // todo: get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
   $: loadRecentFilings(timespans[selectedTimespan]) // should reload data when selectedTimespan changes
+  let tablesSection, link
+  async function exportPdf(){
+    const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], $user.name)
+    downloadBlob(blob, 'recent filings.pdf')
+  }
 </script>
 
 <Container size="xl">
@@ -99,18 +107,24 @@
         <Tooltip label="Feature not available">
             <Button disabled>Export to CSV</Button>
         </Tooltip>
+        <Tooltip label="Feature not available">
+            <Button on:click={exportPdf}>Export to PDF</Button>
+        </Tooltip>
+        <Tooltip label="Feature not available">
+            <Button on:click={exportPdf}>Export image</Button>
+        </Tooltip>
     </Group>
     {#if error}
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
-        {#each Object.keys(recentFilings) as filingType}
-            <Title order="{4}">{sentenceCase(filingType)} ({recentFilings[filingType].length})</Title>
-            {#each [...new Set(recentFilings[filingType].filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
-            <AsyncTable columns={columns} rows={recentFilings[filingType]}/>
-        {/each}
+        <div bind:this={tablesSection}>
+            {#each Object.keys(recentFilings) as filingType}
+                <Title order="{4}">{sentenceCase(filingType)} ({recentFilings[filingType].length})</Title>
+                {#each [...new Set(recentFilings[filingType].filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
+                <AsyncTable columns={columns} rows={recentFilings[filingType]}/>
+            {/each}
+        </div>
     {/if}
-
-
     </Container>
 <style>
 
