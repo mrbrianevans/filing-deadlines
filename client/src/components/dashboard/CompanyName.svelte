@@ -5,10 +5,7 @@
   import {onMount} from "svelte";
   export let row: DashboardDataItem
   export const col: any = null
-  let isNew
-  onMount(()=>{
-    isNew = row.date_of_creation && Date.now() - new Date(row.date_of_creation).getTime() < 86400*1000*365 // created in the last 365 days
-  })
+  $: isNew = row?.date_of_creation && Date.now() - new Date(row.date_of_creation).getTime() < 86400*1000*365 // created in the last 365 days
 </script>
 
 <Text inherit>
