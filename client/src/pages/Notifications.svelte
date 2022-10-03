@@ -24,7 +24,7 @@
     if(permission === 'denied'){
       notificationTypes[0].notification = {title:'Permission denied', body: 'You have denied permission to show notifications. If you wish to receive notifications, please allow them and try again.'}
     }else if(permission === 'default'){
-      notificationTypes[0].notification = {title:'Permission not yet granted', body: 'You have not yet granted permission to show notifications. If you wish to receive notifications, please allow them and try again.'}
+      notificationTypes[0].notification = {title:'Permission not yet granted', body: 'You have not yet granted permission to show notifications. If you wish to receive notifications, please click the orange button above to allow them and try again.'}
     }
     if(permission === 'granted') {
       await fetcher('/api/user/notifications/test')
@@ -57,10 +57,6 @@
             <Text>Web notifications permission: </Text>
             <NotificationPermissionButton bind:permission/>
         </Group>
-        <Alert title="Coming soon..." color="green">
-            <Text inherit mb="xs">More notification types are coming soon. You can see the planned options on this page, but can't enable all of them yet.</Text>
-            <Text inherit mb="xs">If there is a particular type of notification that would help you, send a request on the <AnchoredLink href="/feedback">feedback form</AnchoredLink> to have it added.</Text>
-        </Alert>
         {#each notificationTypes as notificationType}
             <Group>
                 <Checkbox label={notificationType.label}
@@ -73,6 +69,10 @@
                 <SvelteNotification title="{notificationType.notification.title}" loading="{notificationType.notification.loading}">{notificationType.notification.body}</SvelteNotification>
             {/if}
         {/each}
+        <Alert title="Coming soon..." color="green">
+            <Text inherit mb="xs">More notification types are coming soon. You can see the planned options on this page, but can't enable all of them yet.</Text>
+            <Text inherit mb="xs">If there is a particular type of notification that would help you, send a request on the <AnchoredLink href="/feedback">feedback form</AnchoredLink> to have it added.</Text>
+        </Alert>
     </Stack>
 
 

@@ -27,6 +27,10 @@
   import {user} from "../lib/stores/user.js";
   import {downloadBlob} from "../lib/exportFormats/downloadBlob.js";
   import {exportRecentFilingsXlsx} from "../lib/exportFormats/exportRecentFilingsXlsx.js";
+  import {Link, useLocation, useNavigate} from "svelte-navigator";
+  import AnchoredLink from "../components/AnchoredLink.svelte";
+  const location = useLocation()
+  const navigate = useNavigate();
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
   let showingFilingsSince
   $: filingTypes =  [...new Set(recentFilings?.map(f=>f.filingType))]
@@ -49,10 +53,16 @@
   }
   const timespans = {'1 day': 'P1D','3 days': 'P3D','7 days': 'P7D', '14 days': 'P14D', '30 days': 'P30D', '60 days': 'P60D', '6 months': 'P6M'}
   let selectedTimespan // this is the human-readable string eg 7 days, starts undefined
-  // get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
-  const getTimespan = () => selectedTimespan?timespans[selectedTimespan]:(new URLSearchParams(window.location.search).get('p') || undefined)
+  const getTimespan = (search) => new URLSearchParams(search).get('p') ?? 'P7D'
   onMount(()=> {
-    // loadRecentFilings(getTimespan())
+    // get initial value from URL query on mount. Eg /recent-filings?p=P1D. Some other components redirect here like that.
+    const sp = new URLSearchParams($location.search)
+    if(!sp.get('p')) {
+      sp.set('p', 'P7D') // default period
+      navigate('?' + sp.toString())
+    }
+    const duration = sp.get('p') // sets the value of the select, if its in the list
+    selectedTimespan = Object.entries(timespans).find(([h, d])=>d===duration)?.[0] ?? undefined
   })
 
   const columns: TableColumns<RecentFilingsItem> = [
@@ -94,7 +104,13 @@
       }
     }
   ]
-  $: loadRecentFilings(selectedTimespan ? getTimespan() : undefined) // should reload data when selectedTimespan changes
+  function updateSearchQuery(timespanDuration){
+    const sp = new URLSearchParams($location.search)
+    sp.set('p', timespanDuration)
+    navigate('?'+sp.toString())
+  }
+  $: if(selectedTimespan) updateSearchQuery(timespans[selectedTimespan])
+  $: loadRecentFilings(getTimespan($location.search)) // should reload data when selectedTimespan changes
   let exportingPdf = false, exportingXlsx = false
   async function exportPdf(){
     exportingPdf = true
@@ -115,11 +131,10 @@
     <Group>
         <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan} placeholder="Choose time period"></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
-            <ActionIcon on:click={()=>loadRecentFilings(getTimespan())} loading="{processing}"><Reload/></ActionIcon>
+            <ActionIcon on:click={()=>loadRecentFilings(getTimespan($location.search))} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
-        {#if showingFilingsSince}<Text>Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
-        <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{!recentFilings || error || processing}">Export to XLSX</Button>
-        <Button on:click={exportPdf} variant="outline" color="red" loading="{exportingPdf}" disabled="{!recentFilings || error || processing}">Export to PDF</Button>
+        <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{!recentFilings || recentFilings.length === 0 || error || processing}">Export to XLSX</Button>
+        <Button on:click={exportPdf} variant="outline" color="red" loading="{exportingPdf}" disabled="{!recentFilings || recentFilings.length === 0 || error || processing}">Export to PDF</Button>
         <Tooltip label="Feature not available">
             <Button disabled>Export image</Button>
         </Tooltip>
@@ -129,10 +144,15 @@
         <Tooltip label="Feature not available">
             <Button disabled>Group by company</Button>
         </Tooltip>
+        <Tooltip label="Subscribe to web notifications of new filings">
+            <AnchoredLink href="/notifications">Get notifications</AnchoredLink>
+        </Tooltip>
     </Group>
     {#if error}
         <ErrorAlert error="{error}"/>
-    {:else if recentFilings && recentFilings.length > 0}
+    {:else if recentFilings}
+        {#if showingFilingsSince}<Text root="p" pt="sm">Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
+        {#if recentFilings.length > 0}
         <div>
             {#each filingTypes as filingType}
                 <Title order="{4}">{sentenceCase(filingType)} ({recentFilings.filter(f=>f.filingType===filingType).length})</Title>
@@ -140,12 +160,13 @@
                 <AsyncTable columns={columns} rows={recentFilings.filter(f=>f.filingType===filingType)}/>
             {/each}
         </div>
-    {:else if recentFilings && recentFilings.length === 0}
+        {:else}
         <Space h="sm"/>
         <Alert title="No recent filings" color="gray" variant="outline">
             <Text inherit>There haven't been any filings since {showingFilingsSince} for companies on your client list.</Text>
             <Text inherit>Try choosing a longer period or add some more clients to your client list.</Text>
         </Alert>
+        {/if}
     {/if}
     </Container>
 <style>
