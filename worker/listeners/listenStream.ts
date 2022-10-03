@@ -69,6 +69,7 @@ class StreamError extends Error{
   constructor(message: string, retry: boolean) {
     super(message);
     this.retry = retry
+    this.name = 'StreamError'
   }
 }
 // listen on stream using Fetch API
@@ -83,17 +84,24 @@ export async function fetchStream(streamPath: StreamPath = "companies", startFro
   const emitter = new EventEmitter({})
   if(response.ok) {
     if (response.body) {
-      const responseBody = Readable.fromWeb(<ReadableStream>response.body)
-      responseBody.on("close", () => emitter.emit('end'))
-      nextTick(() => emitter.emit('start'))
-      function mapper(line: string){
-        emitter.emit('heartbeat') // emit an event on every input, including blank lines (heartbeats)
-        return line.trim().length>0?JSON.parse(line):undefined
+      try {
+        const responseBody = Readable.fromWeb(<ReadableStream>response.body)
+        responseBody.on("close", () => emitter.emit('end'))
+        responseBody.on("error", (e) => emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'})))
+        nextTick(() => emitter.emit('start'))
+
+        function mapper(line: string) {
+          emitter.emit('heartbeat') // emit an event on every input, including blank lines (heartbeats)
+          return line.trim().length > 0 ? JSON.parse(line) : undefined
+        }
+
+        responseBody.pipe(split2(/\r?\n+/, mapper))
+          .on("data", event => emitter.emit('event', event))
+          .on("error", (e) => emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'})))
+          .on("end", () => emitter.emit('end'))
+      }catch (e) {// this can be called if the connection is aborted by the server as it's classed as a network error
+        emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'}))
       }
-      responseBody.pipe(split2(/\r?\n+/,mapper))
-        .on("data", event => emitter.emit('event', event))
-        .on("error", (e) => emitter.emit('error', Object.assign(e, {retry: true})))
-        .on("end", () => emitter.emit('end'))
     } else {
       nextTick(() => emitter.emit('error', new StreamError('No response body returned', true)))
     }
