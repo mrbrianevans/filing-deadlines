@@ -35,7 +35,8 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification clicked ', event.notification.title);
     event.notification.close();
-
+    const {action} = event
+    console.log("Event clicked with action", action)
     // This looks to see if the target URL is already open and
     // focuses if it is
     if(event.notification.data && typeof event.notification.data === 'object' && 'url' in event.notification.data) {
@@ -43,9 +44,9 @@ self.addEventListener('notificationclick', (event) => {
         event.waitUntil(clients.matchAll({
             type: "window"
         }).then((clientList) => {
-            console.log({clientList, openUrl})
+            // console.log({clientList, openUrl})
             for (const client of clientList) {
-                if (new URL(client.url).pathname === openUrl && 'focus' in client)
+                if (new URL(client.url).pathname === new URL(openUrl, new URL(client.url).origin).pathname && 'focus' in client)
                     return client.focus();
             }
             // allow server to send a URL to open when the user clicks the notification

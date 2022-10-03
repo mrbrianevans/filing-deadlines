@@ -1,5 +1,5 @@
 import {callApi} from "./callApi.js";
-import {CompanyFilingHistoryResource} from "@companieshouse/api-sdk-node/dist/services/company-filing-history/index.js";
+import type {CompanyFilingHistoryResource} from "@companieshouse/api-sdk-node/dist/services/company-filing-history/index.js";
 
 export {CompanyFilingHistoryResource, FilingHistoryItemResource} from "@companieshouse/api-sdk-node/dist/services/company-filing-history/index.js"
 export async function getFilingHistoryFromApi(companyNumber: string, limit = 35){

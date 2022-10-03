@@ -1,6 +1,6 @@
 import {callApi} from "./callApi.js";
 import {sharedLogger} from "../loggers.js";
-import {CompaniesResource} from "@companieshouse/api-sdk-node/dist/services/search/advanced-search/index.js";
+import type {CompaniesResource} from "@companieshouse/api-sdk-node/dist/services/search/advanced-search/index.js";
 
 
 interface SearchCriteria{

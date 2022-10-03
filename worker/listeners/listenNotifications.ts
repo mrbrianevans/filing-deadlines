@@ -11,6 +11,7 @@ import { workerLogger } from '../../backend-shared/loggers.js'
 import {listenRedisStream} from '../../backend-shared/notifications/redisStreams.js'
 import {sendWebNotification} from '../../backend-shared/notifications/sendWebNotification.js'
 import {notificationNames} from '../../fs-shared/Notifications.js'
+import { formatFilingNotification } from "../../backend-shared/notifications/formatFilingNotification.js";
 
 
 interface FilingNotification extends Record<string,string>{
@@ -30,14 +31,9 @@ export async function listenToFilingNotifications(signal?: AbortSignal) {
       const {companyNumber, transactionId, event} = notification.data
       const filingEvent = JSON.parse(event)
       logger.info({companyNumber, transactionId}, 'Notification received on Redis Stream')
-      //todo: format notification text better
-      const webNotification = {
-        title: 'A new filing for a company on your client list',
-        options: {
-          body: `Company number: ${companyNumber}. Category: ${filingEvent.data.category}`,
-          url: '/recent-filings?p=P1D' // recent filings in the last 1 Day
-        }
-      }
+      const companyName = await redis.get(`company:${companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name)
+      const webNotification = formatFilingNotification(companyNumber, companyName, filingEvent.data)
+
       const interestedOrgs = await redis.smembers(`company:${companyNumber}:clientLists`)
       logger.debug({interestedOrgs}, 'interested orgs') // todo: there is a problem because these debugs are NOT showing in grafana
       for (const orgId of interestedOrgs) {

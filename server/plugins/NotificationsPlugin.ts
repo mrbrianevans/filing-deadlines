@@ -3,7 +3,9 @@ import type {PushSubscription} from 'web-push'
 import webPush from 'web-push'
 import {notificationNames} from '../../fs-shared/Notifications.js'
 import {sendWebNotification} from '../../backend-shared/notifications/sendWebNotification.js'
+import { formatFilingNotification } from "../../backend-shared/notifications/formatFilingNotification.js";
 import assert from "assert";
+import type { FilingHistoryItemResource } from "../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js";
 
 const setPreferenceSchema: FastifySchema = {
   params: {
@@ -113,16 +115,27 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     reply.status(204).send()
   })
 
+  // duplicated from RecentFilingsPlugin
+  async function getFilingByCompanyNumberTransactionId(companyNumberTransactionId: string): Promise<FilingHistoryItemResource&{companyNumber:string}>{
+    const matches = companyNumberTransactionId.match(/^([A-Z\d]{8}):([a-zA-Z\d]{10,})$/)
+    if(!matches) throw new Error('Key does not match expected format: "'+companyNumberTransactionId+'". Should be companyNumber:transactionId')
+    const [,companyNumber, transactionId] = matches
+    const filingString = await fastify.redis.hget(`company:${companyNumber}:filingHistory`, transactionId)
+    if(!filingString) fastify.log.error({companyNumber, transactionId, companyNumberTransactionId, filingString}, 'Did not find expected filing transaction')
+    const transaction = <FilingHistoryItemResource>JSON.parse(filingString??`{transaction_id:${transactionId}`)
+    return Object.assign(transaction, {companyNumber})
+  }
+
   // for a user to test a server-sent notification
   fastify.get('/test', async (request, reply)=>{
     const userSubscription: PushSubscription|undefined = await fastify.redis.get(`user:${request.session.userId}:notifications:subscription`).then(JSON.parse)
     request.log.info({hasSubscription: Boolean(userSubscription)}, 'User requested a test web push notification')
     if(userSubscription) {
       try {
-        const notification = {
-          title: 'Test notification',
-          options: {body: 'This is a test notification sent from the server', data: {url: '/notifications'}}
-        }
+        const companyNumberTransactionId = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, -1, -1)
+        const filingEvent = await getFilingByCompanyNumberTransactionId(companyNumberTransactionId[0])
+        const companyName = await fastify.redis.get(`company:${filingEvent.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name)
+        const notification = formatFilingNotification(filingEvent.companyNumber, companyName, filingEvent)
         await sendWebNotification({userId: request.session.userId, notification})
         return {sent: true}
       }catch (e) {

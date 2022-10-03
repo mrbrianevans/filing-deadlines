@@ -1,8 +1,7 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import type { RecentFilings, RecentFilingsItem} from "../../../fs-shared/RecentFilings.js";
 import type {FilingHistoryItemResource} from "../../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js";
-import filingDescriptions from '../../../fs-shared/filingDescriptions.json' assert {type:'json'}
-import formatString from 'string-template'
+import { formatFilingDescription } from "../../../backend-shared/companiesHouseApi/formatFilingDescription.js";
 
 const recentFilingsSchema: FastifySchema = {
   querystring: {
@@ -31,11 +30,6 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(!filingString) fastify.log.error({companyNumber, transactionId, companyNumberTransactionId, filingString}, 'Did not find expected filing transaction')
     const transaction = <FilingHistoryItemResource>JSON.parse(filingString??`{transaction_id:${transactionId}`)
     return Object.assign(transaction, {companyNumber})
-  }
-
-  function formatFilingDescription(transaction: FilingHistoryItemResource){
-    //todo: format dates properly and add currency to end for statement-of-capital
-    return formatString(filingDescriptions[transaction.description], transaction.description_values)
   }
 
   fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: RecentFilings}>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
