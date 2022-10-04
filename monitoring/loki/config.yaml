@@ -27,9 +27,10 @@ schema_config:
 
 query_range:
   split_queries_by_interval: 0
-
+  parallelise_shardable_queries: false
+  
 frontend:
-  max_outstanding_per_tenant: 1024
+  max_outstanding_per_tenant: 2048
 
 ruler:
   alertmanager_url: http://localhost:9093
