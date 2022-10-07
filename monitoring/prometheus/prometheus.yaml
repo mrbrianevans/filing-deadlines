@@ -5,3 +5,7 @@ scrape_configs:
     static_configs:
       - targets:
           - caddy:2022
+  - job_name: loki
+    static_configs:
+      - targets:
+          - loki:3100
