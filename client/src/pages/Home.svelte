@@ -1,60 +1,62 @@
 <script lang="ts">
-  import {Anchor, Container, Group, Image, Paper, SimpleGrid, Space, Text, Title} from "@svelteuidev/core";
+  import {
+    Alert,
+    Anchor,
+    Container,
+    Group,
+    Image,
+    Paper,
+    SimpleGrid,
+    Space,
+    Stack,
+    Text,
+    Title
+  } from "@svelteuidev/core";
   import {isDark} from "../lib/stores/theme.js";
   import clientListScreenshot from '../assets/client-list.png'
   import dashboardScreenshot from '../assets/dashboard.png'
   import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
   import SignInWithXeroButton from "../components/SignInWithXeroButton.svelte";
+  import AnchoredLink from "../components/AnchoredLink.svelte";
+  import HomeFeatureCard from "../components/home/HomeFeatureCard.svelte";
+
+  const override={background: '#f4f4f4'}
 </script>
 
 <div class="background" class:dark={$isDark}>
-    <Container>
-        <Paper>
-            <Title order={1} color="teal" weight="bold">Never miss a filing deadline.</Title>
-            <Text color='dimmed'>This up-to-date dashboard will help you and your team keep track of upcoming deadlines.</Text>
-        </Paper>
-        <Space h="md"/>
-        <SimpleGrid
-                breakpoints={[
-        { maxWidth: 980, cols: 1, spacing: 'md' }
-    ]}
-                cols={2}
-        >
-            <Paper>
-                <Title order={3} color="blue" weight="bold" inline>Manage your client list.</Title>
-                <Text color='dimmed' inline>The client list management feature allows you to keep a client list of companies to include in the dashboard.</Text>
-                <ul>
-                    <li>bulk load clients with CSV upload</li>
-                    <li>manually edit client list (add or remove)</li>
-                    <li>client details loaded automatically from Companies House</li>
-                </ul>
-                {#if $user}
-                    <Anchor root={Link} to="/clients" href="/clients">Go to your client list</Anchor>
-                    <Space h="md"/>
-                {/if}
-            <Image src="{clientListScreenshot}"></Image>
+    <Container size="lg">
+        <Stack>
+            <Paper {override}>
+                <Title order={2} color="blue" weight="bold" override={{ fontSize: '60px !important' }} align="center">Never miss a filing deadline.</Title>
+                <Text color='dimmed'>Visibility of upcoming deadlines, alerting you to filings which need to be submitted soon.</Text>
+            </Paper>
 
-            </Paper>
-            <Paper>
-                <Title order={3} color="blue" weight="bold">Always up-to-date dashboard.</Title>
-                <Text color='dimmed' inline>The filing deadline dashboard updates itself when changes are made to company data on Companies House.</Text>
-                <ul>
-                    <li>see upcoming deadlines at-a-glance</li>
-                    <li>click a row to see more details about a company</li>
-                    <li>highlighted based on time left to file</li>
-                </ul>
-                {#if $user}
-                    <Anchor root={Link} to="/dashboard" href="/dashboard">Go to your dashboard</Anchor>
-                    <Space h="md"/>
-                {/if}
-                <Image src="{dashboardScreenshot}"></Image>
-            </Paper>
-        </SimpleGrid>
+            {#if $user}
+                <Alert color="blue" title="Go to your dashboard" pb="lg">
+                    <Text inherit>You are already signed in. Go to <AnchoredLink href="dashboard">dashboard</AnchoredLink> to see your data.</Text>
+                </Alert>
+            {/if}
+
+            <HomeFeatureCard link="/clients" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/dashboard" title="Upcoming deadlines." subtitle="Dashboards for both financial accounts and confirmation statement deadlines, with data pulled from Companies House.">
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/recent-filings" title="Recent filings." subtitle="See a recent history of filings for the companies on your client list.">
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/notifications" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/registered-office-address" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
+            </HomeFeatureCard>
+
+
         {#if !$user}
-            <Space h="md"/>
         <Paper>
-            <Title order={3} color="green" weight="bold">Sign in with Xero to get started.</Title>
+            <Title order={3} color="blue" weight="bold">Sign in with Xero to get started.</Title>
             <Group>
                 <SignInWithXeroButton/>
             </Group>
@@ -63,6 +65,8 @@
             <Space h="xs"/>
         </Paper>
         {/if}
+
+        </Stack>
     </Container>
 </div>
 
