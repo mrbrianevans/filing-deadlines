@@ -23,7 +23,7 @@
   onMount(()=>orgAddress.refresh())
   let newAddress = {postCode: '', addressLine1: ''}
   $: if($orgAddress) companiesAtAddress.refresh()
-
+  let showDissolved = false
 </script>
 
 <Container size="xl">
@@ -31,14 +31,14 @@
 
     {#if $orgAddress}
         {#if $companiesAtAddress}
-            <Text>Showing {$companiesAtAddress?.length??''} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
+            <Text>Showing {$companiesAtAddress?.filter(c=>showDissolved || c.company_status === 'active').length??''} {showDissolved?'':'active'} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
             <Space h="xs"/>
             <Group>
                 <Tooltip label="Feature not available yet">
                     <Checkbox disabled label="Show results which aren't in client list"></Checkbox>
                 </Tooltip>
-                <Tooltip label="Feature not available yet">
-                    <Checkbox disabled label="Hide dissolved"></Checkbox>
+                <Tooltip label="Include dissolved companies in the list">
+                    <Checkbox bind:checked={showDissolved} label="Show dissolved"></Checkbox>
                 </Tooltip>
                 <Tooltip label="Feature not available yet">
                     <Button disabled>Export to CSV</Button>
@@ -47,7 +47,7 @@
                     <Button color="green" disabled>Export to XLSX</Button>
                 </Tooltip>
             </Group>
-            <OfficeAddressResultsTable data={$companiesAtAddress} />
+            <OfficeAddressResultsTable data={$companiesAtAddress.filter(c=>showDissolved || c.company_status === 'active')} />
         {:else if $companiesAtAddressLoading}
             <Loader/>
         {:else if $companiesAtAddressError}
