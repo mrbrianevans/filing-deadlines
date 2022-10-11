@@ -17,6 +17,7 @@
   import {companiesAtAddress, orgAddress} from "../lib/stores/orgAddress.js";
   import ErrorAlert from "../components/ErrorAlert.svelte";
   import OfficeAddressResultsTable from "../components/registeredOfficeAddress/OfficeAddressResultsTable.svelte";
+  import {exportRegisteredOfficeAddressXlsx} from "../lib/exportFormats/exportRegisteredOfficeAddressXlsx.js";
 
   const {error: addressError, processing: addressLoading} = orgAddress
   const {error: companiesAtAddressError, processing: companiesAtAddressLoading} = companiesAtAddress
@@ -24,14 +25,16 @@
   let newAddress = {postCode: '', addressLine1: ''}
   $: if($orgAddress) companiesAtAddress.refresh()
   let showDissolved = false
+
+  $: visibleData = $companiesAtAddress?.filter(c=>showDissolved || c.company_status === 'active')
 </script>
 
 <Container size="xl">
     <Title order={2}>Registered office address</Title>
 
     {#if $orgAddress}
-        {#if $companiesAtAddress}
-            <Text>Showing {$companiesAtAddress?.filter(c=>showDissolved || c.company_status === 'active').length??''} {showDissolved?'':'active'} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
+        {#if visibleData}
+            <Text>Showing {visibleData.length??''} {showDissolved?'':'active'} companies whose registered office address is {$orgAddress.addressLine1?($orgAddress.addressLine1+', '):''} {$orgAddress.postCode}.</Text>
             <Space h="xs"/>
             <Group>
                 <Tooltip label="Feature not available yet">
@@ -43,11 +46,11 @@
                 <Tooltip label="Feature not available yet">
                     <Button disabled>Export to CSV</Button>
                 </Tooltip>
-                <Tooltip label="Feature not available yet">
-                    <Button color="green" disabled>Export to XLSX</Button>
+                <Tooltip label="Export the table to an Excel spreadsheet">
+                    <Button color="green" on:click={()=>exportRegisteredOfficeAddressXlsx(visibleData)}>Export to XLSX</Button>
                 </Tooltip>
             </Group>
-            <OfficeAddressResultsTable data={$companiesAtAddress.filter(c=>showDissolved || c.company_status === 'active')} />
+            <OfficeAddressResultsTable data={visibleData} />
         {:else if $companiesAtAddressLoading}
             <Loader/>
         {:else if $companiesAtAddressError}
