@@ -14,6 +14,7 @@
   function getErrorJson(e){
     if(e instanceof FetchError) return e.toJSON()
     else if(e instanceof Error) return {name: e.name, message: e.message, stack: e.stack}
+    else return {name: 'UNKNOWN_ERROR_TYPE', message: JSON.stringify(e)}
   }
 
   let reporting = false, reported = false, logged = false

@@ -1,10 +1,21 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
-  import {SvelteUIProvider, TypographyProvider, Seo, Header, AppShell, createStyles, Loader} from '@svelteuidev/core';
+  import {
+    SvelteUIProvider,
+    TypographyProvider,
+    Seo,
+    Header,
+    AppShell,
+    createStyles,
+    Loader,
+    Footer, ShellSection, Alert
+  } from '@svelteuidev/core';
   import {isDark} from "./lib/stores/theme.ts";
   import NavBar from "./components/NavBar.svelte";
   import Home from "./pages/Home.svelte";
   import PricingPage from "./pages/PricingPage.svelte";
+  import WebsiteFooter from "./components/WebsiteFooter.svelte";
+  import ErrorAlert from "./components/ErrorAlert.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -27,13 +38,14 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
 >
   <Seo title="Filing deadline dashboard" description="Web application for managing upcoming filing deadlines for annual accounts. Just enter your client list and the deadlines are automatically fetched from Companies House."/>
   <TypographyProvider>
-    <div theme={$isDark ? 'dark' : 'light'} class="full-height">
+    <div theme={$isDark ? 'dark' : 'light'} >
       <AppShell>
         <Header slot="header">
             <NavBar />
         </Header>
+        <WebsiteFooter slot="footer"/>
         <slot>
-
+<div class="full-height">
           <Route path="/view/*">
             {#await import('./pages/PublicPagesRoutes.svelte').then(m=>m.default) }
               <Loader/>
@@ -41,6 +53,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <!-- Async Load the public pages -->
               <PublicPagesRoutes />
             {/await}
+              <Route>
+                  <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+              </Route>
           </Route>
 
           <Route path="/secure/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
@@ -50,6 +65,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <!-- Async Load the authed pages -->
               <AuthedPagesRoutes />
             {/await}
+              <Route>
+                  <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+              </Route>
           </Route>
 
           <Route path="/*"> <!-- this is to support legacy links which weren't prefixed -->
@@ -59,11 +77,15 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <!-- Async Load the authed pages -->
               <AuthedPagesRoutes />
             {/await}
+            <Route>
+              <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+            </Route>
           </Route>
 
-          <Route path="/">
-            <Home />
-          </Route>
+  <Route path="/">
+    <Home />
+  </Route>
+</div>
         </slot>
       </AppShell>
     </div>
@@ -74,7 +96,7 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
 
 <style>
   div.full-height{
-    min-height: 100vh;
+    min-height: 90vh;
   }
   :global(html){
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
