@@ -23,6 +23,7 @@
     import AsyncCompanyProfile from "../components/dashboard/AsyncCompanyProfile.svelte";
     import rowHighlights from '../components/dashboard/rowHighlights.css'
     import ErrorAlert from "../components/ErrorAlert.svelte";
+    import AnchoredLink from "../components/AnchoredLink.svelte";
 
     const {error, processing} = confirmationStatements
     onMount(()=>confirmationStatements.refresh())
@@ -117,7 +118,7 @@
         {#if $confirmationStatements.length === 0}
             <Text>
                 You haven't added any clients yet, so your dashboard is empty.
-                Go the <Anchor root={Link} to="/clients" href="/clients" inherit>client list page</Anchor> and add some clients to get started.
+                Go the <AnchoredLink href="/secure/clients">client list page</AnchoredLink> and add some clients to get started.
                 Then data will appear in your dashboard.
             </Text>
         {:else}

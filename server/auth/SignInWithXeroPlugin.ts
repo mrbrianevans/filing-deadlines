@@ -44,13 +44,13 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
         request.session.owner = await fastify.redis.get(`org:${request.session.orgId}:owner`).then(o => o === request.session.userId)
         // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
         const clientListLength = await fastify.redis.hlen('org:'+request.session.orgId+':clients')
-        if(clientListLength > 0) reply.redirect('/dashboard')
-        else reply.redirect('/clients')
+        if(clientListLength > 0) reply.redirect('/secure/dashboard')
+        else reply.redirect('/secure/clients')
       }else{
         // if there is a pending invite, send the user to a special page for accepting the invite.
         const pendingInvite = await fastify.redis.exists(`invite:${decodedIdToken.email}`)
-        if(pendingInvite) return reply.redirect('/org-invite')
-        else return reply.redirect('/manage-organisation') // the user isn't in an org and doesn't have an invite, so let them create an org
+        if(pendingInvite) return reply.redirect('/secure/org-invite')
+        else return reply.redirect('/secure/manage-organisation') // the user isn't in an org and doesn't have an invite, so let them create an org
       }
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.

@@ -8,6 +8,7 @@
   import PublicDisplayTable from "../components/dashboard/PublicDisplayTable.svelte";
   import DesktopDisplayTable from "../components/dashboard/DesktopDisplayTable.svelte";
     import rowHighlights from '../components/dashboard/rowHighlights.css'
+  import AnchoredLink from "../components/AnchoredLink.svelte";
 
   let publicView = false
 
@@ -36,7 +37,7 @@
                     <Title order={3}>Get started</Title>
                     <Text>
                         It looks like you haven't added any clients yet.
-                        Go the <Anchor root={Link} to="/clients" href="/clients" inherit>client list page</Anchor> and add some clients to get started.
+                        Go the <AnchoredLink href="/secure/clients">client list page</AnchoredLink> and add some clients to get started.
                         Then data will appear in your dashboard.
                     </Text>
                 </Container>

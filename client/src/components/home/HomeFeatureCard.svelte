@@ -7,11 +7,11 @@ import {Paper, Text, Title} from "@svelteuidev/core";
 import {user} from "../../lib/stores/user.js";
 import LinkIf from "./LinkIf.svelte";
 
-export let title, subtitle, link
+export let title, subtitle, link, alwaysLink=false
 
 </script>
 
-<LinkIf href={link} condition={$user}>
+<LinkIf href={link} condition={alwaysLink || $user}>
     <Paper override={{background: '#f9f9f9'}}>
         <Title order={2} color="cyan" weight="bold" override={{ fontSize: '40px !important' }}>{title}</Title>
         <Text color='dimmed'>{subtitle}</Text>

@@ -38,19 +38,22 @@
                 </Alert>
             {/if}
 
-            <HomeFeatureCard link="/clients" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
+            <HomeFeatureCard link="/secure/clients" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/dashboard" title="Upcoming deadlines." subtitle="Dashboards for both financial accounts and confirmation statement deadlines, with data pulled from Companies House.">
+            <HomeFeatureCard link="/secure/dashboard" title="Upcoming deadlines." subtitle="Dashboards for both financial accounts and confirmation statement deadlines, with data pulled from Companies House.">
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/recent-filings" title="Recent filings." subtitle="See a recent history of filings for the companies on your client list.">
+            <HomeFeatureCard link="/secure/recent-filings" title="Recent filings." subtitle="See a recent history of filings for the companies on your client list.">
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/notifications" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
+            <HomeFeatureCard link="/secure/notifications" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/registered-office-address" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
+            <HomeFeatureCard link="/secure/registered-office-address" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/view/pricing" alwaysLink title="Pricing" subtitle="View pricing for accounting practices.">
             </HomeFeatureCard>
 
 

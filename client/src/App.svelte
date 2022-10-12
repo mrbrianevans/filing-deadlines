@@ -4,6 +4,7 @@
   import {isDark} from "./lib/stores/theme.ts";
   import NavBar from "./components/NavBar.svelte";
   import Home from "./pages/Home.svelte";
+  import PricingPage from "./pages/PricingPage.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -32,14 +33,34 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
             <NavBar />
         </Header>
         <slot>
-          <Route path="/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
+
+          <Route path="/view/*">
+            {#await import('./pages/PublicPagesRoutes.svelte').then(m=>m.default) }
+              <Loader/>
+            {:then PublicPagesRoutes}
+              <!-- Async Load the public pages -->
+              <PublicPagesRoutes />
+            {/await}
+          </Route>
+
+          <Route path="/secure/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
             {#await import('./pages/AuthedPagesRoutes.svelte').then(m=>m.default) }
               <Loader/>
-              {:then AuthedPagesRoutes}
+            {:then AuthedPagesRoutes}
               <!-- Async Load the authed pages -->
               <AuthedPagesRoutes />
             {/await}
           </Route>
+
+          <Route path="/*"> <!-- this is to support legacy links which weren't prefixed -->
+            {#await import('./pages/AuthedPagesRoutes.svelte').then(m=>m.default) }
+              <Loader/>
+            {:then AuthedPagesRoutes}
+              <!-- Async Load the authed pages -->
+              <AuthedPagesRoutes />
+            {/await}
+          </Route>
+
           <Route path="/">
             <Home />
           </Route>

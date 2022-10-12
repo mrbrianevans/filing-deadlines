@@ -11,6 +11,7 @@ import SuggestFeature from "./SuggestFeature.svelte";
 import AuthedPage from "./AuthedPage.svelte";
 import ManageOrg from "./ManageOrg.svelte";
 import ClientList from "./ClientList.svelte";
+import PricingPage from "./PricingPage.svelte";
 </script>
 
 <AuthedPage>

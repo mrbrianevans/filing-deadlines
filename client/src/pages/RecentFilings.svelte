@@ -145,7 +145,7 @@
             <Button disabled>Group by company</Button>
         </Tooltip>
         <Tooltip label="Subscribe to web notifications of new filings">
-            <AnchoredLink href="/notifications">Get notifications</AnchoredLink>
+            <AnchoredLink href="/secure/notifications">Get notifications</AnchoredLink>
         </Tooltip>
     </Group>
     {#if error}

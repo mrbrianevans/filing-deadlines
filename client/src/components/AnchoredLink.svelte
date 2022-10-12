@@ -7,6 +7,5 @@
 
 </script>
 
-<!--<Link to="{href}"><slot></slot></Link>-->
 
-<Anchor root={Link} to="{href}" href="{href}"><slot></slot></Anchor>
+<Anchor root={Link} to="{href}" href="{href}" inherit><slot></slot></Anchor>

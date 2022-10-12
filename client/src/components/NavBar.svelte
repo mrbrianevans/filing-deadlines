@@ -66,20 +66,20 @@
                     {#if $user.orgName}
                         <Menu.Label>Dashboards</Menu.Label>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/clients">Client list</AnchoredLink>
+                            <AnchoredLink href="/secure/clients">Client list</AnchoredLink>
                         </Menu.Item>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/dashboard">Accounts dashboard</AnchoredLink>
+                            <AnchoredLink href="/secure/dashboard">Accounts dashboard</AnchoredLink>
                         </Menu.Item>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/confirmation-statement-dashboard">Confirmation statements
+                            <AnchoredLink href="/secure/confirmation-statement-dashboard">Confirmation statements
                             </AnchoredLink>
                         </Menu.Item>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/recent-filings">Recent filings</AnchoredLink>
+                            <AnchoredLink href="/secure/recent-filings">Recent filings</AnchoredLink>
                         </Menu.Item>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/registered-office-address">
+                            <AnchoredLink href="/secure/registered-office-address">
                                 Registered office address
                             </AnchoredLink>
                         </Menu.Item>
@@ -88,21 +88,21 @@
                     {#if $user.owner}
                         <Menu.Label>Manage</Menu.Label>
                         <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/manage-organisation">
+                            <AnchoredLink href="/secure/manage-organisation">
                                 Manage organisation
                             </AnchoredLink>
                         </Menu.Item>
                         <Divider/>
                     {/if}
                     <Menu.Item class={classes.root} root="span">
-                        <AnchoredLink href="/feedback">Give feedback</AnchoredLink>
+                        <AnchoredLink href="/secure/feedback">Give feedback</AnchoredLink>
                     </Menu.Item>
                     <Divider/>
                     <Menu.Label>Settings</Menu.Label>
                     <Menu.Item icon="{$isDark ? Sun : Moon}"
                                on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</Menu.Item>
                     <Menu.Item class={classes.root} root="span">
-                        <AnchoredLink href="/notifications">
+                        <AnchoredLink href="/secure/notifications">
                             Notifications
                         </AnchoredLink>
                     </Menu.Item>
@@ -125,8 +125,7 @@
                             </Tooltip>
                         </Group>
                         <Text>
-                            <Anchor root={Link} to="/manage-organisation"
-                                    href="/manage-organisation">{$user.orgName ?? 'No organisation'}</Anchor>
+                            <AnchoredLink href="/secure/manage-organisation">{$user.orgName ?? 'No organisation'}</AnchoredLink>
                         </Text>
                     </Stack>
                 {/if}

@@ -9,6 +9,7 @@ import {onMount} from "svelte";
 import {OrgMemberStatusPretty} from '../../../fs-shared/OrgMemberStatus.js'
 import {orgAddress} from "../lib/stores/orgAddress.js";
 import type {OfficeAddress} from "../../../fs-shared/OfficeAddress.js";
+import AnchoredLink from "../components/AnchoredLink.svelte";
 
 
 let newOrgName = ''
@@ -60,7 +61,7 @@ let {processing: addressLoading} = orgAddress
                 <Space h="sm"/>
                 <Alert color="green" >
                     <Text>You've successfully created a new organisation called <b>{$user.orgName}</b>.</Text>
-                    <Text>You can add members to allow them to access your client list, or you can go straight to the <Anchor root={Link} to="/clients" href="/clients" inherit>client list</Anchor> add start adding some clients.</Text>
+                    <Text>You can add members to allow them to access your client list, or you can go to the <AnchoredLink href="/secure/clients">client list page</AnchoredLink> add start adding some clients.</Text>
                 </Alert>
             {/if}
             <Title order="{3}">Registered office address</Title>
