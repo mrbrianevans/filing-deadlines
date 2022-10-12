@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.2",
+    "@stripe/stripe-js": "^1.39.0",
     "@svelte-drama/suspense": "^0.3.9",
     "@svelte-drama/swr": "^0.2.6",
     "@svelteuidev/composables": "^0.7.3",

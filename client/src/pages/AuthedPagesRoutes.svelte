@@ -12,9 +12,13 @@ import AuthedPage from "./AuthedPage.svelte";
 import ManageOrg from "./ManageOrg.svelte";
 import ClientList from "./ClientList.svelte";
 import PricingPage from "./PricingPage.svelte";
+import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
 </script>
 
 <AuthedPage>
+    <Route path="/payments/*">
+        <PaymentPageRouter/>
+    </Route>
     <Route path="/manage-organisation">
         <ManageOrg />
     </Route>

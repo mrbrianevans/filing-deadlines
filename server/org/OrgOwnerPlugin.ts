@@ -27,6 +27,8 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
     request.log = request.log.child({owner})
   })
 
+  await fastify.register(import('../plugins/PaymentPlugin.js'))
+
   // invite user to org
   fastify.post<{Body: {email:string}}>('/invite', {schema: inviteSchema},async (request, reply)=>{
     const {email} = request.body
