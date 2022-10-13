@@ -1,6 +1,15 @@
 <script lang="ts">
 
   import {Button, Container,Badge} from "@svelteuidev/core";
+  import {SubscriptionPlans} from '../../../fs-shared/SubscriptionPlans.js'
+  import {fetcher, poster} from "../lib/swr.js";
+  import {navigate} from "svelte-navigator";
+
+  async function startPurchase(plan){
+    const {checkoutUrl} = await fetcher('/api/user/org/member/owner/payments/create-session?'+ new URLSearchParams({plan}).toString())
+    // redirects the user to checkout on Stripe
+    await navigate(checkoutUrl)
+  }
 </script>
 
 <Container>
@@ -17,11 +26,11 @@
                 <li>only 2 users in organisation</li>
             </ul>
             <div class="buy-button-container">
-                <Button disabled>Purchase</Button>
+                <Button on:click={()=>startPurchase(SubscriptionPlans.BASIC)}>Purchase</Button>
             </div>
         </div>
         <div style="background: #c2ebf1">
-            <h2>Intermediate £25/month</h2>
+            <h2>Premium £25/month</h2>
             <Badge color="green">Free 1 month trial</Badge>
             <ul>
                 <li>accounts dashboard (full year)</li>
@@ -32,7 +41,7 @@
                 <li>up to 20 users in organisation</li>
             </ul>
             <div class="buy-button-container">
-                <Button disabled>Start trial</Button>
+                <Button on:click={()=>startPurchase(SubscriptionPlans.PREMIUM)}>Start trial</Button>
             </div>
         </div>
     </div>

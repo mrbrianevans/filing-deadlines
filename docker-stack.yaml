@@ -47,6 +47,7 @@ services:
       - .xero.env
       - .server.env
       - .url.env
+      - .stripe.env
     logging:
       driver: local
     depends_on:

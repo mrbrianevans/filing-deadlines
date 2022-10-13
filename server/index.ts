@@ -39,6 +39,7 @@ await fastify.register(async (fastify, opts)=>{
   await fastify.register(import('./auth/UserPlugin.js'), {prefix: 'user'})
   await fastify.register(import('./plugins/ErrorLoggingPlugin.js'), {prefix: 'error'})
   await fastify.register(import('./plugins/HealthcheckPlugin.js'), {prefix: 'health'})
+  await fastify.register(import('./plugins/StripeWebhooksPlugin.js'), {prefix: 'webhooks/stripe'})
 }, {prefix: 'api'})
 
 await fastify.listen({port, host: '::'})

@@ -1,11 +1,13 @@
-import { OAuth2Namespace } from '@fastify/oauth2';
+import type { OAuth2Namespace } from '@fastify/oauth2';
 import type {IdToken} from "./token.js";
 import type {CustomFastifyError} from "./CustomFastifyError.js";
+import type {Stripe} from "stripe";
 
 
 declare module 'fastify' {
   interface FastifyInstance {
     xeroOauth: OAuth2Namespace;
+    stripe: Stripe
   }
 
   // these variables can be undefined, but they are checked in pre-handler
