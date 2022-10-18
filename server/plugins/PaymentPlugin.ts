@@ -20,11 +20,12 @@ const createSessionSchema = {
 }
 
 const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
+  const SITE_ADDRESS = getEnv('SITE_ADDRESS');
+
   {
     const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-08-01'})
     fastify.decorate('stripe', stripe)
   }
-
 
   fastify.get<{Querystring: {plan:SubscriptionPlans}}>('/create-session', {schema: createSessionSchema},async (request, reply)=> {
     const {plan} = request.query
@@ -37,14 +38,27 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
       ],
       mode: 'subscription',
       subscription_data: {trial_period_days: 30},
-      success_url: getEnv('SITE_ADDRESS') + '/secure/payments/success',
-      cancel_url: getEnv('SITE_ADDRESS') + '/secure/payments/cancel',
+      success_url: SITE_ADDRESS + '/secure/payments/success',
+      cancel_url: SITE_ADDRESS + '/secure/payments/cancel',
     });
 
     if(session.url)
       return {checkoutUrl: session.url}
     else
       reply.sendError({message: 'Could not get a URL for checkout', error: 'No checkout URL', statusCode: 500})
+  })
+
+  // creates a billing portal session for a customer to manage their billing, view invoices etc.
+  fastify.get('/portal-url', async (request, reply)=> {
+    const session = await fastify.stripe.billingPortal.sessions.create({
+      customer: '', // todo: get customer ID for the current user
+      return_url: SITE_ADDRESS
+    });
+
+    if(session.url)
+      return {portalUrl: session.url}
+    else
+      reply.sendError({message: 'Could not get a URL for billing portal', error: 'No billing portal URL', statusCode: 500})
   })
 
 
