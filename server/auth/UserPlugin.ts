@@ -34,7 +34,8 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
       id: decodedIdToken.xero_userid,
       name: decodedIdToken.name,
       email: decodedIdToken.email,
-      owner: request.session.owner
+      owner: request.session.owner,
+      orgPlan: request.session.orgPlan
     }
     if(request.session.orgId) user.orgName = <string>await fastify.redis.get(`org:${request.session.orgId}:name`)
     return user

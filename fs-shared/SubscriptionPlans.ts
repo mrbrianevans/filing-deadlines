@@ -2,7 +2,7 @@
 
 export enum SubscriptionPlans{
   BASIC = "BASIC",
-  PREMIUM = "PREMIUM"
+  STANDARD = "STANDARD"
 }
 
 
@@ -29,7 +29,7 @@ export const SubscriptionPlanFeatures: Record<SubscriptionPlans, Features> = {
     registeredOfficeAddressChecker: false,
     webNotifications: false
   },
-  [SubscriptionPlans.PREMIUM]: {
+  [SubscriptionPlans.STANDARD]: {
     accountsDashboardMaxPeriod: 'P2Y',
     clientListMaxSize: 500,
     confirmationStatementsMaxPeriod: 'P2Y',

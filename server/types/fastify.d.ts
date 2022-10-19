@@ -2,6 +2,7 @@ import type { OAuth2Namespace } from '@fastify/oauth2';
 import type {IdToken} from "./token.js";
 import type {CustomFastifyError} from "./CustomFastifyError.js";
 import type {Stripe} from "stripe";
+import type { SubscriptionPlans } from "../../fs-shared/SubscriptionPlans.js";
 
 
 declare module 'fastify' {
@@ -20,6 +21,9 @@ declare module 'fastify' {
 
     // whether the user is the owner of their organisation or not
     owner?: boolean
+
+    // the subscription plan of the organisation that the user is in
+    orgPlan?: SubscriptionPlans
   }
 
   interface FastifyRequest{

@@ -68,6 +68,21 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     }
   })
 
+  // reject invitation
+  fastify.post<{Querystring: {orgId: string}}>('/rejectInvitation', {schema:acceptInviteSchema},async (request, reply)=>{
+    const orgIdRejected = request.query.orgId
+    const {email} = request.user
+    const {userId} = request.session
+    const pendingInviteOrgId = await fastify.redis.hget(`invite:${email}`, 'orgId')
+    if(orgIdRejected === pendingInviteOrgId){
+      await fastify.redis.del(`invite:${email}`)
+      await fastify.redis.hset(`org:${orgIdRejected}:members`, email, OrgMemberStatus.rejectedInvite)
+      reply.status(204).send()
+    }else{
+      reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
+    }
+  })
+
   // get current pending invite
   fastify.get('/invites', async (request, reply)=>{
     const {email} = request.user

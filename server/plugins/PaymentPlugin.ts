@@ -6,7 +6,7 @@ import {SubscriptionPlans} from '../../fs-shared/SubscriptionPlans.js'
 // these should maybe be in the database or in a .env file
 const subscriptionProducts: Record<SubscriptionPlans, string> = {
   [SubscriptionPlans.BASIC]: getEnv('STRIPE_BASIC_PRICE'),
-  [SubscriptionPlans.PREMIUM]: getEnv('STRIPE_PREMIUM_PRICE')
+  [SubscriptionPlans.STANDARD]: getEnv('STRIPE_STANDARD_PRICE')
 }
 
 

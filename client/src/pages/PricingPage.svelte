@@ -1,20 +1,13 @@
 <script lang="ts">
 
-  import {Button, Container,Badge} from "@svelteuidev/core";
-  import {SubscriptionPlans} from '../../../fs-shared/SubscriptionPlans.js'
-  import {fetcher, poster} from "../lib/swr.js";
-  import {navigate} from "svelte-navigator";
+  import {Container, Badge} from "@svelteuidev/core";
 
-  async function startPurchase(plan){
-    const {checkoutUrl} = await fetcher('/api/user/org/member/owner/payments/create-session?'+ new URLSearchParams({plan}).toString())
-    // redirects the user to checkout on Stripe
-    await navigate(checkoutUrl)
-  }
 </script>
+
 
 <Container>
     <h1>Pricing
-        <Badge>Coming soon</Badge></h1>
+        <Badge>Beta</Badge></h1>
     <p>There are different plans available depending on your needs. Plans are billed monthly and you can cancel anytime.</p>
     <div class="pricing-container">
         <div style="border: 2px solid #86d4e0">
@@ -24,13 +17,11 @@
                 <li>confirmation statement dashboard for next 7 days</li>
                 <li>recent filings for last 7 days</li>
                 <li>only 2 users in organisation</li>
+                <li>up to 100 clients</li>
             </ul>
-            <div class="buy-button-container">
-                <Button on:click={()=>startPurchase(SubscriptionPlans.BASIC)}>Purchase</Button>
-            </div>
         </div>
         <div style="background: #c2ebf1">
-            <h2>Premium £25/month</h2>
+            <h2>Standard £25/month</h2>
             <Badge color="green">Free 1 month trial</Badge>
             <ul>
                 <li>accounts dashboard (full year)</li>
@@ -39,14 +30,15 @@
                 <li>registered office address checker</li>
                 <li>notifications for new filings</li>
                 <li>up to 20 users in organisation</li>
+                <li>up to 500 clients</li>
             </ul>
-            <div class="buy-button-container">
-                <Button on:click={()=>startPurchase(SubscriptionPlans.PREMIUM)}>Start trial</Button>
-            </div>
         </div>
     </div>
 
-    <p>The plan you purchase is for your organisation. Anyone you invite to your organisation will get the same features.</p>
+    <p>The plan you purchase is for your organisation. </p>
+
+<!--    this message could be customised based on whether the user is logged in, a member or owner of an organisation. -->
+    <p>If you wish to purchase a plan, login and then create an organisation. You will then be able to choose which plan to subscribe to.</p>
 
 
 </Container>

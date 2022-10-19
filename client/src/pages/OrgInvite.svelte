@@ -18,7 +18,15 @@
     const success = await poster('/api/user/org/acceptInvitation?orgId='+invite.orgId, {})
     acceptLoading = false
     await user.refresh()
-    if(success) navigate('/dashboard')
+    if(success) navigate('/secure/dashboard')
+  }
+  let rejectLoading = false
+  async function rejectInvite(){
+    rejectLoading = true
+    const success = await poster('/api/user/org/rejectInvitation?orgId='+invite.orgId, {})
+    rejectLoading = false
+    await user.refresh()
+    if(success) navigate('/secure/manage-organisation')
   }
 </script>
 
@@ -31,7 +39,7 @@
             <Space h="sm"/>
             <Group>
                 <Button color="green" on:click={acceptInvite} loading="{acceptLoading}">Accept</Button>
-                <Button color="red" on:click={()=>navigate('/')} disabled>Reject</Button>
+                <Button color="red" on:click={rejectInvite} loading="{rejectLoading}">Reject</Button>
             </Group>
             <Space h="sm"/>
             <Text color="dimmed">Accepting the invitation will give you access to view the dashboard and client list, and also to edit the client list.</Text>
