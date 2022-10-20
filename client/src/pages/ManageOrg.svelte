@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import {user} from "../lib/stores/user.js";
-import {Badge, Container, Text, Title, Tooltip} from "@svelteuidev/core";
+import {Badge, Container, Group, Text, Title, Tooltip} from "@svelteuidev/core";
 import CreateOrganisation from "./org/CreateOrganisation.svelte";
 import StripePricingTable from "./payments/StripePricingTable.svelte";
 import EditRegisteredAddress from "../components/manageOrg/EditRegisteredAddress.svelte";
@@ -11,12 +11,14 @@ import ManageOrgMembers from "../components/manageOrg/ManageOrgMembers.svelte";
 
 <Container>
     <Title order={2}>Manage organisation</Title>
-    <Tooltip label="The name of your organisation" openDelay={200}>
-        <Badge size="xl">{$user.orgName ?? 'no organisation'}</Badge>
-    </Tooltip>
-    <Tooltip label="The subscription plan of your organisation determines which features you can use." openDelay={200}>
-    <Badge size="xl">{$user.orgPlan ?? 'no subscription plan'}</Badge>
-    </Tooltip>
+    <Group spacing="xl" mb="xl">
+        <Tooltip label="The name of your organisation" openDelay={200}>
+            <Badge size="xl" color={$user.orgName?'green':'gray'} radius="xs">{$user.orgName ?? 'no organisation'}</Badge>
+        </Tooltip>
+        <Tooltip label="The subscription plan of your organisation determines which features you can use." openDelay={200}>
+            <Badge size="xl" color={$user.orgPlan?'green':'gray'} radius="xs">{$user.orgPlan ?? 'no subscription plan'}</Badge>
+        </Tooltip>
+    </Group>
     {#if $user.orgName}
         {#if $user.orgPlan}
         <!--    the user is in an organisation which has an active plan, show them the appropriate features -->

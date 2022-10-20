@@ -36,6 +36,7 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
           quantity: 1,
         },
       ],
+      metadata: {orgId: request.session.orgId},
       mode: 'subscription',
       subscription_data: {trial_period_days: 30},
       success_url: SITE_ADDRESS + '/secure/payments/success',

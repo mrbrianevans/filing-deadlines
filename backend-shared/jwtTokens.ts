@@ -1,5 +1,6 @@
 import jwtDecode from "jwt-decode";
 
+// decodes the id token stored at `user:${userId}:id`
 export function getUserFromIdToken(idToken: string){
   return jwtDecode(idToken) as IdToken
 }
