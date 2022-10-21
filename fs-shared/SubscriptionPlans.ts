@@ -1,8 +1,8 @@
 
-
+// intentionally different values to ensure that the correct form is used when persisting
 export enum SubscriptionPlans{
-  BASIC = "BASIC",
-  STANDARD = "STANDARD"
+  BASIC = "basicPlan",
+  STANDARD = "standardPlan"
 }
 
 

@@ -1,4 +1,5 @@
 import type {FastifyPluginAsync} from "fastify";
+import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
 
 const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
@@ -31,6 +32,12 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   fastify.get('/members', async (request, reply)=> {
     return await fastify.redis.hgetall(`org:${request.session.orgId}:members`)
+  })
+
+  // update the current users session org
+  fastify.get('/refreshOrgPlan', async (request, reply)=>{
+    request.session.orgPlan = await getOrgPlan(request.session.orgId)
+    reply.status(204).send()
   })
 
 }

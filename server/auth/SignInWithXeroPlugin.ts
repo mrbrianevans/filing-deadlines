@@ -1,6 +1,7 @@
 import type {FastifyPluginAsync} from "fastify";
 import { getEnv } from '../../backend-shared/utils.js'
 import {decodeAccessToken, getUserFromIdToken} from "../../backend-shared/jwtTokens.js";
+import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
 const userScopes = ['openid', 'profile', 'email']
 const redirectUrl = getEnv('XERO_REDIRECT_URL')
@@ -42,6 +43,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       request.session.orgId = <string>await fastify.redis.get(`user:${request.session.userId}:org`)
       if(request.session.orgId) {
         request.session.owner = await fastify.redis.get(`org:${request.session.orgId}:owner`).then(o => o === request.session.userId)
+        request.session.orgPlan = await getOrgPlan(request.session.orgId)
         // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
         const clientListLength = await fastify.redis.hlen('org:'+request.session.orgId+':clients')
         if(clientListLength > 0) reply.redirect('/secure/dashboard')

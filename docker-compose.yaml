@@ -18,6 +18,8 @@ services:
       - .url.env
     logging:
       driver: local
+    depends_on:
+      - server # server must be running already to allow health check to pass
   redis:
     image: redis/redis-stack-server
     volumes:
@@ -55,6 +57,7 @@ services:
       driver: local
     depends_on:
       - redis
+      - loki
   "metrics":
     build:
       context: monitoring/prometheus

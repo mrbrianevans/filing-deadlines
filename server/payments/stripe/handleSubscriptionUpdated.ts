@@ -19,3 +19,22 @@ export async function handleSubscriptionUpdated(subscription: Stripe.Subscriptio
 
   await redis.quit()
 }
+
+/** Get the current subscription plan for an organisation. Returns undefined if no active plan */
+export async function getOrgPlan(orgId: string){
+  const redis = getRedisClient()
+
+  const subscriptionPlan = await redis.get(`org:${orgId}:subscriptionPlan`) as SubscriptionPlans
+  const activeUntil = await redis.get(`org:${orgId}:subscriptionActiveUntil`).then(secs=>new Date(parseInt(secs??'0') * 1000))
+  const status = await redis.get(`org:${orgId}:subscriptionStatus`) as Stripe.Subscription.Status
+
+  await redis.quit()
+
+  if(subscriptionPlan && status === 'active' || status === 'trialing' && inFuture(activeUntil))
+    return subscriptionPlan
+  else return undefined
+}
+
+function inFuture(date: Date){
+  return Date.now() - date.getTime() < 0
+}
