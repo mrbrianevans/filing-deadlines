@@ -7,7 +7,7 @@ export enum SubscriptionPlans{
 
 
 // these are features that can be enabled/disabled or restricted for various plans.
-interface Features{
+export interface Features{
   recentFilingsMaxPeriod: string,
   registeredOfficeAddressChecker: boolean,
   accountsDashboardMaxPeriod: string
@@ -19,7 +19,17 @@ interface Features{
 
 // these should be checked on the server and the client to display only valid options to user, but also prevent custom requests.
 // these could be stored in Redis and retrieved every time, rather than having them directly in the source code.
-export const SubscriptionPlanFeatures: Record<SubscriptionPlans, Features> = {
+export const SubscriptionPlanFeatures: Record<SubscriptionPlans|'undefined', Features> = {
+  // default features allowed for users who don't have any plan. deny everything. this can also be while plan is loading.
+  undefined: {
+    accountsDashboardMaxPeriod: 'P0D',
+    clientListMaxSize: 0,
+    confirmationStatementsMaxPeriod: 'P0D',
+    organisationMaxMembers: 0,
+    recentFilingsMaxPeriod: 'P0D',
+    registeredOfficeAddressChecker: false,
+    webNotifications: false
+  },
   [SubscriptionPlans.BASIC]: {
     accountsDashboardMaxPeriod: 'P31D',
     clientListMaxSize: 100,

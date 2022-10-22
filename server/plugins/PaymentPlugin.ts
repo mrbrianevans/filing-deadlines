@@ -27,33 +27,13 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
     fastify.decorate('stripe', stripe)
   }
 
-  fastify.get<{Querystring: {plan:SubscriptionPlans}}>('/create-session', {schema: createSessionSchema},async (request, reply)=> {
-    const {plan} = request.query
-    const session = await fastify.stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: subscriptionProducts[plan],
-          quantity: 1,
-        },
-      ],
-      metadata: {orgId: request.session.orgId},
-      mode: 'subscription',
-      subscription_data: {trial_period_days: 30},
-      success_url: SITE_ADDRESS + '/secure/payments/success',
-      cancel_url: SITE_ADDRESS + '/secure/payments/cancel',
-    });
-
-    if(session.url)
-      return {checkoutUrl: session.url}
-    else
-      reply.sendError({message: 'Could not get a URL for checkout', error: 'No checkout URL', statusCode: 500})
-  })
-
   // creates a billing portal session for a customer to manage their billing, view invoices etc.
   fastify.get('/portal-url', async (request, reply)=> {
+    const customer = await fastify.redis.get(`user:${request.session.userId}:customerId`)
+    if(!customer) return reply.sendError({message: 'You haven\'t signed up for payments with Stripe yet, so you can\'t manage Stripe billing.', error: 'Not connected with Stripe', statusCode: 500})
     const session = await fastify.stripe.billingPortal.sessions.create({
-      customer: '', // todo: get customer ID for the current user
-      return_url: SITE_ADDRESS
+      customer,
+      return_url: SITE_ADDRESS + '/secure/manage-organisation'
     });
 
     if(session.url)

@@ -30,6 +30,7 @@ const RedisStore = connectRedis(fastifySession as any)
 }
 
 fastify.decorateReply('sendError', function (error: { message: string; error: string; statusCode: number; }) {
+  fastify.log.warn({error}, "Sending error to client")
   return this.status(error.statusCode).send(error);
 })
 
