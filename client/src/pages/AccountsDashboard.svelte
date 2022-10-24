@@ -11,6 +11,7 @@
   import AnchoredLink from "../components/AnchoredLink.svelte";
   import AsyncDuration from "../components/AsyncDuration.svelte";
   import {features} from "../lib/stores/features.js";
+  import {clientList} from "../lib/stores/clientList.js";
 
   let publicView = false
 
@@ -36,12 +37,19 @@
             <svelte:component this={publicView?PublicDisplayTable:DesktopDisplayTable} data={$dashboardData}/>
             {:else}
                 <Container>
+                    {#if $clientList?.length > 0}
+                        <Title order={3}>All done!</Title>
+                        <Text>
+                            You don't have any accounts deadlines in the next {$features.accountsDashboardMaxPeriodMonths} month(s).
+                        </Text>
+                    {:else }
                     <Title order={3}>Get started</Title>
                     <Text>
                         It looks like you haven't added any clients yet.
                         Go the <AnchoredLink href="/secure/clients">client list page</AnchoredLink> and add some clients to get started.
                         Then data will appear in your dashboard.
                     </Text>
+                    {/if}
                 </Container>
             {/if}
         {/if}
