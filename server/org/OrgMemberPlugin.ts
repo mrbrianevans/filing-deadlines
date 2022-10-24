@@ -1,4 +1,5 @@
 import type {FastifyPluginAsync} from "fastify";
+import { SubscriptionPlanFeatures } from "../../fs-shared/SubscriptionPlans.js";
 import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
 
@@ -18,8 +19,10 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
         reply.sendError({statusCode: 401, error: 'Out of sync', message: 'There has been a problem with your membership of this organisation. Please log out and sign in again and retry.'})
       }
     }
+    //could update the session orgPlan, but in most cases this should not be necessary
+    const features = SubscriptionPlanFeatures[request.session.orgPlan??'undefined']
     const name = <string>await fastify.redis.get(`org:${orgId}:name`)
-    request.org = {name} // ideally there should be a hash containing a field called name, rather than a key like this
+    request.org = {name, features} // ideally there should be a hash containing a field called name, rather than a key like this
     request.log = request.log.child({orgId})
   })
 

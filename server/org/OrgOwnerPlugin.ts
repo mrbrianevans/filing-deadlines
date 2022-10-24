@@ -34,6 +34,10 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const {email} = request.body
     const {orgId} = request.session
     const {user,org} = request
+    const orgActiveMemberCount = await fastify.redis.scard(`org:${orgId}:activeMembers`)
+    if(orgActiveMemberCount >= org.features.organisationMaxMembers){
+      return reply.sendError({message: `Your organisations subscription plan includes ${org.features.organisationMaxMembers} members, and you already have ${orgActiveMemberCount} active members in your organisation.`, error: 'Reached limit', statusCode: 400})
+    }
     const alreadyPending = await fastify.redis.hgetall(`invite:${email}`)
     if(alreadyPending?.orgId === orgId){
       return reply.sendError({message:"This user has already been invited to your organisation",error:'Already invited', statusCode: 400})

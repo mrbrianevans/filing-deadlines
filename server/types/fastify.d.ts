@@ -2,7 +2,7 @@ import type { OAuth2Namespace } from '@fastify/oauth2';
 import type {IdToken} from "./token.js";
 import type {CustomFastifyError} from "./CustomFastifyError.js";
 import type {Stripe} from "stripe";
-import type { SubscriptionPlans } from "../../fs-shared/SubscriptionPlans.js";
+import type { SubscriptionPlans,Features } from "../../fs-shared/SubscriptionPlans.js";
 
 
 declare module 'fastify' {
@@ -30,7 +30,7 @@ declare module 'fastify' {
     // this is only set on /user routes! is null elsewhere
     user: IdToken
 
-    org: {name: string}
+    org: {name: string, features: Features}
   }
 
   interface FastifyReply{
