@@ -8,13 +8,14 @@ export enum SubscriptionPlans{
 
 // these are features that can be enabled/disabled or restricted for various plans.
 export interface Features{
-  recentFilingsMaxPeriod: string,
+  recentFilingsMaxPeriodDays: number,
   registeredOfficeAddressChecker: boolean,
   accountsDashboardMaxPeriodMonths: number
-  confirmationStatementsMaxPeriod: string
+  confirmationStatementsMaxPeriodDays: number
   organisationMaxMembers: number,
   webNotifications: boolean,
-  clientListMaxSize: number
+  clientListMaxSize: number,
+  exportData: boolean
 }
 
 // these should be checked on the server and the client to display only valid options to user, but also prevent custom requests.
@@ -24,28 +25,31 @@ export const SubscriptionPlanFeatures: Record<SubscriptionPlans|'undefined', Fea
   undefined: {
     accountsDashboardMaxPeriodMonths: 0,
     clientListMaxSize: 0,
-    confirmationStatementsMaxPeriod: 'P0D',
+    confirmationStatementsMaxPeriodDays: 0,
     organisationMaxMembers: 0,
-    recentFilingsMaxPeriod: 'P0D',
+    recentFilingsMaxPeriodDays: 0,
     registeredOfficeAddressChecker: false,
-    webNotifications: false
+    webNotifications: false,
+    exportData: false
   },
   [SubscriptionPlans.BASIC]: {
     accountsDashboardMaxPeriodMonths: 1,
     clientListMaxSize: 100,
-    confirmationStatementsMaxPeriod: 'P7D',
+    confirmationStatementsMaxPeriodDays: 7,
     organisationMaxMembers: 2,
-    recentFilingsMaxPeriod: 'P7D',
+    recentFilingsMaxPeriodDays: 7,
     registeredOfficeAddressChecker: false,
-    webNotifications: false
+    webNotifications: false,
+    exportData: false
   },
   [SubscriptionPlans.STANDARD]: {
     accountsDashboardMaxPeriodMonths: 24,
     clientListMaxSize: 500,
-    confirmationStatementsMaxPeriod: 'P2Y',
+    confirmationStatementsMaxPeriodDays: 365,
     organisationMaxMembers: 20,
-    recentFilingsMaxPeriod: 'P1Y',
+    recentFilingsMaxPeriodDays: 365,
     registeredOfficeAddressChecker: true,
-    webNotifications: true
+    webNotifications: true,
+    exportData: true
   }
 }

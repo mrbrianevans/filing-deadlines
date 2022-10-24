@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "watch": "tsc --build --watch",
     "start": "node index.js"
   },

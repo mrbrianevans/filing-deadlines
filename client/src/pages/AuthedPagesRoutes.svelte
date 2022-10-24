@@ -14,6 +14,8 @@ import ClientList from "./ClientList.svelte";
 import PricingPage from "./PricingPage.svelte";
 import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
 import PlanDependentPage from "./org/PlanDependentPage.svelte";
+import {SubscriptionPlans} from '../../../fs-shared/SubscriptionPlans.js'
+import {features} from "../lib/stores/features.js";
 </script>
 
 <AuthedPage>
@@ -29,12 +31,16 @@ import PlanDependentPage from "./org/PlanDependentPage.svelte";
         <Route path="/recent-filings">
             <RecentFilings />
         </Route>
-        <Route path="/registered-office-address">
-            <RegisteredOfficeAddress />
-        </Route>
         <Route path="/clients">
             <ClientList />
         </Route>
+            <Route path="/registered-office-address">
+                {#if $features.registeredOfficeAddressChecker}
+                <RegisteredOfficeAddress />
+                    {:else}
+                    <p>Your plan does not include the registered office address checker.</p>
+                {/if}
+            </Route>
     </PlanDependentPage>
 
     <Route path="/payments/*">

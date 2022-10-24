@@ -18,6 +18,7 @@
   import {notificationPreferences} from "../lib/stores/notificationPreferences.js";
   import AnchoredLink from "../components/AnchoredLink.svelte";
   import {fetcher} from "../lib/swr.js";
+  import {features} from "../lib/stores/features.js";
 
   let permission // updated web-notification permission
   const testWebNotification =  async () => {
@@ -37,7 +38,7 @@
     }
 
   $: notificationTypes = [
-    {label:"Web notifications of company filings", testNotification:testWebNotification, canBeEnabled: permission === 'granted', notificationName: notificationNames.webFilings},
+    {label:"Web notifications of company filings", testNotification:testWebNotification, canBeEnabled: $features.webNotifications && permission === 'granted', notificationName: notificationNames.webFilings},
     {label:"Email notifications of company filings", canBeEnabled: false, notificationName: notificationNames.emailFilings},
     {label:"Email notifications of upcoming accounts deadlines", canBeEnabled: false, notificationName: notificationNames.emailUpcomingAccountsDeadlines},
     {label:"Email notifications of upcoming confirmation statement deadlines", canBeEnabled: false, notificationName: notificationNames.emailUpcomingConfStatDeadlines}

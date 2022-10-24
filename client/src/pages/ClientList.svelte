@@ -20,7 +20,7 @@ import {clientList, importClientListCsv} from "../lib/stores/clientList.js";
 import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
-  import {FilePlus, InfoCircled, Reload} from "radix-icons-svelte";
+  import {FilePlus, InfoCircled, Update} from "radix-icons-svelte";
   import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
@@ -31,6 +31,7 @@ import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
   import {company_status} from "../assets/constants.json";
   import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
   import ErrorAlert from "../components/ErrorAlert.svelte";
+  import {features} from "../lib/stores/features.js";
 
 
 const columns: TableColumns<ClientListItem> = [
@@ -81,6 +82,7 @@ let {processing, error} = clientList
     await clientList.refresh() // when request has returned, the list has been updated on the server, so refresh it here
     reloading = false
   }
+  $: addingNewClientsDisabled = $clientList?.length >= $features?.clientListMaxSize
 </script>
 
 
@@ -88,25 +90,29 @@ let {processing, error} = clientList
     <Title order={2}>Client list</Title>
     {#if $user}
     <Group>
-        <TextInput bind:value={addedCompanyNumber} placeholder="Company number"/>
-        <Button on:click={addClient}>Add</Button>
+        <TextInput bind:value={addedCompanyNumber} placeholder="Company number" disabled={addingNewClientsDisabled}/>
+        <Button on:click={addClient} disabled={addingNewClientsDisabled}>Add</Button>
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-            <InputWrapper label="Upload CSV of clients">
-            <FileUpload let:dragging multiple={false} on:input={e=>importClientListCsv(e.detail.files)}>
-                <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
-                    <FilePlus/>
-                    <Text>Drag and Drop or </Text>
-                    <Text underline>Browse</Text>
-                </Box>
-            </FileUpload>
-        </InputWrapper>
+        {#if addingNewClientsDisabled}
+            <Text>You have reached the maximum number of clients included in your subscription.</Text>
+        {:else}
+                <InputWrapper label="Upload CSV of clients">
+                <FileUpload let:dragging multiple={false} on:input={e=>importClientListCsv(e.detail.files)}>
+                    <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
+                        <FilePlus/>
+                        <Text>Drag and Drop or </Text>
+                        <Text underline>Browse</Text>
+                    </Box>
+                </FileUpload>
+            </InputWrapper>
+        {/if}
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-        <Tooltip label="Reload all the details of companies in your client list.">
-            <ActionIcon on:click={reloadClientListDetails} loading="{reloading}"><Reload/></ActionIcon>
+        <Tooltip label="Update all the details of companies in your client list.">
+            <ActionIcon on:click={reloadClientListDetails} loading="{reloading}"><Update/></ActionIcon>
         </Tooltip>
     </Group>
         <Space h="md"/>
@@ -119,7 +125,7 @@ let {processing, error} = clientList
             {/if}
         {:else}
             {#if $clientList.length > 0}
-                <Text>{$clientList.length} clients</Text>
+                <Text size="xs">{$clientList.length} client(s) ({$features.clientListMaxSize} max)</Text>
                 <SvelteTable columns="{columns}" rows={$clientList} sortBy="company_status" sortOrder="{-1}"></SvelteTable>
             {:else}
                 <Title order={3}>Get started</Title>

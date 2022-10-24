@@ -18,6 +18,7 @@
   import ErrorAlert from "../components/ErrorAlert.svelte";
   import OfficeAddressResultsTable from "../components/registeredOfficeAddress/OfficeAddressResultsTable.svelte";
   import {exportRegisteredOfficeAddressXlsx} from "../lib/exportFormats/exportRegisteredOfficeAddressXlsx.js";
+  import {features} from "../lib/stores/features.js";
 
   const {error: addressError, processing: addressLoading} = orgAddress
   const {error: companiesAtAddressError, processing: companiesAtAddressLoading} = companiesAtAddress
@@ -47,7 +48,7 @@
                     <Button disabled>Export to CSV</Button>
                 </Tooltip>
                 <Tooltip label="Export the table to an Excel spreadsheet">
-                    <Button color="green" on:click={()=>exportRegisteredOfficeAddressXlsx(visibleData)}>Export to XLSX</Button>
+                    <Button color="green" on:click={()=>exportRegisteredOfficeAddressXlsx(visibleData)} disabled={!$features.exportData}>Export to XLSX</Button>
                 </Tooltip>
             </Group>
             <OfficeAddressResultsTable data={visibleData} />

@@ -2,9 +2,10 @@
 
   import {Alert, Button, Group, Space, Text, TextInput, Title} from "@svelteuidev/core";
   import {user} from "../../lib/stores/user.js";
-  import {OrgMemberStatusPretty} from '../../../../fs-shared/OrgMemberStatus.js'
+  import {OrgMemberStatusPretty, activeMemberStatuses} from '../../../../fs-shared/OrgMemberStatus.js'
   import {poster} from "../../lib/swr.js";
   import {orgMembers} from "../../lib/stores/org.js";
+  import {features} from "../../lib/stores/features.js";
 
   let inviteEmail = ''
   let errorInviting = false
@@ -15,6 +16,7 @@
     invited = success
     await orgMembers.refresh()
   }
+  $: addingMembersDisabled = Object.values($orgMembers??{}).filter(s=>activeMemberStatuses.has(s)).length >= $features.organisationMaxMembers
 </script>
 
 <Title order={3}>Members of {$user.orgName}</Title>
@@ -34,8 +36,13 @@
 {#if $user.owner}
     <Text color="dimmed">Members can edit the client list and view all the dashboards.</Text>
     <Space h="xs"/>
-    <Group><TextInput placeholder="Email address" bind:value={inviteEmail} invalid="{errorInviting}" /> <Button on:click={inviteUser}>Invite</Button></Group>
+    <Group>
+        <TextInput placeholder="Email address" bind:value={inviteEmail} invalid="{errorInviting}" disabled={addingMembersDisabled}/>
+        <Button on:click={inviteUser} disabled={addingMembersDisabled}>Invite</Button>
+    </Group>
 {/if}
+<Space h="md"/>
+<Text size="xs">{Object.values($orgMembers??{}).filter(s=>activeMemberStatuses.has(s)).length} active member(s) ({$features.organisationMaxMembers} max)</Text>
 <table class="members">
     {#each Object.entries($orgMembers??{}) as member}
         <tr><td>{member[0]}</td><td>{OrgMemberStatusPretty[member[1]]}</td><td><Button disabled color="red">Remove</Button></td></tr>

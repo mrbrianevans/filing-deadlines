@@ -29,19 +29,26 @@
   import {exportRecentFilingsXlsx} from "../lib/exportFormats/exportRecentFilingsXlsx.js";
   import {Link, useLocation, useNavigate} from "svelte-navigator";
   import AnchoredLink from "../components/AnchoredLink.svelte";
+  import {features} from "../lib/stores/features.js";
   const location = useLocation()
   const navigate = useNavigate();
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
-  let showingFilingsSince
+  let showingFilingsSince;
+  // whether to display the max amount of time their plan supports
+  let showPlanLimit = false;
   $: filingTypes =  [...new Set(recentFilings?.map(f=>f.filingType))]
-  async function loadRecentFilings(timespan = 'P7D'){
-    console.log({timespan})
+  async function loadRecentFilings(timespan, max ){
     processing = true
+    showPlanLimit = false
     try{
       const Temporal = await import('@js-temporal/polyfill').then(m=>m.Temporal)
+      if(Temporal.Duration.from(timespan).total({unit: 'days', relativeTo: Temporal.Now.plainDateISO()}) > max) {
+        showPlanLimit = true
+        timespan = Temporal.Duration.from({days: max}).toString()
+      }
       const startDate = Temporal.Now.plainDateISO().subtract(timespan)
       recentFilings = await fetcher('/api/user/org/member/recent-filings?startDate='+startDate.toString())
-      showingFilingsSince = startDate.toString()
+      showingFilingsSince = startDate.toString() // this assumes the server didn't change the date due to sub plan
       error = null
     }catch (e) {
       error = e
@@ -110,11 +117,11 @@
     navigate('?'+sp.toString())
   }
   $: if(selectedTimespan) updateSearchQuery(timespans[selectedTimespan])
-  $: loadRecentFilings(getTimespan($location.search)) // should reload data when selectedTimespan changes
+  $: loadRecentFilings(getTimespan($location.search), $features.recentFilingsMaxPeriodDays) // should reload data when selectedTimespan changes
   let exportingPdf = false, exportingXlsx = false
-  async function exportPdf(){
+  async function exportPdf(userName){
     exportingPdf = true
-    const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], $user.name)
+    const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], userName)
     downloadBlob(blob, 'recent filings.pdf')
     exportingPdf = false
   }
@@ -123,18 +130,25 @@
     await exportRecentFilingsXlsx(recentFilings)
     exportingXlsx = false
   }
+  $: exportsDisabled = !$features.exportData || !recentFilings || recentFilings.length === 0 || error || processing
+  let displayTimespans = Object.keys(timespans)
+  $: import('@js-temporal/polyfill')
+    .then(m=>m.Temporal)
+    .then(Temporal=>{displayTimespans = Object.entries(timespans)
+      .filter(([human, machine])=>Temporal.Duration.from(machine).total({unit: 'days', relativeTo: Temporal.Now.plainDateISO()}) <= $features.recentFilingsMaxPeriodDays)
+      .map(e=>e[0])})
 </script>
 
 <Container size="xl">
     <Title order={2}>Recent filings</Title>
 
     <Group>
-        <NativeSelect data={Object.keys(timespans)} bind:value={selectedTimespan} placeholder="Choose time period"></NativeSelect>
+        <NativeSelect data={displayTimespans} bind:value={selectedTimespan} placeholder="Choose time period"></NativeSelect>
         <Tooltip label="Reload recent filings list" withArrow>
-            <ActionIcon on:click={()=>loadRecentFilings(getTimespan($location.search))} loading="{processing}"><Reload/></ActionIcon>
+            <ActionIcon on:click={()=>loadRecentFilings(getTimespan($location.search), $features.recentFilingsMaxPeriodDays)} loading="{processing}"><Reload/></ActionIcon>
         </Tooltip>
-        <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{!recentFilings || recentFilings.length === 0 || error || processing}">Export to XLSX</Button>
-        <Button on:click={exportPdf} variant="outline" color="red" loading="{exportingPdf}" disabled="{!recentFilings || recentFilings.length === 0 || error || processing}">Export to PDF</Button>
+        <Button on:click={exportXlsx} variant="outline" color="green" loading="{exportingXlsx}" disabled="{exportsDisabled}">Export to XLSX</Button>
+        <Button on:click={()=>exportPdf($user.name)} variant="outline" color="red" loading="{exportingPdf}" disabled="{exportsDisabled}">Export to PDF</Button>
         <Tooltip label="Feature not available">
             <Button disabled>Export image</Button>
         </Tooltip>
@@ -144,11 +158,18 @@
         <Tooltip label="Feature not available">
             <Button disabled>Group by company</Button>
         </Tooltip>
-        <Tooltip label="Subscribe to web notifications of new filings">
-            <AnchoredLink href="/secure/notifications">Get notifications</AnchoredLink>
-        </Tooltip>
+        {#if $features.webNotifications}
+            <Tooltip label="Subscribe to web notifications of new filings">
+                <AnchoredLink href="/secure/notifications">Get notifications</AnchoredLink>
+            </Tooltip>
+        {/if}
     </Group>
-    {#if error}
+    {#if showPlanLimit}
+        <Space h="md"/>
+      <Alert title="Subscription plan limit">
+          <Text inherit>Your organisations current subscription plan only includes {$features.recentFilingsMaxPeriodDays} days of recent filings.</Text>
+      </Alert>
+    {:else if error}
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
         {#if showingFilingsSince}<Text root="p" pt="sm">Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}

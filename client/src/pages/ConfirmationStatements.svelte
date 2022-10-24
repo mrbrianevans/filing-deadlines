@@ -24,6 +24,7 @@
     import rowHighlights from '../components/dashboard/rowHighlights.css'
     import ErrorAlert from "../components/ErrorAlert.svelte";
     import AnchoredLink from "../components/AnchoredLink.svelte";
+    import {features} from "../lib/stores/features.js";
 
     const {error, processing} = confirmationStatements
     onMount(()=>confirmationStatements.refresh())
@@ -101,6 +102,7 @@
       if(event.detail.row.$expanded) expanded = []
       else expanded = [event.detail.row.company_number]
     }
+    $: numberOfDaysAhead = $features.confirmationStatementsMaxPeriodDays
 </script>
 
 <div>
@@ -110,6 +112,7 @@
             <ActionIcon on:click={()=>confirmationStatements.refresh()} loading="{$processing}"><Reload/></ActionIcon>
         </Tooltip>
     </Group>
+    <Text>Showing confirmation statements due within the next {numberOfDaysAhead} days.</Text>
     {#if $error}
         <Alert icon={InfoCircled} title="{$error.name}" color="red">
             An error occurred while getting the dashboard data.

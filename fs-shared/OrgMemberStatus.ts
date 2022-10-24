@@ -21,3 +21,5 @@ export const OrgMemberStatusPretty: Record<OrgMemberStatus, string> = {
   left: "Left organisation",
   removed: "Removed from organisation"
 }
+
+export const activeMemberStatuses = new Set<OrgMemberStatus>([OrgMemberStatus.owner,OrgMemberStatus.acceptedInvite])
