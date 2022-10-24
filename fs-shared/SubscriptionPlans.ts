@@ -10,7 +10,7 @@ export enum SubscriptionPlans{
 export interface Features{
   recentFilingsMaxPeriod: string,
   registeredOfficeAddressChecker: boolean,
-  accountsDashboardMaxPeriod: string
+  accountsDashboardMaxPeriodMonths: number
   confirmationStatementsMaxPeriod: string
   organisationMaxMembers: number,
   webNotifications: boolean,
@@ -22,7 +22,7 @@ export interface Features{
 export const SubscriptionPlanFeatures: Record<SubscriptionPlans|'undefined', Features> = {
   // default features allowed for users who don't have any plan. deny everything. this can also be while plan is loading.
   undefined: {
-    accountsDashboardMaxPeriod: 'P0D',
+    accountsDashboardMaxPeriodMonths: 0,
     clientListMaxSize: 0,
     confirmationStatementsMaxPeriod: 'P0D',
     organisationMaxMembers: 0,
@@ -31,7 +31,7 @@ export const SubscriptionPlanFeatures: Record<SubscriptionPlans|'undefined', Fea
     webNotifications: false
   },
   [SubscriptionPlans.BASIC]: {
-    accountsDashboardMaxPeriod: 'P31D',
+    accountsDashboardMaxPeriodMonths: 1,
     clientListMaxSize: 100,
     confirmationStatementsMaxPeriod: 'P7D',
     organisationMaxMembers: 2,
@@ -40,7 +40,7 @@ export const SubscriptionPlanFeatures: Record<SubscriptionPlans|'undefined', Fea
     webNotifications: false
   },
   [SubscriptionPlans.STANDARD]: {
-    accountsDashboardMaxPeriod: 'P2Y',
+    accountsDashboardMaxPeriodMonths: 24,
     clientListMaxSize: 500,
     confirmationStatementsMaxPeriod: 'P2Y',
     organisationMaxMembers: 20,

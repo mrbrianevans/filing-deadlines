@@ -22,6 +22,7 @@
   import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
   import AnchoredLink from "./AnchoredLink.svelte";
 
+  const {Item: MenuItem, Label: MenuLabel} = Menu
   let userProcessing = user.processing
 
   const useStyles = createStyles(theme => ({
@@ -59,54 +60,55 @@
                         <HamburgerMenu slot="leftIcon"/>
                         Menu
                     </Button>
-                    <Menu.Item class={classes.root} root="span">
+                    <MenuItem class={classes.root} root="span">
                         <Anchor href="/" to="/" root={Link}>Home page</Anchor>
-                    </Menu.Item>
+                    </MenuItem>
                     <Divider/>
-                    {#if $user.orgName}
-                        <Menu.Label>Dashboards</Menu.Label>
-                        <Menu.Item class={classes.root} root="span">
-                            <AnchoredLink href="/secure/clients">Client list</AnchoredLink>
-                        </Menu.Item>
-                        <Menu.Item class={classes.root} root="span">
+                    {#if $user.orgName && $user.orgPlan}
+                        <!-- these items only show if the user is in an organisation which has an active subscription -->
+                        <MenuLabel>Dashboards</MenuLabel>
+                        <MenuItem class={classes.root} root="span">
+                            <AnchoredLink href="/secure/clients" >Client list</AnchoredLink>
+                        </MenuItem>
+                        <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/dashboard">Accounts dashboard</AnchoredLink>
-                        </Menu.Item>
-                        <Menu.Item class={classes.root} root="span">
+                        </MenuItem>
+                        <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/confirmation-statement-dashboard">Confirmation statements
                             </AnchoredLink>
-                        </Menu.Item>
-                        <Menu.Item class={classes.root} root="span">
+                        </MenuItem>
+                        <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/recent-filings">Recent filings</AnchoredLink>
-                        </Menu.Item>
-                        <Menu.Item class={classes.root} root="span">
+                        </MenuItem>
+                        <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/registered-office-address">
                                 Registered office address
                             </AnchoredLink>
-                        </Menu.Item>
+                        </MenuItem>
                         <Divider/>
                     {/if}
                     {#if $user.owner}
-                        <Menu.Label>Manage</Menu.Label>
-                        <Menu.Item class={classes.root} root="span">
+                        <MenuLabel>Manage</MenuLabel>
+                        <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/manage-organisation">
                                 Manage organisation
                             </AnchoredLink>
-                        </Menu.Item>
+                        </MenuItem>
                         <Divider/>
                     {/if}
-                    <Menu.Item class={classes.root} root="span">
+                    <MenuItem class={classes.root} root="span">
                         <AnchoredLink href="/secure/feedback">Give feedback</AnchoredLink>
-                    </Menu.Item>
+                    </MenuItem>
                     <Divider/>
-                    <Menu.Label>Settings</Menu.Label>
-                    <Menu.Item icon="{$isDark ? Sun : Moon}"
-                               on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</Menu.Item>
-                    <Menu.Item class={classes.root} root="span">
+                    <MenuLabel>Settings</MenuLabel>
+                    <MenuItem icon="{$isDark ? Sun : Moon}"
+                               on:click={toggleTheme}>{$isDark ? 'Light theme' : 'Dark theme'}</MenuItem>
+                    <MenuItem class={classes.root} root="span">
                         <AnchoredLink href="/secure/notifications">
                             Notifications
                         </AnchoredLink>
-                    </Menu.Item>
-                    <Menu.Item icon="{Exit}" on:click={user.logout} color="red">Logout</Menu.Item>
+                    </MenuItem>
+                    <MenuItem icon="{Exit}" on:click={user.logout} color="red">Logout</MenuItem>
                 </Menu>
             {/if}
             <div>

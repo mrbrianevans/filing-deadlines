@@ -9,6 +9,8 @@
   import DesktopDisplayTable from "../components/dashboard/DesktopDisplayTable.svelte";
     import rowHighlights from '../components/dashboard/rowHighlights.css'
   import AnchoredLink from "../components/AnchoredLink.svelte";
+  import AsyncDuration from "../components/AsyncDuration.svelte";
+  import {features} from "../lib/stores/features.js";
 
   let publicView = false
 
@@ -17,20 +19,20 @@
 </script>
 
 <div>
-    {#if $user}
         {#if $error}
             <Alert icon={InfoCircled} title="{$error.name}" color="red">
              An error occurred while getting the dashboard data.
             </Alert>
         {:else if $dashboardData}
+            <Group>
+                <Text>Accounts</Text>
+                <Tooltip label="Reload dashboard" withArrow>
+                    <ActionIcon on:click={()=>dashboardData.refresh()} loading="{$processing}"><Reload/></ActionIcon>
+                </Tooltip>
+                <Switch label="Public display view" bind:checked={publicView}/>
+            </Group>
+            <Text>Showing the next {publicView?Math.min($features.accountsDashboardMaxPeriodMonths, 2):$features.accountsDashboardMaxPeriodMonths} month(s) of data.</Text>
             {#if $dashboardData.length > 0}
-                <Group>
-                    <Text>Accounts</Text>
-                    <Tooltip label="Reload dashboard" withArrow>
-                        <ActionIcon on:click={()=>dashboardData.refresh()} loading="{$processing}"><Reload/></ActionIcon>
-                    </Tooltip>
-                    <Switch label="Public display view" bind:checked={publicView}/>
-                </Group>
             <svelte:component this={publicView?PublicDisplayTable:DesktopDisplayTable} data={$dashboardData}/>
             {:else}
                 <Container>
@@ -43,11 +45,6 @@
                 </Container>
             {/if}
         {/if}
-    {:else}
-    <Text>You need to be logged in to view your dashboard. Try "Sign In with Xero" in the top right of this page, or go to the <Anchor root={Link} to="/" href="/" inherit>home page</Anchor>.</Text>
-    {/if}
-
-
 </div>
 
 <style src="{rowHighlights}"></style>

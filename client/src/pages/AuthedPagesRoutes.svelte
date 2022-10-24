@@ -13,9 +13,30 @@ import ManageOrg from "./ManageOrg.svelte";
 import ClientList from "./ClientList.svelte";
 import PricingPage from "./PricingPage.svelte";
 import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
+import PlanDependentPage from "./org/PlanDependentPage.svelte";
 </script>
 
 <AuthedPage>
+
+<!--    these pages require the user to be in an organisation with a subscription plan -->
+    <PlanDependentPage>
+        <Route path="/dashboard">
+                <AccountsDashboard />
+        </Route>
+        <Route path="confirmation-statement-dashboard">
+            <ConfirmationStatements />
+        </Route>
+        <Route path="/recent-filings">
+            <RecentFilings />
+        </Route>
+        <Route path="/registered-office-address">
+            <RegisteredOfficeAddress />
+        </Route>
+        <Route path="/clients">
+            <ClientList />
+        </Route>
+    </PlanDependentPage>
+
     <Route path="/payments/*">
         <PaymentPageRouter/>
     </Route>
@@ -27,21 +48,6 @@ import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
     </Route>
     <Route path="/org-invite">
         <OrgInvite />
-    </Route>
-    <Route path="/dashboard">
-        <AccountsDashboard />
-    </Route>
-    <Route path="confirmation-statement-dashboard">
-        <ConfirmationStatements />
-    </Route>
-    <Route path="/recent-filings">
-        <RecentFilings />
-    </Route>
-    <Route path="/registered-office-address">
-        <RegisteredOfficeAddress />
-    </Route>
-    <Route path="/clients">
-        <ClientList />
     </Route>
     <Route path="/notifications">
         <Notifications />

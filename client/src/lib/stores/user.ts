@@ -1,14 +1,17 @@
-import {writable} from "svelte/store";
 import type {User} from '../../../../fs-shared/User.js'
 import {clear, swr} from '@svelte-drama/swr'
-import { refreshInterval, refreshOnFocus, refreshOnReconnect } from '@svelte-drama/swr/plugin'
-import type {SWROptions} from "@svelte-drama/swr/types.js";
-import {readableSwrOptions} from "../swr.js";
 import {navigate} from "svelte-navigator";
+import {FetchError} from "../swr.js";
+
+const fetcher = (key) => fetch(key).then(async (r) => {
+  if(r.ok)  return r.json()
+  else if(r.status === 401) return null // returns null for unauthorised instead of throwing error
+  else throw new FetchError(await r.json())
+})
 
 function createUserStore(){
   const key = '/api/user'
-  const { data: {subscribe}, refresh, update, processing } = swr<User|null>(key, readableSwrOptions)
+  const { data: {subscribe}, refresh, update, processing } = swr<User|null>(key, {fetcher})
 
   async function logout(){
     await fetch('/api/user/logout')

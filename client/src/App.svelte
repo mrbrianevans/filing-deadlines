@@ -54,7 +54,10 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <PublicPagesRoutes />
             {/await}
               <Route>
-                  <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+                  <!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
+                  {#await new Promise(res=>setTimeout(res,750)) then _}
+                      <ErrorAlert error={new Error('The public page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+                  {/await}
               </Route>
           </Route>
 
@@ -66,7 +69,10 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <AuthedPagesRoutes />
             {/await}
               <Route>
-                  <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+                  <!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
+                  {#await new Promise(res=>setTimeout(res,750)) then _}
+                      <ErrorAlert error={new Error('The secure page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+                  {/await}
               </Route>
           </Route>
 
@@ -78,7 +84,10 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
               <AuthedPagesRoutes />
             {/await}
             <Route>
-              <ErrorAlert error={new Error('The page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+<!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
+                {#await new Promise(res=>setTimeout(res,750)) then _}
+              <ErrorAlert error={new Error('The top-level page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
+                {/await}
             </Route>
           </Route>
 
