@@ -44,11 +44,14 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       if(request.session.orgId) {
         request.session.owner = await fastify.redis.get(`org:${request.session.orgId}:owner`).then(o => o === request.session.userId)
         request.session.orgPlan = await getOrgPlan(request.session.orgId)
-        // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
-        const clientListLength = await fastify.redis.hlen('org:'+request.session.orgId+':clients')
-        // todo: redirect must depend on the users org plan
-        if(clientListLength > 0) reply.redirect('/secure/dashboard')
-        else reply.redirect('/secure/clients')
+        if(request.session.owner) return reply.redirect('/secure/manage-organisation')
+        else if(!request.session.orgPlan) return reply.redirect('/view/pricing')
+        else {
+          // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
+          const clientListLength = await fastify.redis.hlen('org:' + request.session.orgId + ':clients')
+          if (clientListLength > 0) reply.redirect('/secure/dashboard')
+          else reply.redirect('/secure/clients')
+        }
       }else{
         // if there is a pending invite, send the user to a special page for accepting the invite.
         const pendingInvite = await fastify.redis.exists(`invite:${decodedIdToken.email}`)
