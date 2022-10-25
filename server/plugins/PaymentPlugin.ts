@@ -1,8 +1,19 @@
-import type {FastifyPluginAsync} from "fastify";
+import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import Stripe from 'stripe';
 import { getEnv } from "../../backend-shared/utils.js";
 import {SubscriptionPlans} from '../../fs-shared/SubscriptionPlans.js'
 import billingPortalConfiguration from '../payments/stripe/billingPortalConfiguration.json' assert {type:'json'}
+import assert from "assert";
+
+const getCheckoutSessionSchema: FastifySchema = {
+  querystring: {
+    type: 'object',
+    properties: {
+      checkoutSessionId: {type:'string'}
+    },
+    required: ['checkoutSessionId']
+  }
+}
 
 const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
   const SITE_ADDRESS = getEnv('SITE_ADDRESS');
@@ -34,6 +45,17 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
       return {portalUrl: session.url}
     else
       reply.sendError({message: 'Could not get a URL for billing portal', error: 'No billing portal URL', statusCode: 500})
+  })
+
+  fastify.get<{Querystring: {checkoutSessionId: string}}>('/checkout-session', {schema: getCheckoutSessionSchema},async (request, reply)=> {
+    const {checkoutSessionId} = request.query
+    const checkoutSession = await fastify.stripe.checkout.sessions.retrieve(checkoutSessionId)
+    if(checkoutSession.client_reference_id !== request.session.userId)
+      return reply.sendError({statusCode: 401, error: 'Wrong checkout id', message: 'This checkout session belongs to another user.'})
+    const {status, amount_total} = checkoutSession
+    return {
+      status, amount_total
+    }
   })
 
 

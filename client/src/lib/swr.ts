@@ -18,6 +18,11 @@ export class FetchError extends Error{
 }
 export const fetcher = (key) => fetch(key).then(async (r) => {
   if(r.ok)  return r.json()
+    // could handle certain response codes differently:
+    // - 401 status code, refresh user store and retry the request if it returns a user
+    // - 403 status code, suggest that the user upgrade their subscription plan
+    // - 502 status code, the server is failing health checks, tell the user the server is down and stop sending more requests.
+    // - 400 response code, probably a mistake by the user but could also be a bug
   else throw new FetchError(await r.json())
 })
 export const updater = (key, data) => fetch(key, {method: 'PUT', body: JSON.stringify(data), headers: {'Content-Type':'application/json'}}).then((r) => r.ok ? r.json():null)
