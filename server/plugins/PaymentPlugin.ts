@@ -3,21 +3,6 @@ import Stripe from 'stripe';
 import { getEnv } from "../../backend-shared/utils.js";
 import {SubscriptionPlans} from '../../fs-shared/SubscriptionPlans.js'
 
-// these should maybe be in the database or in a .env file
-const subscriptionProducts: Record<SubscriptionPlans, string> = {
-  [SubscriptionPlans.BASIC]: getEnv('STRIPE_BASIC_PRICE'),
-  [SubscriptionPlans.STANDARD]: getEnv('STRIPE_STANDARD_PRICE')
-}
-
-
-const createSessionSchema = {
-  querystring: {
-    type: 'object',
-    properties: {
-      plan: {type: 'string', enum: Object.values(SubscriptionPlans)}
-    }
-  }
-}
 
 const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
   const SITE_ADDRESS = getEnv('SITE_ADDRESS');

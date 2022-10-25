@@ -67,8 +67,10 @@ jobs:
           XERO_CLIENT_ID: 'test-client-id-xxxxxxxxxxxxxxxxx'
           XERO_CLIENT_SECRET: 'test-client-secret-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
           SITE_ADDRESS: "http://localhost:3000"
+          STRIPE_SECRET_KEY: 'sk_test_xxxx'
+          STRIPE_PUBLIC_KEY: 'pk_test_xxxx'
+          STRIPE_WEBHOOK1_SECRET: 'whsec_xxxx'
 
-# because the worker doesn't finish in time, it exits with a failure status code, failing the job
       - name: Startup worker
         run: node index.js
         working-directory: worker
