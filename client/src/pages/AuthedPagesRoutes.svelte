@@ -36,8 +36,8 @@ import {features} from "../lib/stores/features.js";
         </Route>
             <Route path="/registered-office-address">
                 {#if $features.registeredOfficeAddressChecker}
-                <RegisteredOfficeAddress />
-                    {:else}
+                    <RegisteredOfficeAddress />
+                {:else}
                     <p>Your plan does not include the registered office address checker.</p>
                 {/if}
             </Route>
