@@ -24,6 +24,9 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // add a single client by its company number. Company profile is loaded synchronously, but filing history is asynchronous.
   fastify.post<{Body: {companyNumber: string}}>('/', {schema: addClientSchema},async (request, reply)=>{
+    const currentClientListSize = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    if(currentClientListSize >= request.org.features.clientListMaxSize)
+      return reply.sendError({message: 'You have reached the maximum client list size available in your subscription plan', error: 'Client list full', statusCode: 403})
     const {companyNumber} = request.body
     const exists = await fastify.redis.hexists(`org:${request.session.orgId}:clients`, companyNumber)
     if(!exists){

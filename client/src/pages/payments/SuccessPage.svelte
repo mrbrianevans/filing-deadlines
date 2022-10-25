@@ -4,11 +4,12 @@
 import {onMount} from "svelte";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
 import {useLocation} from 'svelte-navigator'
+  import {user} from "../../lib/stores/user.js";
 
   const location = useLocation()
 onMount(()=>{
   // updates user session to have new plan
-  fetch('/api/user/org/member/refreshOrgPlan')
+  fetch('/api/user/org/member/refreshOrgPlan').then(()=>user.refresh())
   const checkoutSessionId = new URLSearchParams($location.search).get('checkoutSessionId')
   console.log("Stripe checkout session Id:", checkoutSessionId)
 })
