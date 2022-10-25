@@ -3,11 +3,10 @@
   "business_profile": {
     "headline": "Filing Deadlines uses Stripe to manage subscription payments"
   },
-  "default_return_url": "https://filingdeadlines.co.uk/?source=stripe_after_manage",
+  "default_return_url": "https://filingdeadlines.co.uk/secure/manage-organisation?source=stripe_after_manage",
   "features": {
     "customer_update": {
       "allowed_updates": [
-        "email",
         "address"
       ],
       "enabled": true

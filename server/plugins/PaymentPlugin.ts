@@ -2,7 +2,7 @@ import type {FastifyPluginAsync} from "fastify";
 import Stripe from 'stripe';
 import { getEnv } from "../../backend-shared/utils.js";
 import {SubscriptionPlans} from '../../fs-shared/SubscriptionPlans.js'
-
+import billingPortalConfiguration from '../payments/stripe/billingPortalConfiguration.json' assert {type:'json'}
 
 const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
   const SITE_ADDRESS = getEnv('SITE_ADDRESS');
@@ -10,6 +10,15 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
   {
     const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-08-01'})
     fastify.decorate('stripe', stripe)
+  }
+
+  {
+    // billing portal configuration. create if not exists.
+    const configs = await fastify.stripe.billingPortal.configurations.list({active: true, is_default: true})
+    if(configs.data.length === 0){
+      // @ts-ignore
+      await fastify.stripe.billingPortal.configurations.create(billingPortalConfiguration)
+    }
   }
 
   // creates a billing portal session for a customer to manage their billing, view invoices etc.
