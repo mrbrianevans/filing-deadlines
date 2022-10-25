@@ -80,8 +80,12 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const enabled = request.body
     const {notificationName} = request.params
     request.log.info({notificationName, enabled}, 'User updated notification preference')
-    await fastify.redis.hset(`user:${request.session.userId}:notifications:preferences`, notificationName, JSON.stringify(enabled))
-    reply.status(204).send()
+    if(request.org.features.webNotifications || !enabled) {
+      await fastify.redis.hset(`user:${request.session.userId}:notifications:preferences`, notificationName, JSON.stringify(enabled))
+      reply.status(204).send()
+    }else{
+      return reply.wrongPlan('Your subscription plan does not include notifications.')
+    }
   })
 
   // get preferences from redis for this user and return them

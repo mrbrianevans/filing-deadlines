@@ -35,7 +35,9 @@ declare module 'fastify' {
 
   interface FastifyReply{
     // send an error response
-    sendError(error: CustomFastifyError): void
+    sendError(error: CustomFastifyError): FastifyReply
+    // send "wrong subscription plan" response
+    wrongPlan(message: string): FastifyReply
   }
 }
 

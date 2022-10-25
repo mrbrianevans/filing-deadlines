@@ -39,6 +39,8 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const startDateDays = Math.floor(new Date(startDate).getTime()/86_400_000)
     const endDateDays = endDate?Math.ceil(new Date(endDate).getTime()/86_400_000):undefined
     request.log.info({startDate, endDate, startDateDaysAgo: currentDateDays - startDateDays, endDateDaysAgo: currentDateDays - (endDateDays??0)},'Recent filings requested for date range')
+    if(request.org.features.recentFilingsMaxPeriodDays < currentDateDays - startDateDays)
+      return reply.wrongPlan(`Your plan only allows viewing ${request.org.features.recentFilingsMaxPeriodDays} days of recent filings.`)
     const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays??'+inf', "BYSCORE")
     request.log.info({numberOfTransactions: companyNumberTransactionIds.length},`Found ${companyNumberTransactionIds.length} transaction IDs of recent filings for companies on this org's client list`)
     // get filing transaction for each ID

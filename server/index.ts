@@ -34,6 +34,11 @@ fastify.decorateReply('sendError', function (error: { message: string; error: st
   return this.status(error.statusCode).send(error);
 })
 
+fastify.decorateReply('wrongPlan', function (message: string) {
+  fastify.log.warn({message}, "Client requested something not included in their subscription plan")
+  return this.sendError({statusCode: 403, error: 'Subscription does not allow this action', message});
+})
+
 await fastify.register(async (fastify, opts)=>{
   // register endpoints here
   await fastify.register(import('./auth/SignInWithXeroPlugin.js'), {prefix: 'sign-in/xero'})

@@ -66,6 +66,9 @@ const RegisteredAddressPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // list companies at this address
   fastify.get('/list' , async (request, reply)=>{
+    if(!request.org.features.registeredOfficeAddressChecker){
+      return reply.wrongPlan('Your subscription plan does not include the registered office address checker.')
+    }
     const exists = await fastify.redis.exists(`org:${request.session.orgId}:address`)
     if(!exists) return reply.sendError({statusCode: 400, error: 'Address not set', message: 'You need to set your organisations office address before you can view the list of companies who are registered there.'})
     const address = <OfficeAddress>await fastify.redis.hgetall(`org:${request.session.orgId}:address`)

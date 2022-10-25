@@ -23,7 +23,10 @@ const ConfirmationStatementsDataPlugin: FastifyPluginAsync = async (fastify, opt
     const clientIds = (await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)) ?? []
     request.log.info({numberOfClients: clientIds.length}, 'Getting company profiles for confirmation statement dashboard')
     const companyProfiles = await Promise.all(clientIds.map(clientId=>getCompanyProfile(clientId)))
-    return convertCompanyProfilesToConfirmationStatementData(companyProfiles)
+    return convertCompanyProfilesToConfirmationStatementData(companyProfiles).filter(c=>{
+      const daysUntilDue = (new Date(c.confirmation_statement?.next_due??0).getTime() - Date.now())/86400_000
+      return daysUntilDue < request.org.features.confirmationStatementsMaxPeriodDays
+    })
   })
 
 }
