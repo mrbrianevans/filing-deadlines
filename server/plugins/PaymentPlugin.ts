@@ -58,6 +58,13 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
     }
   })
 
+  // used by client to show embedded pricing table
+  fastify.get('/public', async (request, reply)=> {
+    return {
+      pricingTableId: getEnv('STRIPE_PRICING_TABLE_ID'),
+      stripePublicKey: getEnv('STRIPE_PUBLIC_KEY')
+    }
+  })
 
 }
 
