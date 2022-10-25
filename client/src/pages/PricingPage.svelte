@@ -1,6 +1,8 @@
 <script lang="ts">
 
   import {Container, Badge} from "@svelteuidev/core";
+  import {user} from "../lib/stores/user.js";
+  import AnchoredLink from "../components/AnchoredLink.svelte";
 
 </script>
 
@@ -40,6 +42,17 @@
 <!--    this message could be customised based on whether the user is logged in, a member or owner of an organisation. -->
     <p>If you wish to purchase a plan, login and then create an organisation. You will then be able to choose which plan to subscribe to.</p>
 
+    {#if $user}
+
+        {#if $user.orgPlan}
+            <p>Your organisation is on <Badge>{$user.orgPlan}</Badge></p>
+        {:else}
+            <p>To start one of these subscription plans for your organisation, go to <AnchoredLink href="/secure/manage-organisation">manage organisation</AnchoredLink></p>
+        {/if}
+
+    {:else}
+        <p>It's necessary to sign in before you can start a subscription plan. </p>
+    {/if}
 
 </Container>
 
@@ -56,9 +69,4 @@
         padding: 1rem;
     }
 
-    .buy-button-container{
-        display: grid;
-        place-items: center;
-
-    }
 </style>

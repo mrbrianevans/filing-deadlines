@@ -1,4 +1,5 @@
 import type {SWROptions} from "@svelte-drama/swr/types.js";
+import {user} from "./stores/user.js";
 // import {refreshInterval, refreshOnFocus, refreshOnReconnect} from "@svelte-drama/swr/plugin";
 
 // better error handling. If there is a network error, then say so. If the server returns an error, throw an Error with the message returned.
@@ -18,8 +19,15 @@ export class FetchError extends Error{
 }
 export const fetcher = (key) => fetch(key).then(async (r) => {
   if(r.ok)  return r.json()
-    // could handle certain response codes differently:
-    // - 401 status code, refresh user store and retry the request if it returns a user
+  else if(r.status === 502){
+    // server is down
+    throw new FetchError({error: "Server is down", message: 'Sorry, but the server is down at the moment. This is usually fixed within 2 minutes. Try refreshing the page.', statusCode: 502})
+  }
+  if(r.status === 401){
+    await user.refresh() // user MUST NOT use fetcher, otherwise it will cause an infinite loop
+  }
+    // handle certain response codes differently:
+    // - 401 status code, refresh user store
     // - 403 status code, suggest that the user upgrade their subscription plan
     // - 502 status code, the server is failing health checks, tell the user the server is down and stop sending more requests.
     // - 400 response code, probably a mistake by the user but could also be a bug

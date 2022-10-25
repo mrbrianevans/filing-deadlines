@@ -46,6 +46,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
         request.session.orgPlan = await getOrgPlan(request.session.orgId)
         // if the user already has a client list, show them the dashboard. Otherwise, send them to make a client list.
         const clientListLength = await fastify.redis.hlen('org:'+request.session.orgId+':clients')
+        // todo: redirect must depend on the users org plan
         if(clientListLength > 0) reply.redirect('/secure/dashboard')
         else reply.redirect('/secure/clients')
       }else{

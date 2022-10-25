@@ -13,7 +13,7 @@ onMount(()=>{
   // updates user session to have new plan
   fetch('/api/user/org/member/refreshOrgPlan').then(()=>user.refresh())
   const checkoutSessionId = new URLSearchParams($location.search).get('checkoutSessionId')
-  fetcher('/api/user/org/member/owner/payments/checkout-session?checkoutSessionId='+checkoutSessionId).then((res)=>{
+  if(checkoutSessionId) fetcher('/api/user/org/member/owner/payments/checkout-session?checkoutSessionId='+checkoutSessionId).then((res)=>{
     status = res.status
   })
 })
