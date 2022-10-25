@@ -1,5 +1,4 @@
 {
-  "active": true,
   "business_profile": {
     "headline": "Filing Deadlines uses Stripe to manage subscription payments"
   },
@@ -48,6 +47,5 @@
   "login_page": {
     "enabled": false,
     "url": null
-  },
-  "metadata": {}
+  }
 }

@@ -28,7 +28,7 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const configs = await fastify.stripe.billingPortal.configurations.list({active: true, is_default: true})
     if(configs.data.length === 0){
       // @ts-ignore
-      await fastify.stripe.billingPortal.configurations.create(billingPortalConfiguration)
+      await fastify.stripe.billingPortal.configurations.create(billingPortalConfiguration).catch(e=>fastify.log.error(e, 'Could not create billing config on Stripe'))
     }
   }
 
