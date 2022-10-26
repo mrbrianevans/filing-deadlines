@@ -1,25 +1,10 @@
 <script lang="ts">
-  import {
-    Alert,
-    Anchor,
-    Container,
-    Group,
-    Image,
-    Paper,
-    SimpleGrid,
-    Space,
-    Stack,
-    Text,
-    Title
-  } from "@svelteuidev/core";
+  import {Alert, Container, Group, Paper, Space, Stack, Text, Title} from "@svelteuidev/core";
   import {isDark} from "../lib/stores/theme.js";
-  import clientListScreenshot from '../assets/client-list.png'
-  import dashboardScreenshot from '../assets/dashboard.png'
   import {user} from "../lib/stores/user.js";
-  import {Link} from "svelte-navigator";
-  import SignInWithXeroButton from "../components/SignInWithXeroButton.svelte";
   import AnchoredLink from "../components/AnchoredLink.svelte";
   import HomeFeatureCard from "../components/home/HomeFeatureCard.svelte";
+  import SignInButton from "../components/signin/SignInButton.svelte";
 
   const override={background: '#f4f4f4'}
 </script>
@@ -61,7 +46,7 @@
         <Paper>
             <Title order={3} color="blue" weight="bold">Sign in with Xero to get started.</Title>
             <Group>
-                <SignInWithXeroButton/>
+                <SignInButton/>
             </Group>
             <Space h="xs"/>
             <Text color='dimmed'>It won't connect to your Xero organisation, it only uses Xero to authenticate you.</Text>

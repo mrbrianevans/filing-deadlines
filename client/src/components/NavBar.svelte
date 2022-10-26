@@ -19,8 +19,8 @@
   } from "@svelteuidev/core";
   import {user} from "../lib/stores/user.js";
   import {Exit, HamburgerMenu, Moon, Sun} from "radix-icons-svelte";
-  import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
   import AnchoredLink from "./AnchoredLink.svelte";
+  import SignInButton from "./signin/SignInButton.svelte";
 
   const {Item: MenuItem, Label: MenuLabel} = Menu
   let userProcessing = user.processing
@@ -115,8 +115,7 @@
                 {#if $userProcessing}
                     <Loader/>
                 {:else if $user === null || $user === undefined}
-<!--                    <SignInWithXeroButton/>-->
-                    <Button href="/api/sign-in/auth0">Sign in</Button>
+                    <SignInButton/>
                 {:else}
                     <Stack spacing="xs">
                         <Group>

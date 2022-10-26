@@ -1,0 +1,38 @@
+<script lang="ts">
+
+  import {Button, Menu, Space, Text, Tooltip} from "@svelteuidev/core";
+  import {Person} from "radix-icons-svelte";
+  import SignInWithAuth0Button from "./SignInWithAuth0Button.svelte";
+  import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
+  const {Item: MenuItem, Label: MenuLabel} = Menu
+
+  export let buttonOverride = {
+    '&.svelteui-Menu-item': {
+      padding: 0
+    },
+    '& .itemLabel': {
+      width: '100%'
+    }
+  }
+</script>
+
+<!-- the right margin is because the placement prop isn't working. when it gets fixed the margin can be removed -->
+<Menu placement="end" mr="{200}">
+    <Button slot="control">
+        <Person slot="leftIcon"/>
+        Sign in
+    </Button>
+    <MenuLabel>
+<!--        You don't need to already have an account to sign in. It's the same process whether or not you have an account.  -->
+        Sign up and sign in combined
+    </MenuLabel>
+    <MenuItem root="div" override="{buttonOverride}"><SignInWithAuth0Button/></MenuItem>
+        <Space h="xs"/>
+    <MenuItem root="div" override="{buttonOverride}"><SignInWithXeroButton/></MenuItem>
+
+</Menu>
+
+
+<style>
+
+</style>
