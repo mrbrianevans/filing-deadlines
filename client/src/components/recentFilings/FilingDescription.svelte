@@ -12,10 +12,10 @@
 
 <Text>
     {#if parts}
-        <b>{parts[2]}</b>
-        {parts[3]}
+        <b>{parts[2]??''}</b>
+        {parts[3]??''}
     {:else}
-        {description}
+        {description??''}
     {/if}
 </Text>
 

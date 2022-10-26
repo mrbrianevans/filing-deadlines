@@ -70,6 +70,8 @@ jobs:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           STRIPE_PUBLIC_KEY: 'pk_test_xxxx'
           STRIPE_WEBHOOK1_SECRET: 'whsec_xxxx'
+          AUTH0_CLIENT_ID: 'test-client-id'
+          AUTH0_CLIENT_SECRET: 'test-client-secret'
 
       - name: Startup worker
         run: node index.js

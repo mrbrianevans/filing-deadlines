@@ -30,6 +30,7 @@
   import {Link, useLocation, useNavigate} from "svelte-navigator";
   import AnchoredLink from "../components/AnchoredLink.svelte";
   import {features} from "../lib/stores/features.js";
+  import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
   const location = useLocation()
   const navigate = useNavigate();
   let recentFilings: RecentFilings|null = null, error, processing // manual SWR
@@ -76,7 +77,11 @@
     {
       key: 'companyNumber',
       value: v=>v.companyNumber,
-      title: "Company number"
+      title: "Company number",
+      renderComponent: {
+        component: CompanyNumber,
+        props: {getCompanyNumber: v=>v.companyNumber}
+      }
     },
     {
       key: 'companyName',

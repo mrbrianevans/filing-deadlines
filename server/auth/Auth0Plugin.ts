@@ -18,7 +18,7 @@ const Auth0Plugin: FastifyPluginAsync = async (fastify, opts) => {
         secret: getEnv('AUTH0_CLIENT_SECRET')
       },
       auth: {
-        authorizeHost: 'https://dev-filingdeadlines.eu.auth0.com',
+        authorizeHost: 'https://dev-filingdeadlines.eu.auth0.com', //todo: these should be env variables
         authorizePath: '/authorize',
         tokenHost: 'https://dev-filingdeadlines.eu.auth0.com',
         tokenPath: '/oauth/token'
@@ -30,6 +30,8 @@ const Auth0Plugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   //todo: refactor this logic into a generic "handleOauthLogin" function
+  // - also, save the users login method (xero or auth0) in redis
+  // - save a redis key for email:{email}:userId and check this on login to prevent conflicts.
   fastify.get('/callback', async function(request,reply){
     try{
       const {token} = await this.auth0.getAccessTokenFromAuthorizationCodeFlow(request)
