@@ -45,6 +45,7 @@ services:
     env_file:
       - .api.env
       - .xero.env
+      - .auth0.env
       - .server.env
       - .url.env
       - .stripe.env

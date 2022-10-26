@@ -23,15 +23,6 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
     fastify.decorate('stripe', stripe)
   }
 
-  {
-    // billing portal configuration. create if not exists.
-    const configs = await fastify.stripe.billingPortal.configurations.list({active: true, is_default: true})
-    if(configs.data.length === 0){
-      // @ts-ignore
-      await fastify.stripe.billingPortal.configurations.create(billingPortalConfiguration).catch(e=>fastify.log.error(e, 'Could not create billing config on Stripe'))
-    }
-  }
-
   // creates a billing portal session for a customer to manage their billing, view invoices etc.
   fastify.get('/portal-url', async (request, reply)=> {
     const customer = await fastify.redis.get(`user:${request.session.userId}:customerId`)

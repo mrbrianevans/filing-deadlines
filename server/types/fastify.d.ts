@@ -8,6 +8,7 @@ import type { SubscriptionPlans,Features } from "../../fs-shared/SubscriptionPla
 declare module 'fastify' {
   interface FastifyInstance {
     xeroOauth: OAuth2Namespace;
+    auth0: OAuth2Namespace;
     stripe: Stripe
   }
 

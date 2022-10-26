@@ -115,7 +115,8 @@
                 {#if $userProcessing}
                     <Loader/>
                 {:else if $user === null || $user === undefined}
-                    <SignInWithXeroButton/>
+<!--                    <SignInWithXeroButton/>-->
+                    <Button href="/api/sign-in/auth0">Sign in</Button>
                 {:else}
                     <Stack spacing="xs">
                         <Group>

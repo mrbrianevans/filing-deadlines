@@ -1,26 +1,27 @@
 import type {FastifyPluginAsync} from "fastify";
 import { getEnv } from '../../backend-shared/utils.js'
-import {decodeXeroAccessToken, getUserFromIdToken} from "../../backend-shared/jwtTokens.js";
+import {decodeXeroAccessToken, getUserFromIdToken,decodeAuth0AccessToken} from "../../backend-shared/jwtTokens.js";
 import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
-const userScopes = ['openid', 'profile', 'email']
-const redirectUrl = getEnv('XERO_REDIRECT_URL')
 
-const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
+const userScopes = ['openid', 'profile', 'email']
+const redirectUrl = getEnv('SITE_ADDRESS') + '/api/sign-in/auth0/callback'
+
+const Auth0Plugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // @ts-ignore
   fastify.register(import("@fastify/oauth2"), {
-    name: 'xeroOauth',
+    name: 'auth0',
     credentials: {
       client: {
-        id: getEnv('XERO_CLIENT_ID'),
-        secret: getEnv('XERO_CLIENT_SECRET')
+        id: getEnv('AUTH0_CLIENT_ID'),
+        secret: getEnv('AUTH0_CLIENT_SECRET')
       },
       auth: {
-        authorizeHost: 'https://login.xero.com',
-        authorizePath: '/identity/connect/authorize',
-        tokenHost: 'https://identity.xero.com',
-        tokenPath: '/connect/token'
+        authorizeHost: 'https://dev-filingdeadlines.eu.auth0.com',
+        authorizePath: '/authorize',
+        tokenHost: 'https://dev-filingdeadlines.eu.auth0.com',
+        tokenPath: '/oauth/token'
       }
     },
     scope: userScopes,
@@ -28,14 +29,15 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
     callbackUri: redirectUrl
   })
 
+  //todo: refactor this logic into a generic "handleOauthLogin" function
   fastify.get('/callback', async function(request,reply){
     try{
-      const {token} = await this.xeroOauth.getAccessTokenFromAuthorizationCodeFlow(request)
+      const {token} = await this.auth0.getAccessTokenFromAuthorizationCodeFlow(request)
       const {access_token, id_token,refresh_token} = token
-      const decodedAccessToken = decodeXeroAccessToken(access_token)
+      const decodedAccessToken = decodeAuth0AccessToken(access_token)
       const decodedIdToken = getUserFromIdToken(id_token)
       request.session.userId = decodedIdToken.userId
-      request.log.info({userId: request.session.userId}, 'User logged in with Xero')
+      request.log.info({userId: request.session.userId}, 'User logged in with Auth0')
       // this could be improved by storing the user id token as a hash. would require converting some non-string fields. or could be stored as stringified JSON.
       await fastify.redis.set('user:'+request.session.userId+':id', id_token)
       await fastify.redis.set('user:'+request.session.userId+':access_token', access_token)
@@ -60,12 +62,12 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       }
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.
-      request.log.error(e, "Error signing user in with Xero")
+      request.log.error(e, "Error signing user in with Auth0")
       reply.redirect('/')
     }
   })
 
 }
 
+export default Auth0Plugin
 
-export default SignInWithXeroPlugin

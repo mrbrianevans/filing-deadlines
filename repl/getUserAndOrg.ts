@@ -1,5 +1,5 @@
 import {RedisClient} from "bullmq";
-import {getUserFromIdToken,decodeAccessToken} from '../backend-shared/jwtTokens.js'
+import {getUserFromIdToken,decodeXeroAccessToken} from '../backend-shared/jwtTokens.js'
 
 
 // prints details about a user by their user ID
@@ -15,8 +15,10 @@ export async function getUser(redis: RedisClient, userId: string){
   User: ${userId}
     Name: ${user.name}
     Email: ${user.email}
-    Username: ${user.preferred_username}
-    Auth time: ${new Date(user.auth_time * 1000)}
+    Username: [no longer available]
+    Token issued at: ${user.issuedAt}
+    Token expires: ${user.expiresAt}
+    Issued by: ${user.issuer}
   Org: ${orgId}
     Name: ${orgName}
   `

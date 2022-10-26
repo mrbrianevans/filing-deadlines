@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { getRedisClient } from "../../../backend-shared/getRedisClient.js";
-import type { IdToken } from "../../../backend-shared/jwtTokens.js";
+import type { XeroIdToken } from "../../../backend-shared/jwtTokens.js";
 
 /**
  * When a checkout is completed:
