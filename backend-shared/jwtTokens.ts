@@ -1,8 +1,11 @@
 import jwtDecode from "jwt-decode";
 
+
+export interface IdTokenUser{ name: string; issuedAt: Date; userId: string; expiresAt: Date; email: string; issuer: "https://dev-filingdeadlines.eu.auth0.com/" | "https://identity.xero.com" }
+
 // decodes the id token stored at `user:${userId}:id`
-export function getUserFromIdToken(idToken: string){
-  const idTokenDecoded = jwtDecode(idToken) as XeroIdToken | Auth0IdToken
+export function getUserFromIdToken(idToken: string): IdTokenUser {
+  const idTokenDecoded = jwtDecode(idToken) as IdToken
   return {
     // because initially, xero_userid was used, it must remain for backwards compatibility. until a migration is done.
     userId: "xero_userid" in idTokenDecoded ? idTokenDecoded.xero_userid : idTokenDecoded.sub,
@@ -78,3 +81,6 @@ interface Auth0IdToken{
   exp: number,
   sid: string
 }
+
+export type AccessToken = Auth0AccessToken | XeroAccessToken
+export type IdToken = XeroIdToken | Auth0IdToken

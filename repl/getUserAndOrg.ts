@@ -1,14 +1,14 @@
 import {RedisClient} from "bullmq";
-import {getUserFromIdToken,decodeXeroAccessToken} from '../backend-shared/jwtTokens.js'
+import {IdTokenUser} from '../backend-shared/jwtTokens.js'
 
 
 // prints details about a user by their user ID
 export async function getUser(redis: RedisClient, userId: string){
-  const idToken = await redis.get(`user:${userId}:id`)
-  if(!idToken) {
+  const idTokenUser = <IdTokenUser|null>await redis.get(`user:${userId}:idProfile`).then(i=>i ? JSON.parse(i) : null)
+  if(!idTokenUser) {
     return 'User does not exist in database'
   }else {
-    const user = getUserFromIdToken(idToken)
+    const user = idTokenUser
     const orgId = await redis.get(`user:${userId}:org`)
     const orgName = await redis.get(`org:${orgId}:name`)
     return `

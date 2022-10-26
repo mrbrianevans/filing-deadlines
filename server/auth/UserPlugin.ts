@@ -1,6 +1,5 @@
 import type {FastifyPluginAsync} from "fastify";
 import type { User } from "../../fs-shared/User.js";
-import { getUserFromIdToken } from "../../backend-shared/jwtTokens.js";
 
 const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.decorateRequest('user', null)
@@ -12,13 +11,13 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
       reply.sendError({statusCode: 401, message: 'You need to be logged in to access this', error: 'Not logged in'})
       return
     }
-    const idToken = await fastify.redis.get(`user:${userId}:id`)
-    if(!idToken) {
-      request.log.warn('userId exists, but couldn\'t find ID token in Redis')
+    const idProfile = await fastify.redis.get(`user:${userId}:idProfile`).then(i=>i ? JSON.parse(i) : null)
+    if(!idProfile) {
+      request.log.warn('userId exists, but couldn\'t find ID token profile in Redis')
       reply.sendError({statusCode: 401, error: 'Issue with account', message: 'There is an issue with your account. Try logging out and then sign in again.'})
       return null
     }
-    request.user = getUserFromIdToken(idToken)
+    request.user = idProfile
     request.log = request.log.child({userId})
   })
 
@@ -29,11 +28,10 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
 
   fastify.get('/', async (request, reply) => {
-    const decodedIdToken = request.user
     const user: User = {
-      id: decodedIdToken.xero_userid,
-      name: decodedIdToken.name,
-      email: decodedIdToken.email,
+      id: request.user.userId,
+      name: request.user.name,
+      email: request.user.email,
       owner: request.session.owner,
       orgPlan: request.session.orgPlan
     }
@@ -42,6 +40,7 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   })
 
   fastify.get('/logout', async (request, reply)=>{
+    fastify.log.info('User logged out')
     await request.session.destroy()
     reply.redirect('/')
   })
