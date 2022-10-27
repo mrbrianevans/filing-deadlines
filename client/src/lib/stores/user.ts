@@ -15,10 +15,15 @@ function createUserStore(){
 
   async function logout(){
     await fetch('/api/user/logout')
+    // console.log('fetched logout endpoint')
     await update(()=>null)
-    await clear() // when a user logs out, clear all cache entries (because they could contain user data)
+    // console.log('set user to null')
+    clear() // when a user logs out, clear all cache entries (because they could contain user data)
+    // console.log('cleared all swr cache entries')
     await refresh() // have to manually refresh after updating?
+    // console.log('refreshed user store')
     navigate('/') // redirect the user to the home page after logging out
+    // console.log('navigated home')
   }
 
   return {subscribe,logout, processing, refresh}

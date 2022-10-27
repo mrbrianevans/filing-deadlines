@@ -127,7 +127,7 @@
                             </Tooltip>
                         </Group>
                         <Text>
-                            <AnchoredLink href="/secure/manage-organisation">{$user.orgName ?? 'No organisation'}</AnchoredLink>
+                            <AnchoredLink href="/secure/manage-organisation">{$user?.orgName ?? 'No organisation'}</AnchoredLink>
                         </Text>
                     </Stack>
                 {/if}

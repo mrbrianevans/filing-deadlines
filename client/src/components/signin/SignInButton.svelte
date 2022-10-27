@@ -4,6 +4,7 @@
   import {Person} from "radix-icons-svelte";
   import SignInWithAuth0Button from "./SignInWithAuth0Button.svelte";
   import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
+  import {user} from "../../lib/stores/user.js";
   const {Item: MenuItem, Label: MenuLabel} = Menu
 
   export let buttonOverride = {
@@ -17,7 +18,8 @@
 </script>
 
 <!-- the right margin is because the placement prop isn't working. when it gets fixed the margin can be removed -->
-<Menu placement="end" mr="{200}">
+<Menu placement="end" mr="{200}" on:open={()=>user.refresh()}>
+<!--    the events on:open and on:close are not working. ideally, it should refresh the user state when the user clicks sign in -->
     <Button slot="control">
         <Person slot="leftIcon"/>
         Sign in
