@@ -1,30 +1,38 @@
 <script lang="ts">
 
-  import {Badge, Text} from "@svelteuidev/core";
+  import {Badge, Loader, Text} from "@svelteuidev/core";
 import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../../lib/swr.js";
 import {sentenceCase} from "sentence-case";
+  import ErrorAlert from "../../components/ErrorAlert.svelte";
+  import {onMount} from "svelte";
 
 const startDate = new Date()
 startDate.setDate(1)
 const counts = swr('/api/user/org/member/recent-filings/countByCategory?startDate='+startDate.toISOString().split('T')[0], readableSwrOptions)
 const {data, error, processing, refresh} = counts
+onMount(()=>refresh())
 
 $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
 </script>
 
 <div>
     <h2>Recent filings</h2>
+    {#if $processing}
+        <Loader/>
+    {:else if $error}
+        <ErrorAlert error={$error}/>
+    {:else if $data}
+        <p>In the last month you've filed {$data?.['accounts']??0} accounts, {$data?.['confirmation-statement']??0} confirmation statements and {totalCount} total filings. </p>
 
-    <p>In the last month you've filed {$data?.['accounts']??0} accounts, {$data?.['confirmation-statement']??0} confirmation statements and {totalCount} total filings. </p>
+        <table class="counts-table">
+            {#each Object.entries($data) as category}
+                <tr><td>{sentenceCase(category[0])}</td> <td>{category[1]}</td></tr>
+            {/each}
+        </table>
 
-    <table class="counts-table">
-        {#each Object.entries($data) as category}
-            <tr><td>{sentenceCase(category[0])}</td> <td>{category[1]}</td></tr>
-        {/each}
-    </table>
-
-    <Text color="dimmed" size="xs">This counts all filings for companies on your client list, including any filings made by third parties. Counts filings since {startDate.toLocaleDateString()}.</Text>
+        <Text color="dimmed" size="xs">This counts all filings for companies on your client list, including any filings made by third parties. Counts filings since {startDate.toLocaleDateString()}.</Text>
+    {/if}
 </div>
 
 

@@ -10,6 +10,7 @@ import type {
   ConfirmationStatementItem
 } from '../../../../fs-shared/ConfirmationStatements.js'
 import AnchoredLink from "../../components/AnchoredLink.svelte";
+import ErrorAlert from "../../components/ErrorAlert.svelte";
 
 
 const {error, processing} = confirmationStatements
@@ -29,31 +30,33 @@ const columns: TableColumns<ConfirmationStatementItem> = [
       }
 ]
 const limit = 5
-$: overdueCount = $confirmationStatements.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 0).length
-$: thisFortnightCount = $confirmationStatements.filter(r=> {
+$: overdueCount = $confirmationStatements?.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 0).length??0
+$: thisFortnightCount = $confirmationStatements?.filter(r=> {
   const daysLeft = getDaysLeft(r.confirmation_statement?.next_due)
   return daysLeft >= 0 && daysLeft < 14
-}).length
+}).length??0
 
 </script>
 
 <div>
     <h2>Confirmation statement deadlines</h2>
     <p>Upcoming confirmation statement deadlines for your clients. <AnchoredLink href="/secure/confirmation-statement-dashboard">View full dashboard</AnchoredLink></p>
-    <p>{overdueCount} overdue, {thisFortnightCount} due within a fortnight. {#if overdueCount + thisFortnightCount > limit} Only showing {limit}.{/if}</p>
-    {#await import('svelte-table').then(m=>m.default)}
+    {#if $processing}
         <Loader/>
-    {:then SvelteTable}
-        {#if $confirmationStatements}
-            <SvelteTable columns="{columns}" rows={$confirmationStatements.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 14).slice(0,limit)}
-                         sortBy="days_left" sortOrder="{1}"
-                         rowKey="company_name"
-            >
-            </SvelteTable>
-        {:else}
+    {:else if $error}
+        <ErrorAlert error={$error}/>
+    {:else if $confirmationStatements}
+        <p>{overdueCount} overdue, {thisFortnightCount} due within a fortnight. {#if overdueCount + thisFortnightCount > limit} Only showing {limit}.{/if}</p>
+        {#await import('svelte-table').then(m=>m.default)}
             <Loader/>
-        {/if}
-    {/await}
+        {:then SvelteTable}
+                <SvelteTable columns="{columns}" rows={$confirmationStatements.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 14).slice(0,limit)}
+                             sortBy="days_left" sortOrder="{1}"
+                             rowKey="company_name"
+                >
+                </SvelteTable>
+        {/await}
+    {/if}
 </div>
 
 
