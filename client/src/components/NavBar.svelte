@@ -71,7 +71,10 @@
                             <AnchoredLink href="/secure/clients" >Client list</AnchoredLink>
                         </MenuItem>
                         <MenuItem class={classes.root} root="span">
-                            <AnchoredLink href="/secure/dashboard">Accounts dashboard</AnchoredLink>
+                            <AnchoredLink href="/secure/dashboard">Overview dashboard</AnchoredLink>
+                        </MenuItem>
+                        <MenuItem class={classes.root} root="span">
+                            <AnchoredLink href="/secure/accounts-dashboard">Accounts dashboard</AnchoredLink>
                         </MenuItem>
                         <MenuItem class={classes.root} root="span">
                             <AnchoredLink href="/secure/confirmation-statement-dashboard">Confirmation statements

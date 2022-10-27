@@ -16,6 +16,7 @@ import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
 import PlanDependentPage from "./org/PlanDependentPage.svelte";
 import {SubscriptionPlans} from '../../../fs-shared/SubscriptionPlans.js'
 import {features} from "../lib/stores/features.js";
+import OverviewDashboard from "./OverviewDashboard/OverviewDashboard.svelte";
 </script>
 
 <AuthedPage>
@@ -23,7 +24,10 @@ import {features} from "../lib/stores/features.js";
 <!--    these pages require the user to be in an organisation with a subscription plan -->
     <PlanDependentPage>
         <Route path="/dashboard">
-                <AccountsDashboard />
+            <OverviewDashboard />
+        </Route>
+        <Route path="/accounts-dashboard">
+            <AccountsDashboard />
         </Route>
         <Route path="confirmation-statement-dashboard">
             <ConfirmationStatements />

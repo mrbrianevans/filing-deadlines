@@ -76,7 +76,7 @@
         value: v => getDaysLeftDuration(v.confirmation_statement?.next_due)
       },
       {
-        key: 'last_accounts',
+        key: 'last_confirmation_statement_made_up_to',
         title: 'Last confirmation statement made up to',
         value: v => v.confirmation_statement?.last_made_up_to?? '',
         renderComponent: {

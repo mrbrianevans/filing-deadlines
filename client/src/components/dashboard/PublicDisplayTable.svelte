@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {TableColumns} from "svelte-table/src/types.js";
     import type {DashboardData, DashboardDataItem} from '../../../../fs-shared/DashboardData.js'
+    import {getDaysLeftDuration,getDaysLeft} from '../../../../fs-shared/dates.js'
     import CompanyName from "./CompanyName.svelte";
     import CompanyStatus from "./CompanyStatus.svelte";
     import {company_status} from "../../assets/constants.json";
@@ -9,14 +10,6 @@
     import NextAccountsMadeUpTo from "./NextAccountsMadeUpTo.svelte";
     import ErrorAlert from "../ErrorAlert.svelte";
 
-    function getDaysLeft(date: string){
-      return Math.floor((new Date(date) - Date.now())/(86400*1000))
-    }
-    function getDueDateDuration(dueDate: string|undefined){
-      if(!dueDate) return ''
-      const days = getDaysLeft(dueDate)
-      return days > 0 ? `${days} days left` : `${-days} days ago`
-    }
     const columns: TableColumns<DashboardDataItem> = [
       {
         key: 'company_name',
@@ -39,7 +32,7 @@
       {
         key: 'days_left',
         title: 'Due date',
-        value: v => getDueDateDuration(v.next_due_accounts)
+        value: v => getDaysLeftDuration(v.next_due_accounts)
       }
     ]
     function getRowClass(row: DashboardDataItem): string{

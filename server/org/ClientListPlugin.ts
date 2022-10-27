@@ -9,7 +9,7 @@ import type {ClientListItem} from '../../fs-shared/ClientList.js'
 import {sortClientList} from "../../fs-shared/ClientList.js";
 
 const addClientSchema: FastifySchema = {
-  body: {type: 'object', properties: {companyNumber: {type: 'string'}}}
+  body: {type: 'object', properties: {companyNumber: {type: 'string', minLength: 6, maxLength: 8}}}
 }
 
 const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
