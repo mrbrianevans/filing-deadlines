@@ -20,11 +20,11 @@ let checked
 
     </Alert>
 
-    <div class="controls">
-        <h2>Controls</h2>
-        <label>Accounts tile expanded <input type="checkbox" bind:checked/></label>
+<!--    <div class="controls">-->
+<!--        <h2>Controls</h2>-->
+<!--        <label>Accounts tile expanded <input type="checkbox" bind:checked/></label>-->
 
-    </div>
+<!--    </div>-->
     <div class="dashboard">
 
         <div class="tile" class:expanded={checked}><AccountsTile/></div>
@@ -57,7 +57,6 @@ let checked
     }
 
     .tile{
-        min-height: 300px;
         border-radius: 10px;
         padding: 1rem;
         box-shadow: var(--svelteui-shadows-sm);
