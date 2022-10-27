@@ -87,7 +87,7 @@ export async function fetchStream(streamPath: StreamPath = "companies", startFro
       try {
         const responseBody = Readable.fromWeb(<ReadableStream>response.body)
         responseBody.on("close", () => emitter.emit('end'))
-        responseBody.on("error", (e) => emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'})))
+        responseBody.on("error", (e) => emitter.emit('error', new StreamError(e.message, true)))
         nextTick(() => emitter.emit('start'))
 
         function mapper(line: string) {
@@ -97,10 +97,10 @@ export async function fetchStream(streamPath: StreamPath = "companies", startFro
 
         responseBody.pipe(split2(/\r?\n+/, mapper))
           .on("data", event => emitter.emit('event', event))
-          .on("error", (e) => emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'})))
+          .on("error", (e) => emitter.emit('error', new StreamError(e.message, true)))
           .on("end", () => emitter.emit('end'))
       }catch (e) {// this can be called if the connection is aborted by the server as it's classed as a network error
-        emitter.emit('error', Object.assign(e, {retry: true, name:'StreamError'}))
+        emitter.emit('error', new StreamError(e.message, true))
       }
     } else {
       nextTick(() => emitter.emit('error', new StreamError('No response body returned', true)))
