@@ -33,8 +33,7 @@ const SignInWithXeroPlugin: FastifyPluginAsync = async (fastify, opts) => {
       const {token} = await this.xeroOauth.getAccessTokenFromAuthorizationCodeFlow(request)
       const {access_token, id_token, refresh_token} = token
       const accessToken = decodeXeroAccessToken(access_token)
-      const idToken = getUserFromIdToken(id_token)
-      const redirectUrl = await doSignIn({accessToken, idToken, refresh_token, request, fastify, provider: 'xero'})
+      const redirectUrl = await doSignIn({accessToken, id_token, refresh_token, request, fastify, provider: 'xero'})
       reply.redirect(redirectUrl)
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.

@@ -72,6 +72,7 @@ jobs:
           STRIPE_WEBHOOK1_SECRET: 'whsec_xxxx'
           AUTH0_CLIENT_ID: 'test-client-id'
           AUTH0_CLIENT_SECRET: 'test-client-secret'
+          AUTH0_URL: 'https://dev-filingdeadlines.eu.auth0.com'
 
       - name: Startup worker
         run: node index.js
