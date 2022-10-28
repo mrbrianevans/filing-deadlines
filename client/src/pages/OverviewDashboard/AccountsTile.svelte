@@ -6,7 +6,7 @@
   import {onMount} from "svelte";
   import type {TableColumns} from "svelte-table/src/types.js";
   import CompanyName from "../../components/dashboard/CompanyName.svelte";
-  import {Loader, Text} from "@svelteuidev/core";
+  import {Loader, Text, Title} from "@svelteuidev/core";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
   import ErrorAlert from "../../components/ErrorAlert.svelte";
   import StatGroup from "../../components/StatGroup.svelte";
@@ -38,12 +38,12 @@
 </script>
 
 <div>
-    <h2>Accounts deadlines</h2>
+    <Title order={2}>Accounts deadlines</Title>
     <p>Upcoming accounts deadlines for your clients. <AnchoredLink href="/secure/accounts-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
                 label="Overdue" description="Number of your clients whose annual accounts are overdue"
-                data={overdueCount}
+                data={overdueCount} red={Boolean(overdueCount)}
                 loading={$processing}
         />
         <Stat
@@ -53,13 +53,13 @@
         />
     </StatGroup>
     {#if $processing}
-        <Loader/>
+        <Loader color="gray"/>
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $dashboardData}
         {#if overdueCount + thisMonthCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing {limit} out of {overdueCount + thisMonthCount}.</Text>{/if}
         {#await import('svelte-table').then(m=>m.default)}
-            <Loader/>
+            <Loader color="gray"/>
         {:then SvelteTable}
                 <SvelteTable columns="{columns}" rows={$dashboardData.filter(r=>getDaysLeft(r.next_due_accounts) < 31).slice(0,limit)}
                              sortBy="days_left" sortOrder="{1}"

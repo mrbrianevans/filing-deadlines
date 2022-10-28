@@ -4,6 +4,7 @@
 
     export let label: string
     export let description: string = label
+    export let red = false
     export let data: number|string
     export let loading = false
     export let defaultValue = '-'
@@ -15,10 +16,10 @@
 <div class="container">
     <Tooltip label={description} openDelay={150}>
         <div class="layout">
-            <span class="label">{label}</span>
+            <span class="label" class:red>{label}</span>
             <span class="value">
             {#if loading}
-                <Loader/>
+                <Loader variant='dots' color='gray' size="xs"/>
             {:else}
                 {formattedValue}
             {/if}
@@ -28,6 +29,9 @@
 </div>
 
 <style lang="scss">
+  .red{
+    color: VAR(--svelteui-colors-red800);
+  }
   .layout{
     padding: 0.5rem;
     display: grid;
@@ -43,7 +47,7 @@
 .container{
   background: VAR(--contrast);
   border-radius: 2px;
-  display: flex;
+  display: inline-flex;
   align-items: end;
 }
 </style>

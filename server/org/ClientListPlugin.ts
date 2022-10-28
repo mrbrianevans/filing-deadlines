@@ -17,9 +17,14 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
   // get the client list for the current user
   fastify.get('/', async (request, reply)=>{
     const clients = await fastify.redis.hgetall(`org:${request.session.orgId}:clients`)
-    //client IDs are stored in a Redis Hash of id => JSON([Object Client])
+    //client IDs are stored in a Redis Hash of companyNumber => JSON([Object Client])
     const clientListItems = Object.values(clients).map(c=><ClientListItem>JSON.parse(c)).sort(sortClientList)
     return clientListItems
+  })
+
+  fastify.get('/count', async (request, reply)=>{
+    const numberOfClients = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    return numberOfClients
   })
 
   // add a single client by its company number. Company profile is loaded synchronously, but filing history is asynchronous.

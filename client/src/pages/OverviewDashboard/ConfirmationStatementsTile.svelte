@@ -2,7 +2,7 @@
 
 import {confirmationStatements} from "../../lib/stores/confirmationStatements.js";
 import {getDaysLeftDuration,getDaysLeft} from '../../../../fs-shared/dates.js'
-import {Loader, Text} from "@svelteuidev/core";
+import {Loader, Text, Title} from "@svelteuidev/core";
 import {onMount} from "svelte";
 import type {TableColumns} from "svelte-table/src/types.js";
 import CompanyName from "../../components/dashboard/CompanyName.svelte";
@@ -41,12 +41,12 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
 </script>
 
 <div>
-    <h2>Confirmation statement deadlines</h2>
+    <Title order={2}>Confirmation statement deadlines</Title>
     <p>Upcoming confirmation statement deadlines for your clients. <AnchoredLink href="/secure/confirmation-statement-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
                 label="Overdue" description="Number of your clients whose confirmation statements are overdue"
-                data={overdueCount}
+                data={overdueCount} red={Boolean(overdueCount)}
                 loading={$processing}
         />
         <Stat
@@ -56,13 +56,13 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
         />
     </StatGroup>
     {#if $processing}
-        <Loader/>
+        <Loader color="gray"/>
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $confirmationStatements}
         {#if overdueCount + thisFortnightCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing {limit} out of {overdueCount + thisFortnightCount}.</Text>{/if}
         {#await import('svelte-table').then(m=>m.default)}
-            <Loader/>
+            <Loader color="gray"/>
         {:then SvelteTable}
                 <SvelteTable columns="{columns}" rows={$confirmationStatements.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 14).slice(0,limit)}
                              sortBy="days_left" sortOrder="{1}"

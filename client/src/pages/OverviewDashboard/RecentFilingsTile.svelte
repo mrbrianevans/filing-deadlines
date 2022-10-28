@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import {Badge, Loader, Text} from "@svelteuidev/core";
+  import {ActionIcon, Badge, Loader, Text, Title} from "@svelteuidev/core";
 import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../../lib/swr.js";
 import {sentenceCase} from "sentence-case";
@@ -10,6 +10,7 @@ import {sentenceCase} from "sentence-case";
   import Stat from "../../components/Stat.svelte";
   import {months} from "../../../../fs-shared/dates.js";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
+  import {Reload} from "radix-icons-svelte";
 
 const startDate = new Date()
 startDate.setDate(1)
@@ -21,9 +22,10 @@ $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
 </script>
 
 <div>
-    <h2>Recent filings</h2>
+    <Title order={2}>Recent filings</Title>
+    <!--    <ActionIcon on:click={refresh}><Reload/></ActionIcon>  this was decided against because the data doesn't update often enough to make it necessary -->
     {#if $processing}
-        <Loader/>
+        <Loader color="gray"/>
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $data}

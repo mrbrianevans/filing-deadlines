@@ -90,10 +90,9 @@ const RegisteredAddressPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const address = <OfficeAddress>await fastify.redis.hgetall(`org:${request.session.orgId}:address`)
     const result = await advancedCompanySearch({location: `${address.addressLine1??''} ${address.postCode}`, size: 1, company_status: 'active'}) // only active companies
     const {hits} = result ?? {hits:0}
-    const numberOfClients = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
     const clientCompanyNumbers = await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)
     const clientsRegisteredAtOfficeAddress = await Promise.all(clientCompanyNumbers.map(c=>addressMatches(address, c))).then(f=>f.filter(s=>s).length)
-    return {totalRegistered: hits, numberOfClients, clientsRegisteredAtOfficeAddress} as RegisteredOfficeAddressStats
+    return {totalRegistered: hits, clientsRegisteredAtOfficeAddress} as RegisteredOfficeAddressStats
   })
 
   async function addressMatches(orgAddress: OfficeAddress, companyNumber){

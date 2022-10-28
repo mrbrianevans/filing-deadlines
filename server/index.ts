@@ -40,6 +40,10 @@ fastify.decorateReply('wrongPlan', function (message: string) {
 })
 
 await fastify.register(async (fastify, opts)=>{
+  if(process.env.SLOWDOWN_FASTIFY) // optionally slow down requests to 500ms in development
+    fastify.addHook('onRequest', (request, reply, done)=>{
+      setTimeout(done,500)
+    })
   // register endpoints here
   await fastify.register(import('./auth/SignInWithXeroPlugin.js'), {prefix: 'sign-in/xero'})
   await fastify.register(import('./auth/Auth0Plugin.js'), {prefix: 'sign-in/auth0'})
