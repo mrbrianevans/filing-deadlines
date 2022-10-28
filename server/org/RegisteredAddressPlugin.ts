@@ -1,8 +1,9 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import {advancedCompanySearch} from '../../backend-shared/companiesHouseApi/advancedCompanySearch.js'
-import type {OfficeAddress} from '../../fs-shared/OfficeAddress.js'
 import {CustomFastifyErrorSchema} from "../types/CustomFastifyError.js";
-import type {RegisteredAddressResult} from "../../fs-shared/OfficeAddress.js";
+import type {RegisteredAddressResult,RegisteredOfficeAddressStats,OfficeAddress} from "../../fs-shared/OfficeAddress.js";
+import type { CompanyProfile } from "../../fs-shared/CompanyProfile.js";
+import { getCompanyProfileFromApi } from "../../backend-shared/companiesHouseApi/getCompanyProfile.js";
 
 const addressSchema = {
   type: 'object',
@@ -80,6 +81,38 @@ const RegisteredAddressPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(result.hits > result.items.length) request.log.warn({matches: result.hits, returnedResults: result.items.length},'More results matched address than what was returned')
     return result.items.map(transformAddressResult)
   })
+
+  fastify.get('/count', async (request, reply)=>{
+    if(!request.org.features.registeredOfficeAddressChecker)
+      return reply.wrongPlan('Your subscription plan does not include the registered office address checker.')
+    const exists = await fastify.redis.exists(`org:${request.session.orgId}:address`)
+    if(!exists) return reply.sendError({statusCode: 400, error: 'Address not set', message: 'You need to set your organisations office address before you can view the number of companies who are registered there.'})
+    const address = <OfficeAddress>await fastify.redis.hgetall(`org:${request.session.orgId}:address`)
+    const result = await advancedCompanySearch({location: `${address.addressLine1??''} ${address.postCode}`, size: 1, company_status: 'active'}) // only active companies
+    const {hits} = result ?? {hits:0}
+    const numberOfClients = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    const clientCompanyNumbers = await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)
+    const clientsRegisteredAtOfficeAddress = await Promise.all(clientCompanyNumbers.map(c=>addressMatches(address, c))).then(f=>f.filter(s=>s).length)
+    return {totalRegistered: hits, numberOfClients, clientsRegisteredAtOfficeAddress} as RegisteredOfficeAddressStats
+  })
+
+  async function addressMatches(orgAddress: OfficeAddress, companyNumber){
+    const companyProfile = await getCompanyProfile(companyNumber)
+    const addressLine1 = companyProfile?.registered_office_address.address_line_1 // not checking first line of address yet..., it isn't always exactly equal
+    const postCode = companyProfile?.registered_office_address.postal_code
+    return postCode === orgAddress.postCode
+  }
+
+  async function getCompanyProfile(companyNumber: string){
+    const saved = await fastify.redis.get(`company:${companyNumber}:profile`)
+    if(saved) return <CompanyProfile>JSON.parse(saved)
+    else {
+      fastify.log.info({companyNumber},'Fetching company profile from API because not found in Redis when confirmation statements dashboard data requested')
+      const profile = await getCompanyProfileFromApi(companyNumber)
+      if(profile) await fastify.redis.set(`company:${companyNumber}:profile`, JSON.stringify(profile))
+      return profile
+    }
+  }
 }
 
 export default RegisteredAddressPlugin

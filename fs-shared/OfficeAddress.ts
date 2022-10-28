@@ -28,3 +28,13 @@ export interface RegisteredAddressResult{
   sic_codes: String[];
 }
 export type RegisteredAddressResults = RegisteredAddressResult[]
+
+
+export interface RegisteredOfficeAddressStats{
+  // number of companies registered at this office address
+totalRegistered: number,
+  // total number of clients for this organisations client list
+  numberOfClients:number,
+  // number of clients who have the same postcode as this orgs office address
+  clientsRegisteredAtOfficeAddress:number
+}
