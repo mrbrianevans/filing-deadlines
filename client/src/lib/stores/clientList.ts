@@ -10,8 +10,9 @@ function createClientList(){
   // add and delete REST endpoints
   const addClient = (id) => poster(key, {companyNumber: id})
   const deleteClient = (id) => fetch(key+id, {method: 'DELETE'}).then((r) => r.ok)
+  const deleteAll = () => fetch(key, {method: 'DELETE'}).then((r) => r.ok)
 
-  const { data: {subscribe}, error, refresh, update,processing } = swr<ClientListItem[]|null>(key, readableSwrOptions)
+  const { data: {subscribe}, error, refresh, update, processing } = swr<ClientListItem[]|null>(key, readableSwrOptions)
 
   /** Add either one or many clients to the list */
   async function addNew(client: ClientListItem['company_number']|ClientListItem['company_number'][]){
@@ -30,8 +31,13 @@ function createClientList(){
     await deleteClient(companyNumber)
     await refresh() // after deleting, refresh entire list
   }
+  async function removeAll(){
+    await update(()=>[])
+    await deleteAll()
+    await refresh() // after deleting, refresh entire list
+  }
 
-  return {subscribe, addNew, remove, error, refresh, processing}
+  return {subscribe, addNew, remove,removeAll, error, refresh, processing}
 }
 
 export const clientList = createClientList()

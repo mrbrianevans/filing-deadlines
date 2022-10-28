@@ -68,6 +68,24 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     reply.status(204).send()
   })
 
+  fastify.delete('/', async (request, reply)=>{
+    request.log.info("Deleting all companies from client list")
+    //for each company in client list
+    const companies = await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)
+    for(const companyNumber of companies){
+      await fastify.redis.srem(`company:${companyNumber}:clientLists`, request.session.orgId) // remove org from company tracking list
+      if(await fastify.redis.scard(`company:${companyNumber}:clientLists`) === 0) {
+        await fastify.redis.del('company:' + companyNumber + ':profile')
+        await fastify.redis.del('company:' + companyNumber + ':filingHistory')
+      }
+    }
+    // remove organisations client list and client filings altogether
+    await fastify.redis.del(`org:${request.session.orgId}:clients`)
+    await fastify.redis.del(`org:${request.session.orgId}:clientFilings`)
+    request.log.info({countOfDeleted: companies.length}, "Deleted %i companies from client list", companies.length)
+    reply.status(204).send()
+  })
+
   fastify.get('/reloadDetails',async (request, reply)=>{
     request.log.info('User requested reload of client list details')
     // waits synchronously for job to finish before return a response to the request. Max timeout of 10 seconds.

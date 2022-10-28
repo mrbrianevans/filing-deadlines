@@ -20,7 +20,7 @@ import {clientList, importClientListCsv} from "../lib/stores/clientList.js";
 import FileUpload from 'sveltefileuploadcomponent';
   import { Loader } from '@svelteuidev/core';
   import RemoveClientButton from "../components/clientList/RemoveClientButton.svelte";
-  import {FilePlus, InfoCircled, Update} from "radix-icons-svelte";
+  import {FilePlus, InfoCircled, Reload, Trash, Update} from "radix-icons-svelte";
   import {user} from "../lib/stores/user.js";
   import {Link} from "svelte-navigator";
 import sampleSpreadsheet from '../assets/sample-spreadsheet.png'
@@ -83,6 +83,7 @@ let {processing, error} = clientList
     reloading = false
   }
   $: addingNewClientsDisabled = $clientList?.length >= $features?.clientListMaxSize
+  let removingAll = false
 </script>
 
 
@@ -111,8 +112,11 @@ let {processing, error} = clientList
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-        <Tooltip label="Update all the details of companies in your client list.">
-            <ActionIcon on:click={reloadClientListDetails} loading="{reloading}"><Update/></ActionIcon>
+        <Tooltip label="Reload your client list. Will load changes made by other uses or in a different tab.">
+            <ActionIcon on:click={clientList.refresh} loading="{$processing}"><Reload/></ActionIcon>
+        </Tooltip>
+        <Tooltip label="Coming soon. You'll be able to export your client list to a file.">
+            <Button disabled>Download</Button>
         </Tooltip>
     </Group>
         <Space h="md"/>
@@ -127,6 +131,15 @@ let {processing, error} = clientList
             {#if $clientList.length > 0}
                 <Text size="xs">{$clientList.length} client(s) ({$features.clientListMaxSize} max)</Text>
                 <SvelteTable columns="{columns}" rows={$clientList} sortBy="company_status" sortOrder="{-1}"></SvelteTable>
+                <Button color="red" on:click={()=>{removingAll = true}}><Trash slot="leftIcon"/>Remove all clients</Button>
+                {#if removingAll}
+                    <Text my="xs">This will empty your client list. Are you sure?</Text>
+                    <Text my="xs">This cannot be undone and all your dashboards will be empty. It's a way of resetting.</Text>
+                    <Group>
+                        <Button on:click={()=>{removingAll = false}}>No, keep my client list</Button>
+                        <Button on:click={clientList.removeAll} color="red">Yes, delete all clients</Button>
+                    </Group>
+                {/if}
             {:else}
                 <Title order={3}>Get started</Title>
                 <SimpleGrid cols="{2}">
