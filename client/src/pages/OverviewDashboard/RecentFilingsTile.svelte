@@ -41,9 +41,6 @@ $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
         width: auto;
     }
     table.counts-table tr:nth-child(odd){
-        background: rgb(231, 234, 237);
-    }
-    .dark-theme table.counts-table tr:nth-child(odd){
-        background: rgb(47, 50, 55);
+        background: VAR(--contrast);
     }
 </style>

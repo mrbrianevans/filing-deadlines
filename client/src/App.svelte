@@ -108,6 +108,12 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
     min-height: 90vh;
   }
   :global(html){
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+      font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  }
+  :global(:root){
+      --contrast: rgb(231, 234, 237);
+  }
+  :global(.dark-theme ){
+      --contrast: rgb(47, 50, 55);
   }
 </style>
