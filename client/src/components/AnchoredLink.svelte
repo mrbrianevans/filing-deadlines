@@ -8,4 +8,4 @@
 </script>
 
 
-<Anchor root={Link} to="{href}" href="{href}" inherit><slot></slot></Anchor>
+<Anchor root={Link} to="{href}" href="{href}" inherit class="hidden-on-print"><slot></slot></Anchor>

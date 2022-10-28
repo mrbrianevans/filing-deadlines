@@ -5,6 +5,7 @@
   import {onMount} from "svelte";
   import Stat from "../../components/Stat.svelte";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
+  import {Title} from "@svelteuidev/core";
 
   const counts = swr<number>('/api/user/org/member/client-list/count', readableSwrOptions)
   const {data, error, processing, refresh} = counts
@@ -12,7 +13,7 @@
 </script>
 
 <div>
-    <h2>Clients</h2>
+    <Title order={2} class="no-top-margin">Clients</Title>
 
     <p>You have {$data} clients on your client list. <AnchoredLink href="/secure/clients">View client list</AnchoredLink></p>
     <Stat label="number of clients"

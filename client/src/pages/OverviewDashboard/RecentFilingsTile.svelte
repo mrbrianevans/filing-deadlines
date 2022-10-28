@@ -22,7 +22,7 @@ $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
 </script>
 
 <div>
-    <Title order={2}>Recent filings</Title>
+    <Title order={2} class="no-top-margin">Recent filings</Title>
     <!--    <ActionIcon on:click={refresh}><Reload/></ActionIcon>  this was decided against because the data doesn't update often enough to make it necessary -->
     {#if $processing}
         <Loader color="gray"/>

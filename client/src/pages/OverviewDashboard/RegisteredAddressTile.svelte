@@ -18,7 +18,7 @@ onMount(()=>refresh())
 </script>
 
 <div>
-    <Title order={2}>Registered office address </Title>
+    <Title order={2} class="no-top-margin">Registered office address </Title>
 <!--    <ActionIcon on:click={refresh}><Reload/></ActionIcon>  this was decided against because the data doesn't update often enough to make it necessary -->
     <p>{$orgAddress?.addressLine1} {$orgAddress?.postCode}. <AnchoredLink href="/secure/registered-office-address">View full list</AnchoredLink></p>
     <StatGroup>

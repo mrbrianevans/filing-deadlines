@@ -38,7 +38,7 @@
 </script>
 
 <div>
-    <Title order={2}>Accounts deadlines</Title>
+    <Title order={2} class="no-top-margin">Accounts deadlines</Title>
     <p>Upcoming accounts deadlines for your clients. <AnchoredLink href="/secure/accounts-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
@@ -47,7 +47,7 @@
                 loading={$processing}
         />
         <Stat
-                label="Due this month" description="Number of your clients whose annual accounts are due with a month"
+                label="Due this month" description="Number of your clients whose annual accounts are due within a month"
                 data={thisMonthCount}
                 loading={$processing}
         />

@@ -104,9 +104,11 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
 </Router>
 
 <style>
-  div.full-height{
-    min-height: 90vh;
-  }
+    @media screen {
+        div.full-height {
+            min-height: 90vh;
+        }
+    }
   :global(html){
       font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   }
@@ -116,4 +118,18 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
   :global(.dark-theme ){
       --contrast: rgb(47, 50, 55);
   }
+
+    @media print {
+        :global(.hidden-on-print) {
+            display: none;
+        }
+    }
+    @media print {
+        :global(main.main) {
+            padding: 0 !important;
+        }
+    }
+    :global(.no-top-margin){
+        margin-top: 0 !important;
+    }
 </style>

@@ -48,7 +48,7 @@
   const {classes} = useStyles();
 </script>
 
-<div>
+<div class="hidden-on-print">
     <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem' }}>
         <Title inline order={1} override={{margin:'0'}}>
             <Anchor href="/" inherit root={Link} to="/">Filing deadlines</Anchor>

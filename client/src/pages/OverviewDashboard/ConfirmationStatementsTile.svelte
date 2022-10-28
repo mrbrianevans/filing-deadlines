@@ -41,7 +41,7 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
 </script>
 
 <div>
-    <Title order={2}>Confirmation statement deadlines</Title>
+    <Title order={2} class="no-top-margin">Confirmation statement deadlines</Title>
     <p>Upcoming confirmation statement deadlines for your clients. <AnchoredLink href="/secure/confirmation-statement-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
@@ -75,5 +75,4 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
 
 
 <style>
-
 </style>

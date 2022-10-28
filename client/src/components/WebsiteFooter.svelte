@@ -4,7 +4,7 @@
   import AnchoredLink from "./AnchoredLink.svelte";
 </script>
 
-<Footer override={{bc: '#0001'}}>
+<Footer class="footer">
     <Container>
         <div class="container">
             <h6>Made by Brian Evans</h6>
@@ -28,5 +28,16 @@
     padding-bottom: 2rem;
     gap: 1rem;
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media print{
+    .container{
+        display: none;
+    }
+}
+@media screen {
+    :global(.footer) {
+        background: VAR(--contrast);
+    }
 }
 </style>
