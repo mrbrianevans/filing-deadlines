@@ -6,6 +6,10 @@ import {readableSwrOptions} from "../../lib/swr.js";
 import {sentenceCase} from "sentence-case";
   import ErrorAlert from "../../components/ErrorAlert.svelte";
   import {onMount} from "svelte";
+  import StatGroup from "../../components/StatGroup.svelte";
+  import Stat from "../../components/Stat.svelte";
+  import {months} from "../../../../fs-shared/dates.js";
+  import AnchoredLink from "../../components/AnchoredLink.svelte";
 
 const startDate = new Date()
 startDate.setDate(1)
@@ -23,15 +27,17 @@ $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $data}
-        <p>In the last month you've filed {$data?.['accounts']??0} accounts, {$data?.['confirmation-statement']??0} confirmation statements and {totalCount} total filings. </p>
+        <Text size="md" mb="sm">{months[startDate.getMonth()]} filings, counted by filing type. <AnchoredLink href="/secure/recent-filings">View all recent filings</AnchoredLink></Text>
+        <StatGroup>
 
-        <table class="counts-table">
             {#each Object.entries($data) as category}
-                <tr><td>{sentenceCase(category[0])}</td> <td>{category[1]}</td></tr>
+                <Stat
+                label={sentenceCase(category[0])} data={category[1]}
+                />
             {/each}
-        </table>
+        </StatGroup>
 
-        <Text color="dimmed" size="xs">This counts all filings for companies on your client list, including any filings made by third parties. Counts filings since {startDate.toLocaleDateString()}.</Text>
+        <Text color="dimmed" size="xs" mt="xs">This counts all filings for companies on your client list, including any filings made by third parties. Counts filings since {startDate.toLocaleDateString()}.</Text>
     {/if}
 </div>
 

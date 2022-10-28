@@ -6,9 +6,11 @@
   import {onMount} from "svelte";
   import type {TableColumns} from "svelte-table/src/types.js";
   import CompanyName from "../../components/dashboard/CompanyName.svelte";
-  import {Loader} from "@svelteuidev/core";
+  import {Loader, Text} from "@svelteuidev/core";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
   import ErrorAlert from "../../components/ErrorAlert.svelte";
+  import StatGroup from "../../components/StatGroup.svelte";
+  import Stat from "../../components/Stat.svelte";
 
   const {error, processing} = dashboardData
   onMount(()=>dashboardData.refresh())
@@ -38,12 +40,24 @@
 <div>
     <h2>Accounts deadlines</h2>
     <p>Upcoming accounts deadlines for your clients. <AnchoredLink href="/secure/accounts-dashboard">View full dashboard</AnchoredLink></p>
+    <StatGroup>
+        <Stat
+                label="Overdue" description="Number of your clients whose annual accounts are overdue"
+                data={overdueCount}
+                loading={$processing}
+        />
+        <Stat
+                label="Due this month" description="Number of your clients whose annual accounts are due with a month"
+                data={thisMonthCount}
+                loading={$processing}
+        />
+    </StatGroup>
     {#if $processing}
         <Loader/>
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $dashboardData}
-        <p>{overdueCount} overdue, {thisMonthCount} due this month. {#if overdueCount + thisMonthCount > limit} Only showing {limit}.{/if}</p>
+        {#if overdueCount + thisMonthCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing {limit} out of {overdueCount + thisMonthCount}.</Text>{/if}
         {#await import('svelte-table').then(m=>m.default)}
             <Loader/>
         {:then SvelteTable}

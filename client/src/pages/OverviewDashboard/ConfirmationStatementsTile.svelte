@@ -2,7 +2,7 @@
 
 import {confirmationStatements} from "../../lib/stores/confirmationStatements.js";
 import {getDaysLeftDuration,getDaysLeft} from '../../../../fs-shared/dates.js'
-import {Loader} from "@svelteuidev/core";
+import {Loader, Text} from "@svelteuidev/core";
 import {onMount} from "svelte";
 import type {TableColumns} from "svelte-table/src/types.js";
 import CompanyName from "../../components/dashboard/CompanyName.svelte";
@@ -11,6 +11,8 @@ import type {
 } from '../../../../fs-shared/ConfirmationStatements.js'
 import AnchoredLink from "../../components/AnchoredLink.svelte";
 import ErrorAlert from "../../components/ErrorAlert.svelte";
+import Stat from "../../components/Stat.svelte";
+import StatGroup from "../../components/StatGroup.svelte";
 
 
 const {error, processing} = confirmationStatements
@@ -41,12 +43,24 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
 <div>
     <h2>Confirmation statement deadlines</h2>
     <p>Upcoming confirmation statement deadlines for your clients. <AnchoredLink href="/secure/confirmation-statement-dashboard">View full dashboard</AnchoredLink></p>
+    <StatGroup>
+        <Stat
+                label="Overdue" description="Number of your clients whose confirmation statements are overdue"
+                data={overdueCount}
+                loading={$processing}
+        />
+        <Stat
+            label="Due in 14 days" description="Number of your clients whose confirmation statements due within the next fortnight"
+            data={thisFortnightCount}
+            loading={$processing}
+        />
+    </StatGroup>
     {#if $processing}
         <Loader/>
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $confirmationStatements}
-        <p>{overdueCount} overdue, {thisFortnightCount} due within a fortnight. {#if overdueCount + thisFortnightCount > limit} Only showing {limit}.{/if}</p>
+        {#if overdueCount + thisFortnightCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing {limit} out of {overdueCount + thisFortnightCount}.</Text>{/if}
         {#await import('svelte-table').then(m=>m.default)}
             <Loader/>
         {:then SvelteTable}

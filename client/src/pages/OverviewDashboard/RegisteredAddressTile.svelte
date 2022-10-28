@@ -1,11 +1,14 @@
 <script lang="ts">
 
-  import {Badge,Group, Text} from "@svelteuidev/core";
+  import {Text} from "@svelteuidev/core";
 import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../../lib/swr.js";
 import {onMount} from "svelte";
-import type {RegisteredOfficeAddressStats} from "../../../../fs-shared/OfficeAddress.js";
+  import type {RegisteredOfficeAddressStats} from "../../../../fs-shared/OfficeAddress.js";
   import Stat from "../../components/Stat.svelte";
+  import {orgAddress} from "../../lib/stores/orgAddress.js";
+  import AnchoredLink from "../../components/AnchoredLink.svelte";
+  import StatGroup from "../../components/StatGroup.svelte";
 
 
 const counts = swr<RegisteredOfficeAddressStats>('/api/user/org/member/registered-address/count', readableSwrOptions)
@@ -15,7 +18,8 @@ onMount(()=>refresh())
 
 <div>
     <h2>Registered office address</h2>
-    <Group>
+    <p>{$orgAddress?.addressLine1} {$orgAddress?.postCode}. <AnchoredLink href="/secure/registered-office-address">View full list</AnchoredLink></p>
+    <StatGroup>
         <Stat label="active companies registered at your address"
               description="the total number of active companies registered at your office address"
               data={$data?.totalRegistered} loading={$processing}/>
@@ -23,9 +27,9 @@ onMount(()=>refresh())
               description="the number of clients in your client list"
               data={$data?.numberOfClients} loading={$processing}/>
         <Stat label="companies on your client list registered at your address"
-              description="the number of companies on your client list who are registered at your office address"
+              description="the number of companies on your client list who are registered at your office address post code"
               data={$data?.clientsRegisteredAtOfficeAddress} loading={$processing}/>
-    </Group>
+    </StatGroup>
 
     <Text color="dimmed" size="xs" mt="xs">These counts are based on a search at Companies House with your postcode and optionally first line of address, and may not be perfectly accurate.</Text>
 </div>

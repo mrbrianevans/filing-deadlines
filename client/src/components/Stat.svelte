@@ -9,34 +9,41 @@
     export let defaultValue = '-'
     export let formatter = (value: number|string) => value
 
-    $: formattedValue = data ? formatter(data) : defaultValue
+    $: formattedValue = data !== null && data !== undefined ? formatter(data) : defaultValue
 </script>
 
-<Tooltip label={description} openDelay={150}>
-    <div class="container">
-        <span class="label">{label}</span>
-        <span class="value">
+<div class="container">
+    <Tooltip label={description} openDelay={150}>
+        <div class="layout">
+            <span class="label">{label}</span>
+            <span class="value">
             {#if loading}
                 <Loader/>
             {:else}
                 {formattedValue}
             {/if}
         </span>
-    </div>
-</Tooltip>
+        </div>
+    </Tooltip>
+</div>
 
 <style lang="scss">
+  .layout{
+    padding: 0.5rem;
+    display: grid;
+    .label{
+      font-size: smaller;
+      max-width: 200px;
+      min-width: 100px;
+    }
+    .value{
+      font-size: larger;
+    }
+  }
 .container{
-    display: inline-grid;
-    background: VAR(--contrast);
-  padding: 10px;
+  background: VAR(--contrast);
   border-radius: 2px;
-  .label{
-    font-size: smaller;
-    max-width: 200px;
-  }
-  .value{
-    font-size: larger;
-  }
+  display: flex;
+  align-items: end;
 }
 </style>
