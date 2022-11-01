@@ -22,3 +22,12 @@ function createOrgMembersStore(){
 }
 
 export const orgMembers = createOrgMembersStore()
+
+function createOrgSubscriptionStore(){
+  const key = '/api/user/org/member/owner/subscription'
+  const { data: {subscribe}, error, refresh, update, processing } = swr(key, readableSwrOptions)
+
+  return {subscribe, processing, refresh}
+}
+
+export const orgSubscription = createOrgSubscriptionStore()

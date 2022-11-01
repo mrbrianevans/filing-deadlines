@@ -2,10 +2,11 @@
 
   import {Link} from "svelte-navigator";
   import {isDark, toggleTheme} from "../lib/stores/theme.js";
+  import {getDaysLeftDuration,getDaysLeft} from '../../../fs-shared/dates.js'
   import {
     ActionIcon,
     Anchor,
-    Box,
+    Badge, Box,
     Button,
     createStyles,
     Divider,
@@ -21,6 +22,8 @@
   import {Exit, HamburgerMenu, Moon, Sun} from "radix-icons-svelte";
   import AnchoredLink from "./AnchoredLink.svelte";
   import SignInButton from "./signin/SignInButton.svelte";
+  import {orgSubscription} from "../lib/stores/org.js";
+  import {onMount} from "svelte";
 
   const {Item: MenuItem, Label: MenuLabel} = Menu
   let userProcessing = user.processing
@@ -46,6 +49,7 @@
     }
   }));
   const {classes} = useStyles();
+  onMount(()=>orgSubscription.refresh())
 </script>
 
 <div class="hidden-on-print">
@@ -54,6 +58,20 @@
             <Anchor href="/" inherit root={Link} to="/">Filing deadlines</Anchor>
         </Title>
         <Group spacing="lg">
+            {#if $orgSubscription && $orgSubscription.status === 'evaluation'}
+                <div>
+                    <Tooltip label="You are trying this product out, and haven't chosen a plan yet.">
+                        <Stack spacing="xs">
+                            <AnchoredLink href="/secure/manage-organisation">
+                                <Badge size="lg" radius="xs" color="yellow" css={{cursor: 'pointer'}}>Evaluation</Badge>
+                            </AnchoredLink>
+                            <AnchoredLink href="/secure/manage-organisation">
+                                <Badge size="lg" radius="xs" color="orange" css={{cursor: 'pointer'}}>{getDaysLeftDuration($orgSubscription.activeUntil)}</Badge>
+                            </AnchoredLink>
+                        </Stack>
+                    </Tooltip>
+                </div>
+            {/if}
             {#if $user}
                 <Menu size="xl" closeOnItemClick="{true}">
                     <Button slot="control">

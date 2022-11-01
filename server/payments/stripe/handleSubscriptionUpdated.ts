@@ -26,11 +26,11 @@ export async function getOrgPlan(orgId: string){
 
   const subscriptionPlan = await redis.get(`org:${orgId}:subscriptionPlan`) as SubscriptionPlans
   const activeUntil = await redis.get(`org:${orgId}:subscriptionActiveUntil`).then(secs=>new Date(parseInt(secs??'0') * 1000))
-  const status = await redis.get(`org:${orgId}:subscriptionStatus`) as Stripe.Subscription.Status
+  const status = await redis.get(`org:${orgId}:subscriptionStatus`) as Stripe.Subscription.Status | 'evaluation'
 
   await redis.quit()
 
-  if(subscriptionPlan && status === 'active' || status === 'trialing' && inFuture(activeUntil))
+  if(subscriptionPlan && (status === 'active' || status === 'trialing' || status === 'evaluation') && inFuture(activeUntil))
     return subscriptionPlan
   else return undefined
 }

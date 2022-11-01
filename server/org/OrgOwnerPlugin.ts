@@ -1,6 +1,8 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import {Invite, OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
 import {emailRegex} from '../../fs-shared/sharedRegex.js'
+import type Stripe from "stripe";
+import type { SubscriptionPlans } from "../../fs-shared/SubscriptionPlans.js";
 
 
 const inviteSchema: FastifySchema = {
@@ -59,6 +61,19 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
       }else{
         return reply.sendError({message:"This user is already a part of your organisation",error:'Already in organisation', statusCode: 400})
       }
+    }
+  })
+
+  // get the details of the organisations subscription plan
+  fastify.get('/subscription', async (request, reply)=>{
+    const subscriptionPlan = await fastify.redis.get(`org:${request.session.orgId}:subscriptionPlan`) as SubscriptionPlans
+    const activeUntil = await fastify.redis.get(`org:${request.session.orgId}:subscriptionActiveUntil`).then(secs=>new Date(parseInt(secs??'0') * 1000).toISOString())
+    const status = await fastify.redis.get(`org:${request.session.orgId}:subscriptionStatus`) as Stripe.Subscription.Status | 'evaluation'
+    const signedUpOnStripe = await fastify.redis.exists(`user:${request.session.userId}:customerId`).then(Boolean)
+    return {
+      subscriptionPlan,
+      activeUntil,
+      status, signedUpOnStripe
     }
   })
 }
