@@ -3,7 +3,7 @@
   import {
     Alert,
     Box,
-    Button,
+    Button, Divider,
     Overlay,
     SimpleGrid,
     Space, Stack,
@@ -17,12 +17,13 @@
   import {user} from "../../lib/stores/user.js";
 
   let newOrgName = ''
+  let newOrgAddress = {postCode: '', addressLine1: ''}
   let creating = false
   let errorCreating = false
   let created = false
   async function createOrg(){
     creating = true
-    const success = await poster('/api/user/org/', {name: newOrgName})
+    const success = await poster('/api/user/org/', {name: newOrgName, address: newOrgAddress})
     errorCreating = !success // ideally it would show an error message if something failed
     created = success // show a message to say well done if success
     newOrgName = ''
@@ -72,11 +73,15 @@
         <SimpleGrid cols={1} breakpoints={[{ minWidth: 'md', cols: 2 }]} my="lg">
             <Box css={{backgroundColor: '#8882', borderRadius: '$md'}} p="md">
                 <Title order={4}>Create</Title>
-                <Text>Create a new organisation on Filing Deadlines. This will create an empty client list for you and allow you to invite other users to have shared access.</Text>
+                <Text css={{lineHeight:1.2}}>Create a new organisation on Filing Deadlines. This will create an empty client list for you and allow you to invite other users to have shared access.</Text>
 
                 <Space h="sm"/>
                 <Stack grow>
                     <TextInput required bind:value={newOrgName} invalid="{errorCreating}" label="Organisation name"/>
+                    <Divider/>
+                    <Text size="md" weight="semibold">Organisation registered office address</Text>
+                    <TextInput required label="Post code" bind:value={newOrgAddress.postCode}/>
+                    <TextInput label="Address line 1 (optional)" bind:value={newOrgAddress.addressLine1}/>
                     <Button on:click={createOrg} loading="{creating}">Create</Button>
                     <Text color="dimmed" size="sm">After this, you'll be able to choose a subscription plan for your organisation.</Text>
                 </Stack>
@@ -84,8 +89,8 @@
 
             <Box css={{backgroundColor: '#8882', borderRadius: '$md'}} p="md">
                 <Title order={4}>Join</Title>
-                <Text>If someone else in your firm has already created an organisation on Filing Deadlines then ask them to invite you with the email address you use to log in.</Text>
-                <Text>Once you've accepted their invitation, you will be granted shared access to their client list and dashboards.</Text>
+                <Text css={{lineHeight:1.2}}>If someone else in your firm has already created an organisation on Filing Deadlines then ask them to invite you with the email address you use to log in.</Text>
+                <Text css={{lineHeight:1.2}}>Once you've accepted their invitation, you will be granted shared access to their client list and dashboards.</Text>
             </Box>
         </SimpleGrid>
     </Box>

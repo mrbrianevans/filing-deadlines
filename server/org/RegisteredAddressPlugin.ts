@@ -5,7 +5,7 @@ import type {RegisteredAddressResult,RegisteredOfficeAddressStats,OfficeAddress}
 import type { CompanyProfile } from "../../fs-shared/CompanyProfile.js";
 import { getCompanyProfileFromApi } from "../../backend-shared/companiesHouseApi/getCompanyProfile.js";
 
-const addressSchema = {
+export const addressSchema = {
   type: 'object',
   properties: {
     postCode: {type:'string'},

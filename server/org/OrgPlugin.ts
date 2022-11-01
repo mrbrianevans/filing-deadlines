@@ -1,14 +1,17 @@
 import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import {randomUUID} from "crypto";
-import {Invite, OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
+import { OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
+import {addressSchema} from "./RegisteredAddressPlugin.js";
 
 
 const createOrgSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      name: {type:'string', pattern: '^[a-zA-Z0-9-_ ]+$'}
-    }
+      name: {type:'string', pattern: '^[a-zA-Z0-9-_ ]+$'},
+      address: addressSchema
+    },
+    required: ['name', 'address']
   }
 }
 
@@ -30,8 +33,9 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
   await fastify.register(import('./OrgMemberPlugin.js'), {prefix: 'member'})
 
   //  create new org
-  fastify.post<{Body: {name:string}}>('/', {schema: createOrgSchema},async (request, reply)=>{
-    const {name} = request.body
+  fastify.post<{Body: {name:string, address: {postCode:string, addressLine1?: string}}}>('/', {schema: createOrgSchema},async (request, reply)=>{
+    if(request.session.orgId) return reply.sendError({message: 'You are already apart of an organisation. You can\'t create a new one.', error: 'Already in organisation', statusCode: 400})
+    const {name, address} = request.body
     //check name is unique
     const added = await fastify.redis.sadd('orgNames', name)
     if(added === 0) return reply.sendError({message:'An organisation already exists with that name', error: 'Duplicate name', statusCode: 400})
@@ -40,6 +44,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     request.session.orgId = orgId
     request.session.owner = true
     await fastify.redis.set(`org:${orgId}:name`, name)
+    await fastify.redis.hset(`org:${request.session.orgId}:address`, address)
     const {userId} = request.session
     await fastify.redis.set(`org:${orgId}:owner`, <string>userId)
     await fastify.redis.set(`user:${userId}:org`, orgId)
