@@ -1,8 +1,8 @@
 <script lang="ts">
 
   import {Container, Badge} from "@svelteuidev/core";
-  import {user} from "../lib/stores/user.js";
-  import AnchoredLink from "../components/AnchoredLink.svelte";
+  import {user} from "../../lib/stores/user.js";
+  import AnchoredLink from "../../components/AnchoredLink.svelte";
 
 </script>
 

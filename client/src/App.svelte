@@ -1,19 +1,9 @@
 <script lang="ts">
-  import { Router, Route } from "svelte-navigator";
-  import {
-    SvelteUIProvider,
-    TypographyProvider,
-    Seo,
-    Header,
-    AppShell,
-    createStyles,
-    Loader,
-    Footer, ShellSection, Alert
-  } from '@svelteuidev/core';
+  import {Route, Router} from "svelte-navigator";
+  import {AppShell, createStyles, Header, Loader, Seo, SvelteUIProvider, TypographyProvider} from '@svelteuidev/core';
   import {isDark} from "./lib/stores/theme.ts";
   import NavBar from "./components/NavBar.svelte";
   import Home from "./pages/Home.svelte";
-  import PricingPage from "./pages/PricingPage.svelte";
   import WebsiteFooter from "./components/WebsiteFooter.svelte";
   import ErrorAlert from "./components/ErrorAlert.svelte";
 
@@ -47,7 +37,7 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
         <slot>
 <div class="full-height">
           <Route path="/view/*">
-            {#await import('./pages/PublicPagesRoutes.svelte').then(m=>m.default) }
+            {#await import('./pages/view/PublicPagesRoutes.svelte').then(m=>m.default) }
               <Loader/>
             {:then PublicPagesRoutes}
               <!-- Async Load the public pages -->

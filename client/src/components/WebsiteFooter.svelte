@@ -8,9 +8,12 @@
     <Container>
         <div class="container">
             <h6>Made by Brian Evans</h6>
-            <div>
+            <div class="stack">
                 <h6>Links</h6>
                 <AnchoredLink href="/view/pricing">Pricing</AnchoredLink>
+                <AnchoredLink href="/view/about">About</AnchoredLink>
+                <AnchoredLink href="/view/contact">Contact</AnchoredLink>
+                <AnchoredLink href="/view/how-it-works">How it works</AnchoredLink>
             </div>
             <div>
                 <h6>Other</h6>
@@ -28,6 +31,11 @@
     padding-bottom: 2rem;
     gap: 1rem;
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+.stack{
+    display: flex;
+    flex-direction: column;
 }
 
 @media print{

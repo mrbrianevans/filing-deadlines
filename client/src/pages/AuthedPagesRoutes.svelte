@@ -11,7 +11,7 @@ import SuggestFeature from "./SuggestFeature.svelte";
 import AuthedPage from "./AuthedPage.svelte";
 import ManageOrg from "./ManageOrg.svelte";
 import ClientList from "./ClientList.svelte";
-import PricingPage from "./PricingPage.svelte";
+import PricingPage from "./view/PricingPage.svelte";
 import PaymentPageRouter from "./payments/PaymentPageRouter.svelte";
 import PlanDependentPage from "./org/PlanDependentPage.svelte";
 import {SubscriptionPlans} from '../../../fs-shared/SubscriptionPlans.js'
