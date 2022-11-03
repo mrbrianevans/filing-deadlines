@@ -12,12 +12,15 @@
   import notificationScreenshot from '../assets/screenshots/web-notification-windows-with-border.png'
   import OverviewDashboardMockup from "../components/home/OverviewDashboardMockup.svelte";
   import Screenshot from "../components/home/Screenshot.svelte";
+  import AccountsMockup from "../components/home/AccountsMockup.svelte";
+  import ConfirmationStatementsMockup from "../components/home/ConfirmationStatementsMockup.svelte";
 
   const override={background: '#f4f4f4'}
 
   const homeFeatureCards = [
     // {href:'/secure/clients', title: 'Manage your client list.', subtitle: 'Keep a list of your firms clients, import from CSV, view company status.'}
   ]
+  let daysUntilMonthEnd = 31 - new Date().getDate()
 </script>
 
 <div class="background" class:dark={$isDark}>
@@ -27,10 +30,7 @@
                         <Title order={2} color="blue" weight="bold" override={{ fontSize: '60px !important' }} align="center">Never miss a filing deadline.</Title>
                         <Text color='dimmed' size="lg">Visibility of upcoming deadlines for your clients, alerting you to filings which need to be submitted soon.</Text>
                 <div style="margin: 2rem 0;">
-                {#if $user}
-<!--                    <Button size="md" href="/secure/dashboard">View dashboard</Button>-->
-                    <AnchoredLink href="/secure/dashboard">View dashboard</AnchoredLink>
-                {:else}
+                {#if !$user}
 <!--                    <Button size="md" variant="gradient">Try Filing Deadlines free</Button>-->
 <!--                    <AnchoredLink href="/secure/dashboard">Try Filing Deadlines free</AnchoredLink>-->
                     <div style="display: flex;align-items: center;gap:5px;"><SignInWithXeroButton/> or <SignInWithAuth0Button/></div>
@@ -44,36 +44,48 @@
                 </HomeFeatureCard>
             {/each}
 
-            <!-- todo: make nice samples for each feature -->
-            <HomeFeatureCard link="/secure/dashboard" title="Overview dashboard." subtitle="See important information at a glance. Which accounts are due this month, what has been filed in the last week, are there any confirmation statements overdue?">
-               <Screenshot><OverviewDashboardMockup/></Screenshot>
+            <HomeFeatureCard link="/secure/dashboard" linkLabel="View your dashboard" title="Overview dashboard." subtitle="See important information at a glance. Which accounts are due this month, what has been filed in the last week, are there any confirmation statements overdue?">
+               <Screenshot urlPath="/secure/dashboard"><OverviewDashboardMockup/></Screenshot>
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/secure/accounts-dashboard" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
+            <HomeFeatureCard link="/secure/accounts-dashboard" linkLabel="View your accounts deadlines" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
+            <Screenshot urlPath="/secure/accounts-dashboard">
+                <AccountsMockup/>
+            </Screenshot>
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/secure/confirmation-statement-dashboard" linkLabel="View your confirmation statement deadlines" title="Confirmation statement deadlines." subtitle="Dashboard for confirmation statement deadlines, with data pulled from Companies House.">
+                <Screenshot urlPath="/secure/confirmation-statement-dashboard">
+                    <ConfirmationStatementsMockup/>
+                </Screenshot>
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/secure/clients" linkLabel="View your client list" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
+                <Screenshot urlPath="/secure/clients">
+                    <Image src={clientListScreenshot}/>
+<!--                    <table class="no-breaks client-list">-->
+<!--                        <tr><th>Company number</th> <th>Client name</th> <th>Status</th></tr>-->
+<!--                        <tr><td>12370973</td> <td>Joinery LTD</td> <td>Active</td></tr>-->
+<!--                        <tr><td>12370973</td> <td>Joinery LTD</td> <td>Active</td></tr>-->
+<!--                        <tr><td>12370973</td> <td>Joinery LTD</td> <td>Active</td></tr>-->
+<!--                        <tr><td>12370973</td> <td>Joinery LTD</td> <td>Active</td></tr>-->
+<!--                    </table>-->
+                </Screenshot>
+            </HomeFeatureCard>
+
+            <HomeFeatureCard link="/secure/recent-filings" linkLabel="View your recent filings" title="Recent filings." subtitle="See a recent history of filings for the companies on your client list.">
 <!--                <Image src={clientListScreenshot}/>-->
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/secure/confirmation-statement-dashboard" title="Confirmation statement deadlines." subtitle="Dashboard for confirmation statement deadlines, with data pulled from Companies House.">
-<!--                <Image src={clientListScreenshot}/>-->
-            </HomeFeatureCard>
-
-            <HomeFeatureCard link="/secure/clients" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
-                <Image src={clientListScreenshot}/>
-            </HomeFeatureCard>
-
-            <HomeFeatureCard link="/secure/recent-filings" title="Recent filings." subtitle="See a recent history of filings for the companies on your client list.">
-<!--                <Image src={clientListScreenshot}/>-->
-            </HomeFeatureCard>
-
-            <HomeFeatureCard link="/secure/notifications" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
+            <HomeFeatureCard link="/secure/notifications" linkLabel="View your notification settings" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
                 <Image src={notificationScreenshot} class="notification-image"/>
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/secure/registered-office-address" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
+            <HomeFeatureCard link="/secure/registered-office-address" linkLabel="View list" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
 <!--                <Image src={clientListScreenshot}/>-->
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/view/pricing" alwaysLink title="Pricing" subtitle="View pricing for accounting practices.">
+            <HomeFeatureCard link="/view/pricing" alwaysLink linkLabel="View pricing" title="Pricing" subtitle="View pricing for accounting practices.">
 <!--                <Image src={clientListScreenshot}/>-->
             </HomeFeatureCard>
 
@@ -86,4 +98,13 @@
     .notification-image{
         max-width: 400px;
     }
+    table.no-breaks *{
+        white-space: nowrap;
+        overflow: clip;
+        text-overflow: ellipsis;
+    }
+    table.client-list{
+        max-width: 350px;
+    }
+
 </style>

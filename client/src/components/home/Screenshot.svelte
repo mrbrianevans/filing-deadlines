@@ -1,13 +1,15 @@
 <script lang="ts">
 
   import {ArrowLeft, ArrowRight, Home, LockClosed, Reload} from "radix-icons-svelte";
+
+  export let urlPath = '/'
 </script>
 
 <div class="screenshot">
 
     <div class="topbar">
         <div class="icons"><ArrowLeft/><ArrowRight/><Reload/><Home/></div>
-        <div class="address"><LockClosed color="green"/> https://filingdeadlines.co.uk/</div>
+        <div class="address"><LockClosed color="green"/> <a>https://filingdeadlines.co.uk{urlPath}</a></div>
     </div>
 
     <div class="window">
@@ -32,10 +34,21 @@
       gap: 6px;
     }
     .address{
+      display: flex;
+      align-items: center;
+      gap: 4px;
       background: VAR(--contrast);
       border-radius: 4px;
       padding: 4px;
       flex-grow: 1;
+      font-size: smaller;
+      overflow: hidden;
+      a{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
     }
 
   }

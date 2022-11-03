@@ -4,20 +4,24 @@ Shows a paper card. If the user is logged in, then it makes it clickable as a li
 Can optionally display children inside card.
  */
 import {Paper, Text, Title} from "@svelteuidev/core";
+import AnchoredLink from "../AnchoredLink.svelte";
 import {user} from "../../lib/stores/user.js";
-import LinkIf from "./LinkIf.svelte";
 
-export let title, subtitle, link, alwaysLink=false
+export let title, subtitle, link, alwaysLink = false, linkLabel = 'View your dashboard'
 
 </script>
 
-<LinkIf href={link} condition={alwaysLink || $user}>
-    <Paper >
+    <Paper override={{breakInside: 'avoid'}}>
         <div class="two-column">
             <div class="padded">
-                <Title order={2} color="cyan" weight="bold" override={{ fontSize: '40px !important' }}>{title}</Title>
+                <Title order={2}  weight="bold" override={{ fontSize: '40px !important' }}>{title}</Title>
                 <Text color='dimmed'>{subtitle}</Text>
-
+                <div style="height: 10px"></div>
+                {#if $user || alwaysLink}
+                    <slot name="link">
+                        <AnchoredLink href={link}>{linkLabel}</AnchoredLink>
+                    </slot>
+                {/if}
             </div>
             <div>
 
@@ -25,12 +29,11 @@ export let title, subtitle, link, alwaysLink=false
             </div>
         </div>
     </Paper>
-</LinkIf>
 
 <style>
 .two-column{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 50% 50%;
 }
 .padded{
     padding: 6rem 0.5rem;
