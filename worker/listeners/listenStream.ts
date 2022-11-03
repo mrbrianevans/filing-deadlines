@@ -140,7 +140,7 @@ export async function *streamEventsContinuously<EventType extends {event:{timepo
         ac.abort()
       })
       eventEmitter.on('start', () => logger.info("Event emitter started"))
-      eventEmitter.on('error', (e) => logger.error(e, "Event emitter errored. Retry="+e.retry))
+      eventEmitter.on('error', (e) => logger.warn(e, "Event emitter errored. Retry="+e.retry))
       eventEmitter.on('heartbeat', async () => !signal.aborted && await redis.set(streamHeartbeatKey, new Date().toISOString()))
       let counter = 0, lastTimepoint: number | null = null, retry = true
       try {
@@ -167,5 +167,5 @@ export async function *streamEventsContinuously<EventType extends {event:{timepo
     // this shouldn't ever be called! It indicates that the worker is NOT listening to events, and won't restart automatically.
     logger.error(e,"Exiting update script due to failure to connect to Streaming API.")
   }
-  logger.info("Exited stream loop. Needs to be manually restarted.")
+  logger.error("Exited stream loop. Needs to be manually restarted.")
 }

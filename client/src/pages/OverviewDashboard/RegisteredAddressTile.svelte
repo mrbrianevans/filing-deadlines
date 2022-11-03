@@ -19,6 +19,7 @@ onMount(()=>refresh())
 
 <div>
     <Title order={2} class="no-top-margin">Registered office address </Title>
+<!--    todo: show something different if the user doesn't have access to registered address -->
 <!--    <ActionIcon on:click={refresh}><Reload/></ActionIcon>  this was decided against because the data doesn't update often enough to make it necessary -->
     <p>{$orgAddress?.addressLine1} {$orgAddress?.postCode}. <AnchoredLink href="/secure/registered-office-address">View full list</AnchoredLink></p>
     <StatGroup>
