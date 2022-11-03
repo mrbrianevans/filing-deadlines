@@ -4,6 +4,7 @@
 
     export let label: string
     export let description: string = label
+    export let tooltip = true
     export let red = false
     export let data: number|string
     export let loading = false
@@ -14,18 +15,31 @@
 </script>
 
 <div class="container">
-    <Tooltip label={description} openDelay={150}>
+    {#if tooltip}
+        <Tooltip label={description} openDelay={150}>
+            <div class="layout">
+                <span class="label" class:red>{label}</span>
+                <span class="value">
+                {#if loading}
+                    <Loader variant='dots' color='gray' size="xs"/>
+                {:else}
+                    {formattedValue}
+                {/if}
+            </span>
+            </div>
+        </Tooltip>
+    {:else}
         <div class="layout">
             <span class="label" class:red>{label}</span>
             <span class="value">
-            {#if loading}
-                <Loader variant='dots' color='gray' size="xs"/>
-            {:else}
-                {formattedValue}
-            {/if}
-        </span>
+                {#if loading}
+                    <Loader variant='dots' color='gray' size="xs"/>
+                {:else}
+                    {formattedValue}
+                {/if}
+            </span>
         </div>
-    </Tooltip>
+    {/if}
 </div>
 
 <style lang="scss">

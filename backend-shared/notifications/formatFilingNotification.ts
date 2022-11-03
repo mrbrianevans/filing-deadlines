@@ -19,7 +19,7 @@ export function formatFilingNotification(companyNumber, companyName, filingEvent
       icon: 'https://filingdeadlines.co.uk/icon/icon500.svg',
       actions: [
       // could have an action to view filing on companies house
-        {action: 'View', title: 'View recent filings', icon: 'https://filingdeadlines.co.uk/icon/icon500.svg'}
+        {action: 'View', title: 'View recent filings'}
       ]
     }
   }

@@ -7,7 +7,10 @@
 <Footer class="footer">
     <Container>
         <div class="container">
-            <h6>Made by Brian Evans</h6>
+            <div>
+                <h4>Filing Deadlines</h4>
+                <h6>Made by Brian Evans</h6>
+            </div>
             <div class="stack">
                 <h6>Links</h6>
                 <AnchoredLink href="/view/pricing">Pricing</AnchoredLink>

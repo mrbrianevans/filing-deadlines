@@ -9,6 +9,9 @@
   import SignInWithAuth0Button from "../components/signin/SignInWithAuth0Button.svelte";
   import SignInWithXeroButton from "../components/signin/SignInWithXeroButton.svelte";
   import clientListScreenshot from '../assets/client-list.png'
+  import notificationScreenshot from '../assets/screenshots/web-notification-windows-with-border.png'
+  import OverviewDashboardMockup from "../components/home/OverviewDashboardMockup.svelte";
+  import Screenshot from "../components/home/Screenshot.svelte";
 
   const override={background: '#f4f4f4'}
 
@@ -43,9 +46,7 @@
 
             <!-- todo: make nice samples for each feature -->
             <HomeFeatureCard link="/secure/dashboard" title="Overview dashboard." subtitle="See important information at a glance. Which accounts are due this month, what has been filed in the last week, are there any confirmation statements overdue?">
-<!--                <div style="display: flex;">-->
-<!--                    <div><h3>Accounts</h3></div>-->
-<!--                </div>-->
+               <Screenshot><OverviewDashboardMockup/></Screenshot>
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/accounts-dashboard" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
@@ -65,7 +66,7 @@
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/notifications" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
-<!--                <Image src={clientListScreenshot}/>-->
+                <Image src={notificationScreenshot} class="notification-image"/>
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/registered-office-address" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
@@ -82,5 +83,7 @@
 
 
 <style>
-
+    .notification-image{
+        max-width: 400px;
+    }
 </style>
