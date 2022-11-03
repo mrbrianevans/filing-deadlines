@@ -15,17 +15,17 @@
     <Title order={1} class="hidden-on-print" >Dashboard overview
         <Badge>Beta</Badge>
     </Title>
-    <Alert class="hidden-on-print" color="blue" title="What do you think of this new feature?">
-        <Text>We are trying this new dashboard to give you a quick overview of all the different data points managed by
-            Filing Deadlines.
-        </Text>
-        <Text>Please send feedback on this feature, whether it's useful and what could be improved.</Text>
-        <br/>
-        <Text size="xl">
-            <AnchoredLink href="/secure/feedback">Send feedback</AnchoredLink>
-        </Text>
+<!--    <Alert class="hidden-on-print" color="blue" title="What do you think of this new feature?">-->
+<!--        <Text>We are trying this new dashboard to give you a quick overview of all the different data points managed by-->
+<!--            Filing Deadlines.-->
+<!--        </Text>-->
+<!--        <Text>Please send feedback on this feature, whether it's useful and what could be improved.</Text>-->
+<!--        <br/>-->
+<!--        <Text size="xl">-->
+<!--            <AnchoredLink href="/secure/feedback">Send feedback</AnchoredLink>-->
+<!--        </Text>-->
 
-    </Alert>
+<!--    </Alert>-->
 
     <!--    <div class="controls">-->
     <!--        <h2>Controls</h2>-->

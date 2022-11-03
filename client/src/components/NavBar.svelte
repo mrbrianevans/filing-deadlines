@@ -48,7 +48,7 @@
     <Container size="xl">
     <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem' }}>
         <h1 class="title">
-            <AnchoredLink href="/">Filing deadlines</AnchoredLink>
+            <AnchoredLink href="/"><img src="/icon/icon500.svg" alt="filing deadlines icon" style="height: 40px;width:40px;" height="40px" width="40px"/> Filing deadlines</AnchoredLink>
         </h1>
         <Group spacing="lg">
             {#if $orgSubscription && $orgSubscription.status === 'evaluation'}

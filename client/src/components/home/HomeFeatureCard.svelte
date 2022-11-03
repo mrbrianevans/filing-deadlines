@@ -12,13 +12,27 @@ export let title, subtitle, link, alwaysLink=false
 </script>
 
 <LinkIf href={link} condition={alwaysLink || $user}>
-    <Paper override={{background: '#f9f9f9'}}>
-        <Title order={2} color="cyan" weight="bold" override={{ fontSize: '40px !important' }}>{title}</Title>
-        <Text color='dimmed'>{subtitle}</Text>
-        <slot/>
+    <Paper >
+        <div class="two-column">
+            <div class="padded">
+                <Title order={2} color="cyan" weight="bold" override={{ fontSize: '40px !important' }}>{title}</Title>
+                <Text color='dimmed'>{subtitle}</Text>
+
+            </div>
+            <div>
+
+                <slot/>
+            </div>
+        </div>
     </Paper>
 </LinkIf>
 
 <style>
-
+.two-column{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.padded{
+    padding: 6rem 0.5rem;
+}
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 
-  import {Button, Menu, Space, Text, Tooltip} from "@svelteuidev/core";
-  import {Person} from "radix-icons-svelte";
+  import {Button, Menu, Space} from "@svelteuidev/core";
+  import {ChevronDown, ChevronUp, Person} from "radix-icons-svelte";
   import SignInWithAuth0Button from "./SignInWithAuth0Button.svelte";
   import SignInWithXeroButton from "./SignInWithXeroButton.svelte";
   import {user} from "../../lib/stores/user.js";
@@ -15,6 +15,7 @@
       width: '100%'
     }
   }
+  let opened = false
 </script>
 
 <!-- the right margin is because the placement prop isn't working. when it gets fixed the margin can be removed -->
@@ -23,6 +24,7 @@
     <Button slot="control">
         <Person slot="leftIcon"/>
         Sign in
+        <svelte:component this={opened ? ChevronUp : ChevronDown} slot="rightIcon"/>
     </Button>
     <MenuLabel>
 <!--        You don't need to already have an account to sign in. It's the same process whether or not you have an account.  -->

@@ -16,7 +16,7 @@ function createClientList(){
 
   /** Add either one or many clients to the list */
   async function addNew(client: ClientListItem['company_number']|ClientListItem['company_number'][]){
-    const companyNumbers:string[] = [].concat(client).map(companyNumber=>companyNumber.padStart(8, '0'))
+    const companyNumbers:string[] = [].concat(client).map(companyNumber=>companyNumber.trim().padStart(8, '0'))
     const newClients = companyNumbers.map(company_number=>({company_number, added_on: new Date().toISOString()}))
     await update(prev=>prev?.concat(newClients).sort(sortClientList)??newClients)
     //call endpoint to add by company number

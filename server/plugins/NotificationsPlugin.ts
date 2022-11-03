@@ -2,7 +2,7 @@ import type {FastifyInstance, FastifyPluginAsync, FastifySchema} from "fastify";
 import type {PushSubscription} from 'web-push'
 import webPush from 'web-push'
 import {notificationNames} from '../../fs-shared/Notifications.js'
-import {sendWebNotification} from '../../backend-shared/notifications/sendWebNotification.js'
+import {sendWebNotification, WebNotification} from '../../backend-shared/notifications/sendWebNotification.js'
 import { formatFilingNotification } from "../../backend-shared/notifications/formatFilingNotification.js";
 import assert from "assert";
 import type { FilingHistoryItemResource } from "../../backend-shared/companiesHouseApi/getFilingHistoryFromApi.js";
@@ -126,9 +126,10 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const [,companyNumber, transactionId] = matches
     const filingString = await fastify.redis.hget(`company:${companyNumber}:filingHistory`, transactionId)
     if(!filingString) fastify.log.error({companyNumber, transactionId, companyNumberTransactionId, filingString}, 'Did not find expected filing transaction')
-    const transaction = <FilingHistoryItemResource>JSON.parse(filingString??`{transaction_id:${transactionId}`)
+    const transaction = <FilingHistoryItemResource>JSON.parse(filingString??`{"transaction_id":"${transactionId}"}`)
     return Object.assign(transaction, {companyNumber})
   }
+
 
   // for a user to test a server-sent notification
   fastify.get('/test', async (request, reply)=>{
@@ -137,8 +138,8 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     if(userSubscription) {
       try {
         const companyNumberTransactionId = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, -1, -1)
-        const filingEvent = await getFilingByCompanyNumberTransactionId(companyNumberTransactionId[0])
-        const companyName = await fastify.redis.get(`company:${filingEvent.companyNumber}:profile`).then(c=>JSON.parse(c??'{}').company_name)
+        const filingEvent = companyNumberTransactionId.length ? await getFilingByCompanyNumberTransactionId(companyNumberTransactionId[0]) : await getRandomFilingEvent()
+        const companyName = await fastify.redis.get(`company:${filingEvent.companyNumber}:profile`).then(c => JSON.parse(c ?? '{"company_name":"Company name"}').company_name)
         const notification = formatFilingNotification(filingEvent.companyNumber, companyName, filingEvent)
         await sendWebNotification({userId: request.session.userId, notification})
         return {sent: true}
@@ -153,3 +154,23 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
 }
 
 export default NotificationsPlugin
+
+// for when a user tests notifications
+async function getRandomFilingEvent(): Promise<FilingHistoryItemResource&{companyNumber:string}>{
+  return {
+    companyNumber: '00000295',
+    // action_date: '2020-11-20',
+    category: 'accounts',
+    date: '2020-12-03',
+    description: 'accounts-with-accounts-type-total-exemption-full',
+    description_values: { made_up_date: '2020-11-20' },
+    links: {
+      self: '/company/00000295/filing-history/MzI4NTEzMDM5MWFkaXF6a2N4',
+      document_metadata: 'https://frontend-doc-api.company-information.service.gov.uk/document/L54REOdV_5k1Qe0EctxElJ8BaReUa01VD01xLNM7qDc'
+    },
+    type: 'AA',
+    pages: 9,
+    barcode: 'X9J5CBWQ',
+    transaction_id: 'MzI4NTEzMDM5MWFkaXF6a2N4'
+  }
+}
