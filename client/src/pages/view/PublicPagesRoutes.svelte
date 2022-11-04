@@ -4,6 +4,7 @@
     import About from "./About.svelte";
     import HowItWorks from "./HowItWorks.svelte";
     import Contact from "./Contact.svelte";
+    import PrivacyPolicy from "./PrivacyPolicy.svelte";
 </script>
 
 
@@ -19,6 +20,9 @@
     </Route>
     <Route path="/how-it-works">
         <HowItWorks />
+    </Route>
+    <Route path="/privacy-policy">
+        <PrivacyPolicy />
     </Route>
 
 </div>

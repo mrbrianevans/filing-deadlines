@@ -12,15 +12,16 @@
                 <h6>Made by Brian Evans</h6>
             </div>
             <div class="stack">
-                <h6>Links</h6>
+<!--                <h6>Links</h6>-->
                 <AnchoredLink href="/view/pricing">Pricing</AnchoredLink>
                 <AnchoredLink href="/view/about">About</AnchoredLink>
                 <AnchoredLink href="/view/contact">Contact</AnchoredLink>
                 <AnchoredLink href="/view/how-it-works">How it works</AnchoredLink>
             </div>
-            <div>
-                <h6>Other</h6>
+            <div class="stack">
+<!--                <h6>Other</h6>-->
                 <AnchoredLink href="/secure/feedback">Send feedback</AnchoredLink>
+                <AnchoredLink href="/view/privacy-policy">Privacy policy</AnchoredLink>
             </div>
         </div>
 

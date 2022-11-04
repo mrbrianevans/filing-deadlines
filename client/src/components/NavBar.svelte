@@ -138,7 +138,7 @@
 }
 .layout{
     display: grid;
-    grid-template-columns: auto 40%;
+    grid-template-columns: auto auto;
     justify-items: center;
     align-items: center;
     padding: 0.5rem 1rem;

@@ -13,6 +13,7 @@
     "@sveltejs/vite-plugin-svelte": "^1.0.8",
     "@tsconfig/svelte": "^3.0.0",
     "@types/papaparse": "^5.3.5",
+    "mdsvex": "^0.10.6",
     "sass": "^1.55.0",
     "svelte": "3.50.1",
     "svelte-check": "^2.9.1",
