@@ -11,3 +11,11 @@ export function getDaysLeftDuration(dueDate: string|undefined){
   const days = getDaysLeft(dueDate)
   return days > 0 ? `${days} days left` : `${-days} days ago`
 }
+
+
+export function getLastDayOfMonth(month: number){
+  const date = new Date()
+  date.setMonth(month + 1)
+  date.setDate(0)
+  return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getDate())
+}
