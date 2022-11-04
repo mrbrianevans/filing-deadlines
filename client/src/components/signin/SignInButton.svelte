@@ -18,10 +18,11 @@
   let opened = false
 </script>
 
+
 <!-- the right margin is because the placement prop isn't working. when it gets fixed the margin can be removed -->
 <Menu placement="end" mr="{200}" on:open={()=>user.refresh()}>
 <!--    the events on:open and on:close are not working. ideally, it should refresh the user state when the user clicks sign in -->
-    <Button slot="control">
+    <Button slot="control" on:click={()=>user.refresh()}>
         <Person slot="leftIcon"/>
         Sign in
         <svelte:component this={opened ? ChevronUp : ChevronDown} slot="rightIcon"/>
@@ -35,7 +36,6 @@
     <MenuItem root="div" override="{buttonOverride}"><SignInWithXeroButton/></MenuItem>
 
 </Menu>
-
 
 <style>
 

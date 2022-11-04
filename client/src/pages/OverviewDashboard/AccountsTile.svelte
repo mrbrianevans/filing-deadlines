@@ -29,7 +29,7 @@
       value: v => getDaysLeftDuration(v.next_due_accounts)
     }
   ]
-  const limit = 5
+  export let limit = 5
   $: overdueCount = $dashboardData?.filter(r=>getDaysLeft(r.next_due_accounts) < 0).length??0
   $: thisMonthCount = $dashboardData?.filter(r=> {
     const daysLeft = getDaysLeft(r.next_due_accounts)
@@ -38,8 +38,6 @@
 </script>
 
 <div>
-    <Title order={2} class="no-top-margin">Accounts deadlines</Title>
-    <p>Upcoming accounts deadlines for your clients. <AnchoredLink href="/secure/accounts-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
                 label="Overdue" description="Number of your clients whose annual accounts are overdue"

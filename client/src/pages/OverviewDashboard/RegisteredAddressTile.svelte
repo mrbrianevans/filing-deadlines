@@ -18,10 +18,7 @@ onMount(()=>refresh())
 </script>
 
 <div>
-    <Title order={2} class="no-top-margin">Registered office address </Title>
 <!--    todo: show something different if the user doesn't have access to registered address -->
-<!--    <ActionIcon on:click={refresh}><Reload/></ActionIcon>  this was decided against because the data doesn't update often enough to make it necessary -->
-    <p>{$orgAddress?.addressLine1} {$orgAddress?.postCode}. <AnchoredLink href="/secure/registered-office-address">View full list</AnchoredLink></p>
     <StatGroup>
         <Stat label="active companies registered at your address"
               description="the total number of active companies registered at your office address"
@@ -30,8 +27,6 @@ onMount(()=>refresh())
               description="the number of companies on your client list who are registered at your office address post code"
               data={$data?.clientsRegisteredAtOfficeAddress} loading={$processing}/>
     </StatGroup>
-
-    <Text color="dimmed" size="xs" mt="xs">These counts are based on a search at Companies House with your postcode and optionally first line of address, and may not be perfectly accurate.</Text>
 </div>
 
 

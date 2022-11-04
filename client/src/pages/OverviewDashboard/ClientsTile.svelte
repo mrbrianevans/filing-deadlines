@@ -13,9 +13,6 @@
 </script>
 
 <div>
-    <Title order={2} class="no-top-margin">Clients</Title>
-
-    <p>You have {$data} clients on your client list. <AnchoredLink href="/secure/clients">View client list</AnchoredLink></p>
     <Stat label="number of clients"
           description="the number of clients on your organisations client list"
           data={$data} loading={$processing}/>

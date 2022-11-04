@@ -4,52 +4,65 @@
   import RecentFilingsTile from "./RecentFilingsTile.svelte";
   import ConfirmationStatementsTile from "./ConfirmationStatementsTile.svelte";
   import RegisteredAddressTile from "./RegisteredAddressTile.svelte";
-  import {Alert, Badge, Text, Title} from "@svelteuidev/core";
-  import AnchoredLink from "../../components/AnchoredLink.svelte";
+  import {Badge, NumberInput, Title, Switch, ActionIcon, Group} from "@svelteuidev/core";
   import ClientsTile from "./ClientsTile.svelte";
+  import {Height, Reload, Width} from "radix-icons-svelte";
+  import {dashboardData} from "../../lib/stores/dashboardData.js";
+  import OverviewDashboardTile from "./OverviewDashboardTile.svelte";
+  import {confirmationStatements} from "../../lib/stores/confirmationStatements.js";
+  import {orgAddress} from "../../lib/stores/orgAddress.js";
 
-  let checked
+  const {processing: accountsProcessing} = dashboardData
+  const {processing: confirmationStatementsProcessing} = confirmationStatements
+  let accountsTall = true, accountsWide = false
+  let confirmationStatementsTall = false
+  // these config values should be persisted in localStorage
 </script>
 
 <div>
     <Title order={1} class="hidden-on-print" >Dashboard overview
         <Badge>Beta</Badge>
     </Title>
-<!--    <Alert class="hidden-on-print" color="blue" title="What do you think of this new feature?">-->
-<!--        <Text>We are trying this new dashboard to give you a quick overview of all the different data points managed by-->
-<!--            Filing Deadlines.-->
-<!--        </Text>-->
-<!--        <Text>Please send feedback on this feature, whether it's useful and what could be improved.</Text>-->
-<!--        <br/>-->
-<!--        <Text size="xl">-->
-<!--            <AnchoredLink href="/secure/feedback">Send feedback</AnchoredLink>-->
-<!--        </Text>-->
 
-<!--    </Alert>-->
-
-    <!--    <div class="controls">-->
-    <!--        <h2>Controls</h2>-->
-    <!--        <label>Accounts tile expanded <input type="checkbox" bind:checked/></label>-->
-
-    <!--    </div>-->
+<!--        <div class="controls hidden-on-print">-->
+<!--            <Switch bind:checked={accountsTall} label="Accounts tile expanded"/>-->
+<!--        </div>-->
     <div class="dashboard">
 
-        <div class="tile" class:expanded={checked}>
-            <AccountsTile/>
-        </div>
-        <div class="tile">
-            <ConfirmationStatementsTile/>
-        </div>
-        <div class="tile">
-            <RecentFilingsTile/>
-        </div>
-        <div class="tile">
-            <RegisteredAddressTile/>
-        </div>
-        <div class="tile">
-            <ClientsTile/>
-        </div>
+        <OverviewDashboardTile title="Accounts deadlines" description="Upcoming accounts deadlines for your clients."
+                               linkUrl="/secure/accounts-dashboard" linkDisplay="View full dashboard"
+                               on:refresh={()=>{dashboardData.refresh()}} loading={$accountsProcessing}
+                               bind:tall={accountsTall} bind:wide={accountsWide}
+        >
+            <AccountsTile limit={accountsTall ? 10 : 5}/>
+        </OverviewDashboardTile>
 
+        <OverviewDashboardTile title="Confirmation statement deadlines" description="Upcoming confirmation statement deadlines for your clients."
+                               linkUrl="/secure/confirmation-statement-dashboard" linkDisplay="View full dashboard"
+                               on:refresh={()=>{confirmationStatements.refresh()}} loading={$confirmationStatementsProcessing}
+                               bind:tall={confirmationStatementsTall}
+        >
+            <ConfirmationStatementsTile limit={confirmationStatementsTall ? 10 : 5}/>
+        </OverviewDashboardTile>
+
+        <OverviewDashboardTile title="Recent filings" description="Filings in the last 7 days for companies on your client list."
+                               linkUrl="/secure/recent-filings" linkDisplay="View recent filings" showRefresh={false}
+                               footnotes={["This counts all filings for companies on your client list, including any filings made by third parties, in the last 7 days."]}
+        >
+            <RecentFilingsTile/>
+        </OverviewDashboardTile>
+        <OverviewDashboardTile title="Registered office address" description="{$orgAddress?.addressLine1} {$orgAddress?.postCode}"
+                               linkUrl="/secure/registered-office-address" linkDisplay="View full list" showRefresh={false}
+                               footnotes={["These counts are based on a search at Companies House with your postcode and optionally first line of address, and may not be perfectly accurate."]}
+        >
+            <RegisteredAddressTile/>
+        </OverviewDashboardTile>
+        <OverviewDashboardTile title="Clients"
+                               linkUrl="/secure/clients" linkDisplay="View client list" showRefresh={false}
+                               footnotes={["This counts all filings for companies on your client list, including any filings made by third parties, in the last 7 days."]}
+        >
+            <ClientsTile/>
+        </OverviewDashboardTile>
     </div>
 
 </div>
@@ -62,15 +75,6 @@
         flex-direction: row;
         align-items: center;
         gap: 1rem;
-        box-shadow: var(--svelteui-shadows-sm);
-    }
-
-    .tile {
-        padding: 1rem;
-    }
-
-    .tile.expanded {
-        grid-column: span 2;
     }
 
     .dashboard {
@@ -79,7 +83,7 @@
     }
 
     @media screen {
-        .tile {
+        .dashboard>* {
             border-radius: 10px;
             box-shadow: var(--svelteui-shadows-sm);
         }
@@ -108,7 +112,7 @@
     }
 
     @media print {
-        .tile {
+        .dashboard>* {
             padding: 0.5rem;
             /*border: 1px solid black;*/
         }

@@ -31,7 +31,7 @@ const columns: TableColumns<ConfirmationStatementItem> = [
         value: v => getDaysLeftDuration(v.confirmation_statement?.next_due)
       }
 ]
-const limit = 5
+export let limit = 5
 $: overdueCount = $confirmationStatements?.filter(r=>getDaysLeft(r.confirmation_statement?.next_due) < 0).length??0
 $: thisFortnightCount = $confirmationStatements?.filter(r=> {
   const daysLeft = getDaysLeft(r.confirmation_statement?.next_due)
@@ -41,8 +41,6 @@ $: thisFortnightCount = $confirmationStatements?.filter(r=> {
 </script>
 
 <div>
-    <Title order={2} class="no-top-margin">Confirmation statement deadlines</Title>
-    <p>Upcoming confirmation statement deadlines for your clients. <AnchoredLink href="/secure/confirmation-statement-dashboard">View full dashboard</AnchoredLink></p>
     <StatGroup>
         <Stat
                 label="Overdue" description="Number of your clients whose confirmation statements are overdue"

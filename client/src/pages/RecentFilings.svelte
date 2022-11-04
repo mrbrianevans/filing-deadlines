@@ -1,5 +1,5 @@
 <script lang="ts">
-
+//todo: there is a problem with the URLs. Something about changing the query string doesn't replace, so the back button in the web browser breaks.
   import {
     ActionIcon,
     Alert, Badge,
