@@ -46,11 +46,11 @@
 
 <div class="hidden-on-print" use:links>
     <Container size="xl">
-    <Box css={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem' }}>
+    <div class="layout">
         <h1 class="title">
             <AnchoredLink href="/"><img src="/icon/icon500.svg" alt="filing deadlines icon" style="height: 40px;width:40px;" height="40px" width="40px"/> Filing deadlines</AnchoredLink>
         </h1>
-        <Group spacing="lg">
+        <div class="actions">
             {#if $orgSubscription && $orgSubscription.status === 'evaluation'}
                 <div>
                     <Tooltip label="You are trying this product out, and haven't chosen a plan yet.">
@@ -70,7 +70,7 @@
                     <Menu size="xl" closeOnItemClick="{true}" on:click={closeMenus} bind:opened={dashboardsMenuOpen}>
                         <Button slot="control" on:click={()=>{settingsMenuOpen = false}}>
                             <Table slot="leftIcon"/>
-                            Dashboards
+                            <span class="hide-on-mobile">Dashboards</span>
                             <svelte:component this={dashboardsMenuOpen ? ChevronUp : ChevronDown} slot="rightIcon"/>
                         </Button>
                         {#each dashboardsMenu as menuItem}
@@ -83,7 +83,7 @@
                 <Menu size="xl" closeOnItemClick="{true}" bind:opened={settingsMenuOpen} on:click={closeMenus}>
                     <Button slot="control" variant="subtle" on:click={()=>{dashboardsMenuOpen = false}}>
                         <Gear slot="leftIcon"/>
-                        Settings
+                        <span class="hide-on-mobile">Settings</span>
                         <svelte:component this={settingsMenuOpen ? ChevronUp : ChevronDown} slot="rightIcon"/>
                     </Button>
                     {#each settingsMenu as menuItem}
@@ -102,28 +102,28 @@
                     <SignInButton/>
                 {:else}
                     <div class="user-info">
-                        <Group>
+                        <div class="no-break-group">
                             <Text>Logged in as {$user.name}</Text>
                             <Tooltip label="Logout" position="left">
                                 <ActionIcon on:click={user.logout} aria-label={'logout'} color="red">
                                     <Exit/>
                                 </ActionIcon>
                             </Tooltip>
-                        </Group>
+                        </div>
                         <Text>
                             <AnchoredLink href="/secure/manage-organisation">{$user?.orgName ?? 'No organisation'}</AnchoredLink>
                         </Text>
                     </div>
                 {/if}
             </div>
-        </Group>
+        </div>
 
-    </Box>
+    </div>
     </Container>
 </div>
 
 
-<style>
+<style lang="scss">
 .menu-item{
     display: block;
     padding: VAR(--svelteui-space-xsPX);
@@ -136,9 +136,33 @@
 .dark-theme.menu-item:hover{
     background: rgba(92, 95, 102, 0.35);
 }
-.title{
+.layout{
+    display: grid;
+    grid-template-columns: auto 40%;
+    justify-items: center;
+    align-items: center;
+    padding: 0.5rem 1rem;
+
+  .title{
     margin: 0;
     padding: 0;
+    white-space: nowrap;
+    justify-self: start;
+  }
+
+  .actions{
+    justify-self: end;
+    justify-content: flex-end;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 1rem;
+  }
+}
+.no-break-group{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
 }
 .user-info{
     display: grid;
@@ -148,9 +172,17 @@
     flex-wrap: wrap;
     gap: 2px;
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1000px) {
     .evaluation-badges{
         display: none;
     }
+}
+@media screen and (max-width: 600px){
+  .layout {
+    grid-template-columns: auto;
+  }
+  .hide-on-mobile{
+    display: none;
+  }
 }
 </style>
