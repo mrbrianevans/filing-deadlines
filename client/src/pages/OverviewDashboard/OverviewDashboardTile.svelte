@@ -26,16 +26,18 @@
 <div class="tile" class:wide class:tall>
     <div class="header">
         <h2 class="no-margin-top">{title}</h2>
-        <Group>
+        <div class="actions">
             {#if linkUrl}
                 <AnchoredLink href={linkUrl}>{linkDisplay ?? linkUrl}</AnchoredLink>
             {/if}
-            {#if showRefresh}
-                <ActionIcon on:click={refresh} loading={loading}><Reload/></ActionIcon>
-            {/if}
-            <ActionIcon on:click={()=>{wide = !wide}} variant={wide?'light':'hover'}><Width/></ActionIcon>
-            <ActionIcon on:click={()=>{tall = !tall}} variant={tall?'light':'hover'}><Height/></ActionIcon>
-        </Group>
+            <div class="icons">
+                {#if showRefresh}
+                    <ActionIcon on:click={refresh} loading={loading}><Reload/></ActionIcon>
+                {/if}
+                <ActionIcon on:click={()=>{wide = !wide}} variant={wide?'light':'hover'}><Width/></ActionIcon>
+                <ActionIcon on:click={()=>{tall = !tall}} variant={tall?'light':'hover'}><Height/></ActionIcon>
+            </div>
+        </div>
     </div>
     {#if description}
         <p>
@@ -75,4 +77,17 @@
         grid-row: span 2;
     }
 
+    .actions{
+        display: inline-flex;
+        flex-wrap: wrap;
+        row-gap: 3px;
+        column-gap: 15px;
+        justify-content: end;
+        align-items: center;
+    }
+    .icons{
+        display: flex;
+        row-gap: 3px;
+        column-gap: 15px;
+    }
 </style>

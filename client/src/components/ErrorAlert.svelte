@@ -53,7 +53,7 @@
                 <SewingPinFilled slot="leftIcon"/>
                 Report error
             </Button>
-            <AnchoredLink href="/feedback">Write a feedback report</AnchoredLink>
+            <AnchoredLink href="/secure/feedback">Write a feedback report</AnchoredLink>
         </div>
     </SimpleGrid>
 </Alert>
