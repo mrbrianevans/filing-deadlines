@@ -5,6 +5,7 @@
     import HowItWorks from "./HowItWorks.svelte";
     import Contact from "./Contact.svelte";
     import PrivacyPolicy from "./PrivacyPolicy.svelte";
+    import HowSubscriptionsWork from "./HowSubscriptionsWork.svelte";
 </script>
 
 
@@ -24,5 +25,7 @@
     <Route path="/privacy-policy">
         <PrivacyPolicy />
     </Route>
-
+    <Route path="/how-subscriptions-work">
+        <HowSubscriptionsWork />
+    </Route>
 </div>

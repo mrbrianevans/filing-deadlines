@@ -1,6 +1,7 @@
 <script lang="ts">
 
   import {Container, Text, Title} from "@svelteuidev/core";
+  import AnchoredLink from "../../components/AnchoredLink.svelte";
 </script>
 
 
@@ -39,6 +40,9 @@
         It searches by postcode, but there may be other registered addresses in the same postcode.
         For best results, try put your full postcode and the first line of your address.
     </p>
+
+    <Title order={2}>Subscriptions</Title>
+    For details about how the subscription plans work, see <AnchoredLink href="/view/how-subscriptions-work">How Subscriptions Work</AnchoredLink>.
 
     <Title order={2}>Anything else</Title>
     <p>
