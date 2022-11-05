@@ -32,7 +32,7 @@
   async function onUpdate(newPermission){
     await poster('/api/user/notifications/permissions', {permission: newPermission})
     if(newPermission === 'granted') {
-      const registration = await navigator.serviceWorker.getRegistration(serviceWorkerUrl)
+      const registration = await navigator.serviceWorker?.getRegistration(serviceWorkerUrl)
       if (registration) {
         const subscriptionExists = await registration.pushManager.getSubscription()
         if(!subscriptionExists){
