@@ -3,6 +3,11 @@ import {callApi} from "./callApi.js";
 
 
 export async function getCompanyProfileFromApi(companyNumber: string): Promise<CompanyProfile|null>{
-  const profile = await callApi<CompanyProfile>(`/company/${companyNumber}`)
-  return profile
+  if(companyNumber) {
+    const normalisedNumber = companyNumber?.trim().padStart(8, '0')
+    const profile = await callApi<CompanyProfile>(`/company/${normalisedNumber}`)
+    return profile
+  }else{
+    return null
+  }
 }

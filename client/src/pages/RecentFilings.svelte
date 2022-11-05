@@ -67,7 +67,7 @@
     const sp = new URLSearchParams($location.search)
     if(!sp.get('p')) {
       sp.set('p', 'P7D') // default period
-      navigate('?' + sp.toString())
+      navigate('?' + sp.toString(), {replace: true})
     }
     const duration = sp.get('p') // sets the value of the select, if its in the list
     selectedTimespan = Object.entries(timespans).find(([h, d])=>d===duration)?.[0] ?? undefined
@@ -119,7 +119,7 @@
   function updateSearchQuery(timespanDuration){
     const sp = new URLSearchParams($location.search)
     sp.set('p', timespanDuration)
-    navigate('?'+sp.toString())
+    navigate('?'+sp.toString(), {replace: true})
   }
   $: if(selectedTimespan) updateSearchQuery(timespans[selectedTimespan])
   $: loadRecentFilings(getTimespan($location.search), $features.recentFilingsMaxPeriodDays) // should reload data when selectedTimespan changes

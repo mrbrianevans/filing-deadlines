@@ -11,6 +11,9 @@ import {sortClientList} from "../../fs-shared/ClientList.js";
 const addClientSchema: FastifySchema = {
   body: {type: 'object', properties: {companyNumber: {type: 'string', minLength: 6, maxLength: 8}}}
 }
+const addManyClientsSchema: FastifySchema = {
+  body: {type:'array', items: {type: 'string', minLength: 6, maxLength: 8}}
+}
 
 const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
@@ -29,10 +32,11 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // add a single client by its company number. Company profile is loaded synchronously, but filing history is asynchronous.
   fastify.post<{Body: {companyNumber: string}}>('/', {schema: addClientSchema},async (request, reply)=>{
+    const companyNumber = request.body.companyNumber.trim().padStart(8, '0')
     const currentClientListSize = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    request.log.info({companyNumber, currentClientListSize}, 'Add company number to client list')
     if(currentClientListSize >= request.org.features.clientListMaxSize)
       return reply.sendError({message: 'You have reached the maximum client list size available in your subscription plan', error: 'Client list full', statusCode: 403})
-    const {companyNumber} = request.body
     const exists = await fastify.redis.hexists(`org:${request.session.orgId}:clients`, companyNumber)
     if(!exists){
       await fastify.redis.sadd(`company:${companyNumber}:clientLists`, request.session.orgId)
@@ -46,6 +50,32 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     }else{
       reply.status(204).send({message:'Client was already on your client list'})
     }
+  })
+
+  fastify.post<{Body: string[]}>('/addMany', {schema: addManyClientsSchema},async (request, reply)=>{
+    const companyNumbers = request.body.map(companyNumber=>companyNumber.trim().padStart(8, '0'))
+    const currentClientListSize = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    request.log.info({companyNumbers: companyNumbers.length, currentClientListSize}, 'User uploaded client list')
+    if(currentClientListSize + companyNumbers.length > request.org.features.clientListMaxSize)
+      return reply.sendError({message: 'You have reached the maximum client list size available in your subscription plan', error: 'Client list full', statusCode: 403})
+    let successCount = 0
+    for (const companyNumber of companyNumbers) {
+      const added = await fastify.redis.sadd(`company:${companyNumber}:clientLists`, request.session.orgId).then(res=>res === 1)
+      if(added){
+        const profile = await getCompanyProfileFromApi(companyNumber)
+        if(profile) {
+          await fastify.redis.set(`company:${companyNumber}:profile`, JSON.stringify(profile))
+          const client: ClientListItem = {company_number: companyNumber, added_on: new Date().toISOString(),company_name: profile?.company_name, company_status: profile?.company_status}
+          await fastify.redis.hset(`org:${request.session.orgId}:clients`, companyNumber, JSON.stringify(client))
+          // new client, dispatch event to load filing history asynchronously
+          await dispatchLoadFilingHistoryForCompany(companyNumber, 100, 'new-client-added')
+          successCount++
+        }
+      }
+    }
+    const newClientListSize = await fastify.redis.hlen(`org:${request.session.orgId}:clients`)
+    request.log.info({successCount,newClientListSize,previousClientListSize:currentClientListSize}, 'Added %i companies to client list in bulk', successCount)
+    return {successCount}
   })
 
   fastify.delete<{Params: {companyNumber: string}}>('/:companyNumber', async (request, reply)=>{

@@ -8,7 +8,8 @@ import {sortClientList} from "../../../../fs-shared/ClientList.js";
 function createClientList(){
   const key = '/api/user/org/member/client-list/'
   // add and delete REST endpoints
-  const addClient = (id) => poster(key, {companyNumber: id})
+  const addClient = (companyNumber) => poster(key, {companyNumber})
+  const addClients = (companyNumbers) => poster(key + 'addMany', companyNumbers)
   const deleteClient = (id) => fetch(key+id, {method: 'DELETE'}).then((r) => r.ok)
   const deleteAll = () => fetch(key, {method: 'DELETE'}).then((r) => r.ok)
 
@@ -24,6 +25,15 @@ function createClientList(){
     await refresh() // after adding, refresh entire list
   }
 
+  async function addMany(rawCompanyNumbers: string[]){
+    const companyNumbers = rawCompanyNumbers.map(companyNumber=>companyNumber.trim().padStart(8, '0'))
+    const success = await addClients(companyNumbers)
+    if(success) {
+      const newClients = companyNumbers.map(company_number=>({company_number, added_on: new Date().toISOString()}))
+      await update(prev=>prev?.concat(newClients).sort(sortClientList)??newClients)
+      await refresh() // after adding, refresh entire list
+    }
+  }
 
   async function remove(companyNumber: ClientListItem['company_number']){
     await update(prev=>prev?.filter(c=>c.company_number!==companyNumber)) // sort order shouldn't change
@@ -37,7 +47,7 @@ function createClientList(){
     await refresh() // after deleting, refresh entire list
   }
 
-  return {subscribe, addNew, remove,removeAll, error, refresh, processing}
+  return {subscribe, addNew,addMany, remove, removeAll, error, refresh, processing}
 }
 
 export const clientList = createClientList()
@@ -53,8 +63,5 @@ export async function importClientListCsv(csv){
   }
   const rows:ParseResult<{ companyNumber: string }> = await new Promise((resolve, reject) => papa.parse(csv, {complete: resolve, error: reject,...papaOptions }))
   const companyNumbers = rows.data.map(r=>r.companyNumber)
-  await clientList.addNew(companyNumbers)
-  if(companyNumbers.length > 100)
-    alert('You have uploaded more than 100 clients, which may take a few minutes to load all of their filing history from Companies House. ' +
-      'Until then, the Recent filings page may not have complete data.')
+  await clientList.addMany(companyNumbers)
 }

@@ -84,6 +84,12 @@ let {processing, error} = clientList
   }
   $: addingNewClientsDisabled = $clientList?.length >= $features?.clientListMaxSize
   let removingAll = false
+  let uploading = false
+  async function uploadCsv(csv){
+    uploading = true
+    await importClientListCsv(csv)
+    uploading = false
+  }
 </script>
 
 
@@ -100,7 +106,7 @@ let {processing, error} = clientList
             <Text>You have reached the maximum number of clients included in your subscription.</Text>
         {:else}
                 <InputWrapper label="Upload CSV of clients">
-                <FileUpload let:dragging multiple={false} on:input={e=>importClientListCsv(e.detail.files)}>
+                <FileUpload let:dragging multiple={false} on:input={e=>uploadCsv(e.detail.files)}>
                     <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
                         <FilePlus/>
                         <Text>Drag and Drop or </Text>
@@ -109,10 +115,11 @@ let {processing, error} = clientList
                 </FileUpload>
             </InputWrapper>
         {/if}
+        {#if uploading} <Loader/> {/if}
         <Box css={{ height: '2em', display: 'flex', justifyContent: 'center' }}>
             <Divider orientation='vertical' />
         </Box>
-        <Tooltip label="Reload your client list. Will load changes made by other uses or in a different tab.">
+        <Tooltip label="Reload your client list. Will load changes made by other users or in a different tab.">
             <ActionIcon on:click={clientList.refresh} loading="{$processing}"><Reload/></ActionIcon>
         </Tooltip>
         <Tooltip label="Coming soon. You'll be able to export your client list to a file.">
@@ -137,7 +144,7 @@ let {processing, error} = clientList
                     <Text my="xs">This cannot be undone and all your dashboards will be empty. It's a way of resetting.</Text>
                     <Group>
                         <Button on:click={()=>{removingAll = false}}>No, keep my client list</Button>
-                        <Button on:click={clientList.removeAll} color="red">Yes, delete all clients</Button>
+                        <Button on:click={()=>{removingAll = false;clientList.removeAll()}} color="red">Yes, delete all clients</Button>
                     </Group>
                 {/if}
             {:else}
