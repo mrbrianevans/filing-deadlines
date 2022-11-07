@@ -1,5 +1,5 @@
 <script lang="ts">
-//todo: there is a problem with the URLs. Something about changing the query string doesn't replace, so the back button in the web browser breaks.
+
   import {
     ActionIcon,
     Alert, Badge,
@@ -7,7 +7,7 @@
     Container,
     Group,
     Loader,
-    NativeSelect, Space,
+    NativeSelect, Progress, Space,
     Text,
     Title,
     Tooltip
@@ -33,11 +33,11 @@
   import CompanyNumber from "../components/dashboard/CompanyNumber.svelte";
   const location = useLocation()
   const navigate = useNavigate();
-  let recentFilings: RecentFilings|null = null, error, processing // manual SWR
+  let recentFilings: { recentFilings: RecentFilings, completeData: boolean, missingCount :number, completeCount: number; }|null = null, error, processing // manual SWR
   let showingFilingsSince;
   // whether to display the max amount of time their plan supports
   let showPlanLimit = false;
-  $: filingTypes =  [...new Set(recentFilings?.map(f=>f.filingType))]
+  $: filingTypes =  [...new Set(recentFilings?.recentFilings.map(f=>f.filingType))]
   async function loadRecentFilings(timespan, max ){
     processing = true
     showPlanLimit = false
@@ -126,16 +126,16 @@
   let exportingPdf = false, exportingXlsx = false
   async function exportPdf(userName){
     exportingPdf = true
-    const blob = await exportRecentFilingsPdf(recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], userName)
+    const blob = await exportRecentFilingsPdf(recentFilings.recentFilings, showingFilingsSince, new Date().toISOString().split('T')[0], userName)
     downloadBlob(blob, 'recent filings.pdf')
     exportingPdf = false
   }
   async function exportXlsx(){
     exportingXlsx = true
-    await exportRecentFilingsXlsx(recentFilings)
+    await exportRecentFilingsXlsx(recentFilings.recentFilings)
     exportingXlsx = false
   }
-  $: exportsDisabled = !$features.exportData || !recentFilings || recentFilings.length === 0 || error || processing
+  $: exportsDisabled = !$features.exportData || !recentFilings || recentFilings.recentFilings.length === 0 || !recentFilings.completeData || error || processing
   let displayTimespans = Object.keys(timespans)
   $: import('@js-temporal/polyfill')
     .then(m=>m.Temporal)
@@ -177,18 +177,27 @@
     {:else if error}
         <ErrorAlert error="{error}"/>
     {:else if recentFilings}
-        {#if showingFilingsSince}<Text root="p" pt="sm">Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
-        {#if recentFilings.length > 0}
+        {#if !recentFilings.completeData}
+            <Alert color="orange" my="md">
+                <Group my="md">
+                    <Loader color="orange" variant="bars"/>
+                    <Text inherit>Your clients filing history is being loaded in the background. This page doesn't have complete information yet.
+                        Expected to take {Math.ceil(recentFilings.missingCount/20) || 15} minutes to finish.</Text>
+                </Group>
+                <Progress tween value={(recentFilings.completeCount/(recentFilings.completeCount+ recentFilings.missingCount))*100} color="orange" size="lg"/>
+            </Alert>
+        {/if}
+        {#if recentFilings.recentFilings.length > 0}
+            {#if showingFilingsSince}<Text root="p" pt="sm">Showing filings since <AsyncDate date="{showingFilingsSince}"/></Text>{/if}
         <div>
             {#each filingTypes as filingType}
-                <Title order="{4}">{sentenceCase(filingType)} ({recentFilings.filter(f=>f.filingType===filingType).length})</Title>
-                {#each [...new Set(recentFilings.filter(f=>f.filingType===filingType).filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
-                <AsyncTable columns={columns} rows={recentFilings.filter(f=>f.filingType===filingType)}/>
+                <Title order="{4}">{sentenceCase(filingType)} ({recentFilings.recentFilings.filter(f=>f.filingType===filingType).length})</Title>
+                {#each [...new Set(recentFilings.recentFilings.filter(f=>f.filingType===filingType).filter(f=>f.subcategory).map(f=>f.subcategory))] as subcategory} <Badge>{subcategory}</Badge> {/each}
+                <AsyncTable columns={columns} rows={recentFilings.recentFilings.filter(f=>f.filingType===filingType)}/>
             {/each}
         </div>
-        {:else}
-        <Space h="sm"/>
-        <Alert title="No recent filings" color="gray" variant="outline">
+        {:else if recentFilings.completeData}
+        <Alert title="No recent filings" color="gray" variant="outline" my="md">
             <Text inherit>There haven't been any filings since {showingFilingsSince} for companies on your client list.</Text>
             <Text inherit>Try choosing a longer period or add some more clients to your client list.</Text>
         </Alert>

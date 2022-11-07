@@ -38,4 +38,10 @@ async function loadFilingHistoryForCompany(job: Job<{companyNumber: string, limi
 }
 
 // will process a maximum of 100 jobs per 5 minutes. This should help avoid the API rate limit.
-export const startLoadFilingHistoryForCompanyQueueWorker = () => new Worker(loadFilingHistoryForCompanyQueue, loadFilingHistoryForCompany, {connection:bullConnection,limiter: {max:100,duration: 5*600*1000}})
+export const startLoadFilingHistoryForCompanyQueueWorker = () => new Worker(loadFilingHistoryForCompanyQueue, loadFilingHistoryForCompany, {connection:bullConnection,limiter: {max:100,duration: 5*60*1000}})
+
+
+//todo: it would be good to refactor the load filing history job:
+// at the moment, a new job is created for each client that is added.
+// I propose making it a single job to load the filing history for all the clients in a newly uploaded client list.
+// This would make it easier to track the progress of the job, and also to better check the rate limit for the API.

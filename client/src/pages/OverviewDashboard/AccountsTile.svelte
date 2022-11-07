@@ -64,7 +64,7 @@
     {:else if $error}
         <ErrorAlert error={$error}/>
     {:else if $dashboardData}
-        {#if overdueCount + thisMonthCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing {limit} out of {overdueCount + thisMonthCount}.</Text>{/if}
+        {#if overdueCount + thisMonthCount > limit}<Text color="dimmed" size="xs" mt="md"> Only showing a maximum of {limit}.</Text>{/if}
         {#await import('svelte-table').then(m=>m.default)}
             <Loader color="gray"/>
         {:then SvelteTable}

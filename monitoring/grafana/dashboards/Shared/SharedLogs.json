@@ -1,0 +1,105 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 17,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
+      "gridPos": {
+        "h": 32,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
+          "editorMode": "builder",
+          "expr": "{component=\"shared\"} |= `` | json | line_format `{{.level}} {{.msg}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "All shared logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "4d8546cdf33d"
+      },
+      "description": "Logs from calling the companies house API",
+      "gridPos": {
+        "h": 32,
+        "w": 8,
+        "x": 7,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "4d8546cdf33d"
+          },
+          "editorMode": "builder",
+          "expr": "{component=\"shared\"} |= `Called Companies House API` | json | line_format `{{.msg}}  in {{ round .duration 0 }}ms remain={{.rateLimit_remain}}  {{if .ok}} OK {{else}}NOT OK status={{.status}} {{end}} {{.path}}`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Companies House API calls",
+      "type": "logs"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Shared logs",
+  "uid": "dNdtxFD4z",
+  "version": 1,
+  "weekStart": ""
+}

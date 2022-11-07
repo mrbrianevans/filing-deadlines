@@ -32,7 +32,7 @@ export async function dispatchJobSync(queueName: string, jobData: any, comment =
 }
 
 export async function dispatchLoadFilingHistoryForCompany(companyNumber: string, limit?: number, comment = 'dispatched-filing-job-for-company-number'){
-  return await dispatchJob(loadFilingHistoryForCompanyQueue, {companyNumber, limit}, comment, 5 * 60 * 1000)
+  return await dispatchJob(loadFilingHistoryForCompanyQueue, {companyNumber, limit}, comment)
 }
 
 export async function dispatchLoadFilingHistoryForClientList(orgId: string, comment = 'dispatched-filing-job-for-client-list'){

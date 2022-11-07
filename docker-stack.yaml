@@ -79,14 +79,13 @@ services:
       METRICS_URL: "http://metrics:9090"
   repl:
     image: registry.digitalocean.com/fdcr/filing-deadlines/backend:latest
+    command: tail -f /dev/null
     working_dir: /filing-deadlines/repl
     depends_on:
       - redis
     "environment":
       REDIS_URL: redis://redis:6379
       LOKI_URL: "http://loki:3100"
-    tty: true
-    stdin_open: true
 
 volumes:
   redisdata:

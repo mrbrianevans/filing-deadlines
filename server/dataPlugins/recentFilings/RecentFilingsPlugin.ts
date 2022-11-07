@@ -58,7 +58,8 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     }
   }
 
-  fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: RecentFilings}>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
+  type GetRecentFilingsEndpoint = {Querystring: {startDate: string, endDate?: string}, Reply: { recentFilings: RecentFilings, completeData: boolean, missingCount: number, completeCount: number }}
+  fastify.get<GetRecentFilingsEndpoint>('/', {schema: recentFilingsSchema}, async (request, reply)=>{
     // logic to get recent filings
     const {startDate, endDate} = request.query
     const currentDateDays = Math.floor(new Date().getTime()/86_400_000)
@@ -67,6 +68,12 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     request.log.info({startDate, endDate, startDateDaysAgo: currentDateDays - startDateDays, endDateDaysAgo: currentDateDays - (endDateDays??0)},'Recent filings requested for date range')
     if(request.org.features.recentFilingsMaxPeriodDays < currentDateDays - startDateDays)
       return reply.wrongPlan(`Your plan only allows viewing ${request.org.features.recentFilingsMaxPeriodDays} days of recent filings.`)
+    const clientsWithFilingHistory: boolean[] = await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)
+      .then(companyNumbers => Promise.all(companyNumbers.map(c=>fastify.redis.exists(`company:${c}:filingHistory`)))).then(bs=>bs.map(Boolean))
+    const completeData = clientsWithFilingHistory.every(b=>b)
+    const missingCount = clientsWithFilingHistory.filter(b=>!b).length
+    const completeCount = clientsWithFilingHistory.filter(b=>b).length
+    if(!completeData) request.log.warn({completeData, clientsCount: clientsWithFilingHistory.length, completeCount,missingCount}, 'Incomplete data for recent filings')
     const companyNumberTransactionIds = await fastify.redis.zrange(`org:${request.session.orgId}:clientFilings`, startDateDays, endDateDays??'+inf', "BYSCORE")
     request.log.info({numberOfTransactions: companyNumberTransactionIds.length},`Found ${companyNumberTransactionIds.length} transaction IDs of recent filings for companies on this org's client list`)
     // get filing transaction for each ID
@@ -89,7 +96,7 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
       recentFilings.push(filing)
     }
     request.log.info(`Returning ${recentFilings.length} recent filings`)
-    return recentFilings
+    return {recentFilings, completeData, missingCount, completeCount}
   })
 
   fastify.get<{Querystring: {startDate: string, endDate?: string}, Reply: Record<string, number>}>('/countByCategory', {schema: recentFilingsSchema}, async (request, reply)=>{
@@ -105,6 +112,16 @@ const RecentFilingsPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const categoryOccurrances = transactions.map(t=>t.category)
     const categoryCounts = countOccurrances(categoryOccurrances)
     return categoryCounts
+  })
+
+  // get whether or not there is complete data for recent filings, or if there are some still being loaded.
+  fastify.get('/completeData', async(request, reply)=>{
+    const clientsWithFilingHistory: boolean[] = await fastify.redis.hkeys(`org:${request.session.orgId}:clients`)
+      .then(companyNumbers => Promise.all(companyNumbers.map(c=>fastify.redis.exists(`company:${c}:filingHistory`)))).then(bs=>bs.map(Boolean))
+    const completeData = clientsWithFilingHistory.every(b=>b)
+    const missingCount = clientsWithFilingHistory.filter(b=>!b).length
+    const completeCount = clientsWithFilingHistory.filter(b=>b).length
+    return {completeData, missingCount, completeCount}
   })
 
 }

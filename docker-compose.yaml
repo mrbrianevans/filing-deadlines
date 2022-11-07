@@ -89,16 +89,13 @@ services:
   repl:
     build:
       dockerfile: Backend.Dockerfile
-    command: node index.js
+    command: tail -f /dev/null
     working_dir: /filing-deadlines/repl
     depends_on:
       - redis
     "environment":
       REDIS_URL: redis://redis:6379
       LOKI_URL: "http://loki:3100"
-    tty: true
-    stdin_open: true
-
 volumes:
   redisdata:
   caddy_data:

@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import {ActionIcon, Badge, Loader, Text, Title} from "@svelteuidev/core";
+  import {ActionIcon, Badge, Loader, Text, Title, Tooltip} from "@svelteuidev/core";
 import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../../lib/swr.js";
 import {sentenceCase} from "sentence-case";
@@ -14,8 +14,10 @@ import {sentenceCase} from "sentence-case";
 
 const startDate = new Date()
 startDate.setDate(startDate.getDate() - 7)
-const counts = swr('/api/user/org/member/recent-filings/countByCategory?startDate='+startDate.toISOString().split('T')[0], readableSwrOptions)
+  const counts = swr('/api/user/org/member/recent-filings/countByCategory?startDate='+startDate.toISOString().split('T')[0], readableSwrOptions)
+  const dataStatus = swr('/api/user/org/member/recent-filings/completeData', readableSwrOptions)
 const {data, error, processing, refresh} = counts
+const {data: completeness} = dataStatus
 onMount(()=>refresh())
 
 $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
@@ -28,6 +30,13 @@ $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
         <ErrorAlert error={$error}/>
     {:else if $data}
         <StatGroup>
+            {#if $completeness && !$completeness?.completeData}
+                <div>
+                    <Tooltip label="Filing history is being loaded in the background for all the companies on your client list.">
+                        <Badge color="orange" size="lg">Incomplete data</Badge>
+                    </Tooltip>
+                </div>
+            {/if}
             {#each Object.entries($data) as category}
                 <Stat
                 label={sentenceCase(category[0])} data={category[1]}
