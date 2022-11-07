@@ -96,9 +96,7 @@
                 </Menu>
             {/if}
             <div>
-                {#if $userProcessing}
-                    <Loader/>
-                {:else if $user === null || $user === undefined}
+                {#if $user === null || $user === undefined}
                     <SignInButton/>
                 {:else}
                     <div class="user-info">
