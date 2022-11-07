@@ -35,6 +35,11 @@ export let title, subtitle, link, alwaysLink = false, linkLabel = 'View your das
     display: grid;
     grid-template-columns: 50% 50%;
 }
+@media screen and (max-width: 700px) {
+    .two-column{
+        grid-template-columns: 100%;
+    }
+}
 .padded{
     padding: 6rem 0.5rem;
 }

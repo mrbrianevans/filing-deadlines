@@ -3,6 +3,7 @@
   import {ArrowLeft, ArrowRight, Home, LockClosed, Reload} from "radix-icons-svelte";
 
   export let urlPath = '/'
+  export let caption: string | undefined
 </script>
 
 <div class="screenshot">
@@ -16,6 +17,10 @@
         <slot/>
     </div>
 
+    {#if caption}
+        <p class="caption">{caption}</p>
+    {/if}
+
 </div>
 
 
@@ -24,6 +29,8 @@
 .screenshot{
   box-shadow: 0 0 14px 4px #0001;
   transform: skew(-1deg, 1deg);
+  user-select: none;
+  overflow: hidden;
   .topbar{
     display: flex;
     align-items: center;
@@ -56,6 +63,13 @@
   .window{
     border: 1px solid VAR(--contrast);
     padding: 4px;
+  }
+
+  .caption{
+    text-align: center;
+    font-style: italic;
+    font-size: smaller;
+    margin: 3px;
   }
 
 }

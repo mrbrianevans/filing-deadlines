@@ -44,24 +44,24 @@
                 </HomeFeatureCard>
             {/each}
 
-            <HomeFeatureCard link="/secure/dashboard" linkLabel="View your dashboard" title="Overview dashboard." subtitle="See important information at a glance. Which accounts are due this month, what has been filed in the last week, are there any confirmation statements overdue?">
-               <Screenshot urlPath="/secure/dashboard"><OverviewDashboardMockup/></Screenshot>
+            <HomeFeatureCard link="/secure/accounts-dashboard" linkLabel="View your accounts deadlines" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
+                <Screenshot urlPath="/secure/accounts-dashboard" caption="Simplified example of accounts dashboard">
+                    <AccountsMockup/>
+                </Screenshot>
             </HomeFeatureCard>
 
-            <HomeFeatureCard link="/secure/accounts-dashboard" linkLabel="View your accounts deadlines" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
-            <Screenshot urlPath="/secure/accounts-dashboard">
-                <AccountsMockup/>
-            </Screenshot>
+            <HomeFeatureCard link="/secure/dashboard" linkLabel="View your dashboard" title="Overview dashboard." subtitle="See important information at a glance. Which accounts are due this month, what has been filed in the last week, are there any confirmation statements overdue?">
+               <Screenshot urlPath="/secure/dashboard" caption="Example of overview dashboard"><OverviewDashboardMockup/></Screenshot>
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/confirmation-statement-dashboard" linkLabel="View your confirmation statement deadlines" title="Confirmation statement deadlines." subtitle="Dashboard for confirmation statement deadlines, with data pulled from Companies House.">
-                <Screenshot urlPath="/secure/confirmation-statement-dashboard">
+                <Screenshot urlPath="/secure/confirmation-statement-dashboard" caption="Simplified example of confirmation statements dashboard">
                     <ConfirmationStatementsMockup/>
                 </Screenshot>
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/clients" linkLabel="View your client list" title="Manage your client list." subtitle="Keep a list of your firms clients, import from CSV, view company status.">
-                <Screenshot urlPath="/secure/clients">
+                <Screenshot urlPath="/secure/clients" caption="Example of client list management feature">
                     <Image src={clientListScreenshot}/>
 <!--                    <table class="no-breaks client-list">-->
 <!--                        <tr><th>Company number</th> <th>Client name</th> <th>Status</th></tr>-->
