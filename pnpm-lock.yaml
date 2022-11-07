@@ -110,6 +110,7 @@ importers:
   server:
     specifiers:
       '@fastify/cookie': ^8.1.0
+      '@fastify/multipart': ^7.3.0
       '@fastify/oauth2': ^6.0.0
       '@fastify/redis': ^6.0.0
       '@fastify/session': ^9.0.0
@@ -124,6 +125,7 @@ importers:
       web-push: ^3.5.0
     dependencies:
       '@fastify/cookie': 8.1.0
+      '@fastify/multipart': 7.3.0
       '@fastify/oauth2': 6.0.0
       '@fastify/redis': 6.0.0
       '@fastify/session': 9.0.0
@@ -198,6 +200,13 @@ packages:
       fast-uri: 2.1.0
     dev: false
 
+  /@fastify/busboy/1.1.0:
+    resolution: {integrity: sha512-Fv854f94v0CzIDllbY3i/0NJPNBRNLDawf3BTYVGCe9VrIIs3Wi7AFx24F9NzCxdf0wyx/x0Q9kEVnvDOPnlxA==}
+    engines: {node: '>=10.17.0'}
+    dependencies:
+      text-decoding: 1.0.0
+    dev: false
+
   /@fastify/cookie/8.1.0:
     resolution: {integrity: sha512-+BxpyK4KLAjDpXdWxOjl8yaKtAoqYZR+CE9+cNtdMDoACb8hcpGx9npkrdINl62EpCu06oIPluq8A4NUsi78ZA==}
     dependencies:
@@ -217,6 +226,19 @@ packages:
     resolution: {integrity: sha512-cTKBV2J9+u6VaKDhX7HepSfPSzw+F+TSd+k0wzifj4rG+4E5PjSFJCk19P8R6tr/72cuzgGd+mbB3jFT6lvAgw==}
     dependencies:
       fast-json-stringify: 5.2.0
+    dev: false
+
+  /@fastify/multipart/7.3.0:
+    resolution: {integrity: sha512-tbzQiRFxoADCn0G10CqiQ/nDWWcfegtwg826Pfz2h7+XvuqJhGnko0TbafrWIY7hnGD+sNCGMdiTVsxxs6zigA==}
+    dependencies:
+      '@fastify/busboy': 1.1.0
+      '@fastify/deepmerge': 1.1.0
+      '@fastify/error': 3.0.0
+      end-of-stream: 1.4.4
+      fastify-plugin: 4.2.1
+      hexoid: 1.0.0
+      secure-json-parse: 2.5.0
+      stream-wormhole: 1.1.0
     dev: false
 
   /@fastify/oauth2/6.0.0:
@@ -1379,6 +1401,11 @@ packages:
     dependencies:
       function-bind: 1.1.1
 
+  /hexoid/1.0.0:
+    resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==}
+    engines: {node: '>=8'}
+    dev: false
+
   /html2canvas/1.4.1:
     resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
     engines: {node: '>=8.0.0'}
@@ -2279,6 +2306,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
+  /stream-wormhole/1.1.0:
+    resolution: {integrity: sha512-gHFfL3px0Kctd6Po0M8TzEvt3De/xu6cnRrjlfYNhwbhLPLwigI2t1nc6jrzNuaYg5C4YF78PPFuQPzRiqn9ew==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
   /string-template/1.0.0:
     resolution: {integrity: sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==}
     dev: false
@@ -2432,6 +2464,10 @@ packages:
     engines: {node: '>=12.0.0'}
     dev: false
     optional: true
+
+  /text-decoding/1.0.0:
+    resolution: {integrity: sha512-/0TJD42KDnVwKmDK6jj3xP7E2MG7SHAOG4tyTgyUCRPdHwvkquYNLEQltmdMa3owq3TkddCVcTsoctJI8VQNKA==}
+    dev: false
 
   /text-segmentation/1.0.3:
     resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}

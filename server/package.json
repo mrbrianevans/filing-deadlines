@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fastify/cookie": "^8.1.0",
+    "@fastify/multipart": "^7.3.0",
     "@fastify/oauth2": "^6.0.0",
     "@fastify/redis": "^6.0.0",
     "@fastify/session": "^9.0.0",
