@@ -31,9 +31,8 @@
                         <Text color='dimmed' size="lg">Visibility of upcoming deadlines for your clients, alerting you to filings which need to be submitted soon.</Text>
                 <div style="margin: 2rem 0;">
                 {#if !$user}
-<!--                    <Button size="md" variant="gradient">Try Filing Deadlines free</Button>-->
-<!--                    <AnchoredLink href="/secure/dashboard">Try Filing Deadlines free</AnchoredLink>-->
-                    <div style="display: flex;align-items: center;gap:5px;"><SignInWithXeroButton/> or <SignInWithAuth0Button/></div>
+
+                    <div style="display: flex;align-items: center;gap:5px;"><h2 style="margin: 0;">Get started</h2><SignInWithXeroButton/> or <SignInWithAuth0Button/></div>
                     <p>Sign in to try Filing Deadlines free. No need to create an account if you use Xero.</p>
                 {/if}
                 </div>
@@ -78,7 +77,7 @@
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/notifications" linkLabel="View your notification settings" title="Filing notifications." subtitle="Easily subscribe to receive pop-up notifications in your web browser whenever there is a new filing for a company on your client list.">
-                <Image src={notificationScreenshot} class="notification-image"/>
+                <Image src={notificationScreenshot} class="notification-image" width={400}/>
             </HomeFeatureCard>
 
             <HomeFeatureCard link="/secure/registered-office-address" linkLabel="View list" title="Companies registered at your address." subtitle="See which companies are using your address as their Registered Office Address on Companies House.">
@@ -88,7 +87,11 @@
             <HomeFeatureCard link="/view/pricing" alwaysLink linkLabel="View pricing" title="Pricing" subtitle="View pricing for accounting practices.">
 <!--                <Image src={clientListScreenshot}/>-->
             </HomeFeatureCard>
+            {#if !$user}
 
+                <div style="display: flex;align-items: center;gap:5px;"><h2 style="margin: 0;">Get started</h2><SignInWithXeroButton/> or <SignInWithAuth0Button/></div>
+                <p>Sign in to try Filing Deadlines free. No need to create an account if you use Xero.</p>
+            {/if}
         </Stack>
     </Container>
 </div>

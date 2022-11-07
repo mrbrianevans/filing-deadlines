@@ -23,7 +23,7 @@ export let title, subtitle, link, alwaysLink = false, linkLabel = 'View your das
                     </slot>
                 {/if}
             </div>
-            <div>
+            <div class="content">
 
                 <slot/>
             </div>
@@ -42,5 +42,9 @@ export let title, subtitle, link, alwaysLink = false, linkLabel = 'View your das
 }
 .padded{
     padding: 6rem 0.5rem;
+}
+.content{
+    display: flex;
+    place-items: center;
 }
 </style>
