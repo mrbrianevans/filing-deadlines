@@ -12,15 +12,18 @@ import {sentenceCase} from "sentence-case";
   import AnchoredLink from "../../components/AnchoredLink.svelte";
   import {Reload} from "radix-icons-svelte";
 
-const startDate = new Date()
-startDate.setDate(startDate.getDate() - 7)
-  const counts = swr('/api/user/org/member/recent-filings/countByCategory?startDate='+startDate.toISOString().split('T')[0], readableSwrOptions)
-  const dataStatus = swr('/api/user/org/member/recent-filings/completeData', readableSwrOptions)
-const {data, error, processing, refresh} = counts
-const {data: completeness} = dataStatus
-onMount(()=>refresh())
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - 7)
+    const counts = swr('/api/user/org/member/recent-filings/countByCategory?startDate='+startDate.toISOString().split('T')[0], readableSwrOptions)
+    const dataStatus = swr('/api/user/org/member/recent-filings/completeData', readableSwrOptions)
+    const {data, error, processing, refresh} = counts
+    const {data: completeness} = dataStatus
+    onMount(()=> {
+      refresh()
+      dataStatus.refresh()
+    })
 
-$: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
+    $: totalCount = Object.values($data??{}).reduce((p,c)=>p+c, 0)
 </script>
 
 <div>
