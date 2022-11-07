@@ -1,20 +1,11 @@
 <script lang="ts">
-
-  import {Anchor, Container, Text, Title} from "@svelteuidev/core";
-  import AnchoredLink from "../../components/AnchoredLink.svelte";
-  import {ExternalLink} from "radix-icons-svelte";
+  import Contact from "../content/Contact.md";
+  import {Container} from "@svelteuidev/core";
+  import {links} from "svelte-navigator";
 </script>
 
-
-<Container>
-    <Title order={2}>Contact</Title>
-    <p>
-        You can get in contact using the form on the website, or you can send me an email personally.
-    </p>
-
+<Container size="sm">
+    <div use:links>
+        <Contact/>
+    </div>
 </Container>
-
-
-<style>
-
-</style>
