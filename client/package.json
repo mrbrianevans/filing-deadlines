@@ -37,6 +37,7 @@
     "svelte-navigator": "^3.2.2",
     "svelte-table": "^0.5.1",
     "sveltefileuploadcomponent": "^0.1.0",
+    "title-case": "^3.0.3",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.12/xlsx-0.18.12.tgz"
   }
 }

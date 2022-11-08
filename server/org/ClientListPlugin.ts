@@ -89,7 +89,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     await fastify.redis.hdel(`org:${request.session.orgId}:clients`, companyNumber) // remove company from org client list
     // remove filings from Sorted Set of recent filings
     const filings = await fastify.redis.hkeys(`company:${companyNumber}:filingHistory`)
-    await fastify.redis.zrem(`org:${request.session.orgId}:clientFilings`, filings.map(f=>`${companyNumber}:${f}`))
+    if(filings.length) await fastify.redis.zrem(`org:${request.session.orgId}:clientFilings`, filings.map(f=>`${companyNumber}:${f}`))
     // remove company profile and filing history if the company isn't in any clientLists anymore.
     if(await fastify.redis.scard(`company:${companyNumber}:clientLists`) === 0) {
       await fastify.redis.del('company:' + companyNumber + ':profile')
