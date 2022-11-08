@@ -1,11 +1,10 @@
 <script lang="ts">
-  import {Route, Router} from "svelte-navigator";
-  import {AppShell, createStyles, Header, Loader, Seo, SvelteUIProvider, TypographyProvider} from '@svelteuidev/core';
+  import {Router} from "svelte-navigator";
+  import {AppShell, createStyles, Header, Seo, SvelteUIProvider, TypographyProvider} from '@svelteuidev/core';
   import {isDark} from "./lib/stores/theme.ts";
   import NavBar from "./components/NavBar.svelte";
-  import Home from "./pages/Home.svelte";
   import WebsiteFooter from "./components/WebsiteFooter.svelte";
-  import ErrorAlert from "./components/ErrorAlert.svelte";
+  import Routes from "./pages/Routes.svelte";
 
   const config = {
     light: { bg: 'White', color: 'Black' },
@@ -26,7 +25,7 @@
 <SvelteUIProvider {config} withNormalizeCSS withGlobalStyles  themeObserver={$isDark ? 'dark' : 'light'} fontFamily="Inter, Avenir, Helvetica, Arial, sans-serif;"
 override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={getStyles()}
 >
-  <Seo title="Filing deadline dashboard" description="Web application for managing upcoming filing deadlines for annual accounts. Just enter your client list and the deadlines are automatically fetched from Companies House."/>
+  <Seo title="Filing deadline dashboard" description="Web application for managing upcoming filing deadlines for annual accounts. Just upload your client list and the deadlines are automatically fetched from Companies House."/>
   <TypographyProvider>
     <div theme={$isDark ? 'dark' : 'light'} >
       <AppShell>
@@ -35,56 +34,9 @@ override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif'}} class={ge
         </Header>
         <WebsiteFooter slot="footer"/>
         <slot>
-<div class="full-height">
-          <Route path="/view/*">
-            {#await import('./pages/view/PublicPagesRoutes.svelte').then(m=>m.default) }
-              <Loader/>
-            {:then PublicPagesRoutes}
-              <!-- Async Load the public pages -->
-              <PublicPagesRoutes />
-            {/await}
-              <Route>
-                  <!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
-                  {#await new Promise(res=>setTimeout(res,750)) then _}
-                      <ErrorAlert error={new Error('The public page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
-                  {/await}
-              </Route>
-          </Route>
-
-          <Route path="/secure/*"> <!-- any path other than home requires auth. This could be changed to /user or /secure or something -->
-            {#await import('./pages/AuthedPagesRoutes.svelte').then(m=>m.default) }
-              <Loader/>
-            {:then AuthedPagesRoutes}
-              <!-- Async Load the authed pages -->
-              <AuthedPagesRoutes />
-            {/await}
-              <Route>
-                  <!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
-                  {#await new Promise(res=>setTimeout(res,750)) then _}
-                      <ErrorAlert error={new Error('The secure page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
-                  {/await}
-              </Route>
-          </Route>
-
-          <Route path="/*"> <!-- this is to support legacy links which weren't prefixed -->
-            {#await import('./pages/AuthedPagesRoutes.svelte').then(m=>m.default) }
-              <Loader/>
-            {:then AuthedPagesRoutes}
-              <!-- Async Load the authed pages -->
-              <AuthedPagesRoutes />
-            {/await}
-            <Route>
-<!--                catchall route, waits 750 milliseconds so that auth can load before showing a not found -->
-                {#await new Promise(res=>setTimeout(res,750)) then _}
-              <ErrorAlert error={new Error('The top-level page you\'re looking for was not found. Trying using the navigation links to go to a page. You tried to access '+location.pathname)}></ErrorAlert>
-                {/await}
-            </Route>
-          </Route>
-
-  <Route path="/">
-    <Home />
-  </Route>
-</div>
+    <div class="full-height">
+            <Routes/>
+    </div>
         </slot>
       </AppShell>
     </div>

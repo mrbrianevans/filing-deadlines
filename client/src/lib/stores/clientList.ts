@@ -62,6 +62,6 @@ export async function importClientListCsv(csv){
     }
   }
   const rows:ParseResult<{ companyNumber: string }> = await new Promise((resolve, reject) => papa.parse(csv, {complete: resolve, error: reject,...papaOptions }))
-  const companyNumbers = rows.data.map(r=>r.companyNumber)
+  const companyNumbers = rows.data.map(r=>r.companyNumber).filter(s=>s)
   await clientList.addMany(companyNumbers)
 }
