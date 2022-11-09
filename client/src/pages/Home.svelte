@@ -14,13 +14,8 @@
   import Screenshot from "../components/home/Screenshot.svelte";
   import AccountsMockup from "../components/home/AccountsMockup.svelte";
   import ConfirmationStatementsMockup from "../components/home/ConfirmationStatementsMockup.svelte";
+  import GettingStartedSteps from "../components/home/GettingStartedSteps.svelte";
 
-  const override={background: '#f4f4f4'}
-
-  const homeFeatureCards = [
-    // {href:'/secure/clients', title: 'Manage your client list.', subtitle: 'Keep a list of your firms clients, import from CSV, view company status.'}
-  ]
-  let daysUntilMonthEnd = 31 - new Date().getDate()
 </script>
 
 <div class="background" class:dark={$isDark}>
@@ -38,10 +33,7 @@
                 </div>
             </div>
 
-            {#each homeFeatureCards as homeFeatureCard}
-                <HomeFeatureCard link={homeFeatureCard.href} title={homeFeatureCard.title} subtitle={homeFeatureCard.subtitle}>
-                </HomeFeatureCard>
-            {/each}
+<!--            <GettingStartedSteps/>-->
 
             <HomeFeatureCard link="/secure/accounts-dashboard" linkLabel="View your accounts deadlines" title="Accounts deadlines." subtitle="Dashboard for financial accounts deadlines, with data pulled from Companies House.">
                 <Screenshot urlPath="/secure/accounts-dashboard" caption="Simplified example of accounts dashboard">

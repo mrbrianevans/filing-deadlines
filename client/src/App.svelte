@@ -13,7 +13,7 @@
 <Router>
   <SvelteUIProvider themeObserver={$isDark ? 'dark' : 'light'} withGlobalStyles withNormalizeCSS>
     <Seo {description} title="Filing deadline dashboard"/>
-    <TypographyProvider override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif', color: '#25262b'}}>
+    <TypographyProvider override={{fontFamily: 'Inter, Avenir, Helvetica, Arial, sans-serif', color: '#25262b', [`& h2`]: {color: '#25262b'}}}}>
       <div theme={$isDark ? 'dark' : 'light'}>
         <AppShell>
           <Header slot="header">
