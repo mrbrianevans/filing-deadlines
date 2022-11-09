@@ -10,7 +10,7 @@
 
     <div class="topbar">
         <div class="icons"><ArrowLeft/><ArrowRight/><Reload/><Home/></div>
-        <div class="address"><LockClosed color="green"/> <a>https://filingdeadlines.co.uk{urlPath}</a></div>
+        <div class="address"><LockClosed color="green"/> <span class="url">https://filingdeadlines.co.uk{urlPath}</span></div>
     </div>
 
     <div class="window">
@@ -50,7 +50,7 @@
       flex-grow: 1;
       font-size: smaller;
       overflow: hidden;
-      a{
+      .url{
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

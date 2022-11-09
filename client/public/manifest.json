@@ -25,6 +25,17 @@
       "src": "icon/icon480.png",
       "sizes": "480x480",
       "type": "image/png"
+    },
+    {
+      "src": "icon/icon512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon/icon192maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

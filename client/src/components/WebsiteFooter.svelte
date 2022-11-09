@@ -8,8 +8,8 @@
     <Container>
         <div class="container">
             <div>
-                <h4>Filing Deadlines</h4>
-                <h6>Made by Brian Evans</h6>
+                <h3>Filing Deadlines</h3>
+                <p>Made by Brian Evans</p>
             </div>
             <div class="stack">
 <!--                <h6>Links</h6>-->
