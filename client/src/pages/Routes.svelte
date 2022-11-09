@@ -3,9 +3,18 @@ import {Route, useLocation} from "svelte-navigator";
 import ErrorAlert from "../components/ErrorAlert.svelte";
 import {Loader} from "@svelteuidev/core";
 import Home from "./Home.svelte";
+import {onMount} from "svelte";
 
 const location = useLocation()
 $: navigator.sendBeacon('/api/log/navigation', JSON.stringify($location));
+function visibilityHandler(){
+  navigator.sendBeacon('/api/log/visibility', JSON.stringify({visibilityState:document.visibilityState}));
+}
+onMount(()=>{
+  document.addEventListener('visibilitychange', visibilityHandler)
+  return () => document.removeEventListener('visibilitychange', visibilityHandler)
+})
+
 </script>
 
 <Route path="/view/*">

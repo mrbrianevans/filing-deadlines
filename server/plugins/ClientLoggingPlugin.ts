@@ -10,6 +10,14 @@ const ClientLoggingPlugin: FastifyPluginAsync = async (fastify, opts) => {
     reply.status(204).send()
   })
 
+  fastify.post('/visibility', async (request, reply) => {
+    const {visibilityState} = JSON.parse(<string>request.body)
+    const userAgent = request.headers["user-agent"]
+    const {userId, orgId, owner} = request.session
+    request.log.info({visibilityState, session: {userId, orgId, owner}, component: 'client', userAgent}, 'Client side visibility state changed to %s', visibilityState)
+    reply.status(204).send()
+  })
+
 }
 
 export default ClientLoggingPlugin
