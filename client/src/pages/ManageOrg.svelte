@@ -10,7 +10,7 @@ import {fetcher} from "../lib/swr.js";
 import {navigate} from "svelte-navigator";
 import {orgSubscription} from "../lib/stores/org.js";
 import Stat from "../components/Stat.svelte";
-import {sentenceCase} from "sentence-case";
+import {sentenceCase} from "change-case";
 
 let redirecting = false
 $: if($user?.orgPlan && $user?.owner) orgSubscription.refresh()

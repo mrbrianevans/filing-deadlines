@@ -1,6 +1,6 @@
 
 import type {RegisteredAddressResults,RegisteredAddressResult} from "../../../../fs-shared/OfficeAddress.js";
-import {sentenceCase} from "sentence-case";
+import {sentenceCase} from "change-case";
 import {company_status, company_type} from "../../assets/constants.json";
 
 /**

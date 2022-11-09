@@ -21,7 +21,7 @@
   import AsyncDate from "../components/AsyncDate.svelte";
   import LinkToViewDocument from "../components/recentFilings/LinkToViewDocument.svelte";
   import FilingDescription from "../components/recentFilings/FilingDescription.svelte";
-  import { sentenceCase } from "sentence-case";
+  import { sentenceCase } from "change-case";
   import AsyncTable from "../components/AsyncTable.svelte";
   import {exportRecentFilingsPdf} from "../lib/exportFormats/exportRecentFilingsPdf.js";
   import {user} from "../lib/stores/user.js";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import {Group, ActionIcon, Button} from "@svelteuidev/core";
-  import {sentenceCase} from "sentence-case";
+  import {sentenceCase} from "change-case";
   import {Reload} from "radix-icons-svelte";
   import {onMount} from "svelte";
   import {fetcher, poster} from "../lib/swr.js";

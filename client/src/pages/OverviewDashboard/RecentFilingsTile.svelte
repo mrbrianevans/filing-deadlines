@@ -3,7 +3,7 @@
   import {ActionIcon, Badge, Loader, Text, Title, Tooltip} from "@svelteuidev/core";
 import {swr} from "@svelte-drama/swr";
 import {readableSwrOptions} from "../../lib/swr.js";
-import {sentenceCase} from "sentence-case";
+import {sentenceCase} from "change-case";
   import ErrorAlert from "../../components/ErrorAlert.svelte";
   import {onMount} from "svelte";
   import StatGroup from "../../components/StatGroup.svelte";

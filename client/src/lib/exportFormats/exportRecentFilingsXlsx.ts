@@ -1,6 +1,6 @@
 
 import type {RecentFilings, RecentFilingsItem} from "../../../../fs-shared/RecentFilings.js";
-import {sentenceCase} from "sentence-case";
+import {sentenceCase} from "change-case";
 
 /**
  * Export recent filings to an Excel spreadsheet, which is auto-downloaded for the user.

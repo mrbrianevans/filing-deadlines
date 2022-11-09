@@ -1,6 +1,6 @@
 import type {ClientListItem} from "../../../../fs-shared/ClientList.js";
 import type { ParseLocalConfig, ParseResult} from 'papaparse'
-import camelcase from "camelcase";
+import {camelCase} from "change-case";
 import {swr} from "@svelte-drama/swr";
 import {poster, readableSwrOptions, writableSwrOptions} from "../swr.js";
 import {sortClientList} from "../../../../fs-shared/ClientList.js";
@@ -58,7 +58,7 @@ export async function importClientListCsv(csv){
   const papa = await import('papaparse')
   const papaOptions: Partial<ParseLocalConfig<unknown, any>> = {
     worker: false, delimiter: ',', skipEmptyLines:true, header: true, transformHeader(header: string): string {
-      return camelcase(header.trim())
+      return camelCase(header.trim())
     }
   }
   const rows:ParseResult<{ companyNumber: string }> = await new Promise((resolve, reject) => papa.parse(csv, {complete: resolve, error: reject,...papaOptions }))

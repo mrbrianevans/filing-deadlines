@@ -2,7 +2,7 @@ import type {CellConfig} from 'jspdf'
 import type {RecentFilings, RecentFilingsItem} from "../../../../fs-shared/RecentFilings.js";
 import Inter from '../../assets/fonts/inter/static/Inter-Regular.ttf?raw'
 import { user } from '../stores/user.js';
-import {sentenceCase} from "sentence-case";
+import {sentenceCase} from "change-case";
 
 export async function exportRecentFilingsPdf(recentFilings: RecentFilings, startDate: string, endDate: string, requestedBy: string){
 
