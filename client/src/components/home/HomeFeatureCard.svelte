@@ -7,19 +7,22 @@ import {Paper, Text, Title} from "@svelteuidev/core";
 import AnchoredLink from "../AnchoredLink.svelte";
 import {user} from "../../lib/stores/user.js";
 import {paramCase} from "change-case";
-import IntersectionObserver from "svelte-intersection-observer";
 import {navigate} from "svelte-navigator";
+
+import { io } from '@svelteuidev/composables';
 
 export let title, subtitle, link, alwaysLink = false, linkLabel = 'View your dashboard'
 let headerElement
+function handleScroll({ detail }){
+    if(detail.inView)
+        navigate('#'+paramCase(title), {replace: true})
+}
 </script>
 
-    <Paper override={{breakInside: 'avoid'}}>
-        <div class="two-column">
+    <Paper override={{breakInside: 'avoid'}} id={paramCase(title)}>
+        <div class="two-column" use:io={{threshold:1,unobserveOnEnter:false}} on:change={handleScroll}>
             <div class="padded">
-                <IntersectionObserver element={headerElement} on:intersect={()=>{console.log('intersect', title);navigate('#'+paramCase(title), {replace: true})}}>
-                <h2 class="feature-title" id={paramCase(title)} bind:this={headerElement}>{title}</h2>
-                </IntersectionObserver>
+                <h2 class="feature-title" bind:this={headerElement}>{title}</h2>
                 <Text color='dimmed'>{subtitle}</Text>
                 <div style="height: 10px"></div>
                 {#if $user || alwaysLink}
@@ -29,7 +32,6 @@ let headerElement
                 {/if}
             </div>
             <div class="content">
-
                 <slot/>
             </div>
         </div>

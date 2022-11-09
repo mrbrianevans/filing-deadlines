@@ -50,7 +50,6 @@ importers:
       sass: ^1.55.0
       svelte: 3.50.1
       svelte-check: ^2.9.1
-      svelte-intersection-observer: ^0.10.0
       svelte-navigator: ^3.2.2
       svelte-preprocess: ^4.10.7
       svelte-table: ^0.5.1
@@ -71,7 +70,6 @@ importers:
       jspdf: 2.5.1
       papaparse: 5.3.2
       radix-icons-svelte: 1.2.1
-      svelte-intersection-observer: 0.10.0
       svelte-navigator: 3.2.2_qy6w2iv5hnh55blsjuu7uihyzm
       svelte-table: 0.5.1
       sveltefileuploadcomponent: 0.1.0
@@ -2443,10 +2441,6 @@ packages:
     dependencies:
       svelte: 3.50.1
     dev: true
-
-  /svelte-intersection-observer/0.10.0:
-    resolution: {integrity: sha512-GdOTMSrRpoBciMe+NbocsHOBvqKJ5OiL5H8Jz4mBoDGHba9VOI4oGeXAmMOmh8mi5gq95+0b0DVI+6alcQ7TCA==}
-    dev: false
 
   /svelte-navigator/3.2.2_qy6w2iv5hnh55blsjuu7uihyzm:
     resolution: {integrity: sha512-Xio4ohLUG1nQJ+ENNbLphXXu9L189fnI1WGg+2Q3CIMPe8Jm2ipytKQthdBs8t0mN7p3Eb03SE9hq0xZAqwQNQ==}
