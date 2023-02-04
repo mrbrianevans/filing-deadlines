@@ -107,8 +107,8 @@ let {processing, error} = clientList
         {:else}
                 <InputWrapper label="Upload CSV of clients">
                 <FileUpload let:dragging multiple={false} on:input={e=>uploadCsv(e.detail.files)}>
-<!--                    apply custom styling based on dragging variable. probably best to replace this Box with a div -->
-                    <Box root="span" css={{border: '1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
+<!--             TODO:       apply custom styling based on dragging variable. probably best to replace this Box with a div -->
+                    <Box root="span" css={{border: dragging? '1px solid currentColor':'1px dashed currentColor', display: 'flex', gap: '1ch', padding: '10px'}}>
                         <FilePlus/>
                         <Text>Drag and Drop or </Text>
                         <Text underline>Browse</Text>
