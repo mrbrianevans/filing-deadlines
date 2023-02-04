@@ -19,7 +19,7 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
   const SITE_ADDRESS = getEnv('SITE_ADDRESS');
 
   {
-    const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-08-01'})
+    const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-11-15'})
     fastify.decorate('stripe', stripe)
   }
 

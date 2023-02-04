@@ -1,6 +1,6 @@
 FROM node:18 AS builder
 
-RUN corepack enable && corepack prepare pnpm@7.12.1 --activate && pnpm config set store-dir /home/node/.pnpm-store
+RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm store path
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch

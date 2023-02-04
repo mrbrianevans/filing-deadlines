@@ -20,7 +20,7 @@ const webhookSchema = {
 // listens on /api/webhooks/stripe/* for webhooks
 const StripeWebhooksPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
-    const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-08-01'})
+    const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'), {apiVersion: '2022-11-15'})
     fastify.decorate('stripe', stripe)
     fastify.log = fastify.log.child({action:'webhook', webhookInvoker: 'stripe'})
 
