@@ -12,4 +12,6 @@ The production Droplet pulls the images from the container registry and runs the
 1. Push changes to GitHub
 2. Wait for images to be build by GitHub Action
 3. Copy image hash from Container Registry
-4. On prod machine, run `docker service update --image {image hash} filing-deadlines_server`
+4. On prod machine,
+ - run `docker pull registry.digitalocean.com/fdcr/filing-deadlines/{hash}`
+ - run `docker service update --image {image hash} filing-deadlines_{service}`
