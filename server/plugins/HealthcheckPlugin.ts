@@ -26,7 +26,7 @@ const HealthcheckPlugin: FastifyPluginAsync = async (fastify, opts) => {
       lastCompanyHeartbeat,
       streamsActive
     }
-    request.log.info('Status healthcheck', {health})
+    request.log.info({health}, 'Status healthcheck')
     // set status code to OK only if all services are okay, otherwise 500.
     if (health.lokiReady && health.redisStatus === 'ready' && streamsActive) reply.status(200)
     else reply.status(500)
