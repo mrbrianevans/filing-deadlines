@@ -28,7 +28,7 @@
       notificationTypes[0].notification = {title:'Permission not yet granted', body: 'You have not yet granted permission to show notifications. If you wish to receive notifications, please click the orange button above to allow them and try again.'}
     }
     if(permission === 'granted') {
-      await fetcher('/api/user/notifications/test')
+      await fetcher('/api/user/org/member/notifications/test')
     }
   }
 // could make it simply that when the user switches browser notifications on, permission is requested and the request is only sent to the server if permission is granted. might be simpler for the user.

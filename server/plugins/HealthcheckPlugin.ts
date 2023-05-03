@@ -10,6 +10,7 @@ const HealthcheckPlugin: FastifyPluginAsync = async (fastify, opts) => {
     return performance.now() - startTime
   }
 
+  // this checks that all the systems are working: server, redis, worker, loki
   fastify.get('/', async (request, reply) => {
     const lokiReady = await fetch(new URL('ready', getEnv('LOKI_URL'))).then(r => r.ok).catch(() => false)
     const redisOpMs = await timeRedisOp().catch(() => false)
@@ -31,6 +32,11 @@ const HealthcheckPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if (health.lokiReady && health.redisStatus === 'ready' && streamsActive) reply.status(200)
     else reply.status(500)
     return health
+  })
+
+  // this only checks that the server is running, immediately returns. used by caddy.
+  fastify.get('/serverAlive', async (request, reply) => {
+    reply.status(200)
   })
 
 }

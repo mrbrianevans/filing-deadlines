@@ -30,18 +30,18 @@
 
   // if permission is granted/changed, it needs to be sent to the backend server so that it knows it can send notifications.
   async function onUpdate(newPermission){
-    await poster('/api/user/notifications/permissions', {permission: newPermission})
+    await poster('/api/user/org/member/notifications/permissions', {permission: newPermission})
     if(newPermission === 'granted') {
       const registration = await navigator.serviceWorker?.getRegistration(serviceWorkerUrl)
       if (registration) {
         const subscriptionExists = await registration.pushManager.getSubscription()
         if(!subscriptionExists){
-          const vapidKey = await fetcher(`/api/user/notifications/vapidKey`)
+          const vapidKey = await fetcher(`/api/user/org/member/notifications/vapidKey`)
           const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: vapidKey
           })
-          await poster(`/api/user/notifications/subscription`, subscription.toJSON())
+          await poster(`/api/user/org/member/notifications/subscription`, subscription.toJSON())
         }
       } else {
         // serious error cause SW hasn't been registered

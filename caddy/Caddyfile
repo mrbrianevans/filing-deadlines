@@ -11,7 +11,7 @@
 
 	handle /api/* {
 		reverse_proxy server:{$SERVER_PORT} {
-		    health_uri /api/health
+		    health_uri /api/health/serverAlive
 		    health_interval 60s
 		    health_timeout 10s
 		}
