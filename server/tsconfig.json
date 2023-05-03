@@ -8,7 +8,6 @@
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "skipLibCheck": true, // to fix fastify session errors
-    "importsNotUsedAsValues": "error"
   },
   "exclude": [
     "node_modules"

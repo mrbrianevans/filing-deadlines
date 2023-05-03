@@ -35,3 +35,10 @@ This directory can be used by any backend service. It can access server-only com
 
 ### `fs-shared`
 Full-stack shared directory. Can be accessed by any service including the client. Should mostly contain type definitions.
+
+
+## Update packages
+To update all the NPM packages in this repository, run this command in the root:
+```
+pnpm update --recursive --latest
+```

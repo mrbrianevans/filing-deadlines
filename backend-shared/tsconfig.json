@@ -7,8 +7,7 @@
     "strictNullChecks": true,
     "composite": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "importsNotUsedAsValues": "error"
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules"

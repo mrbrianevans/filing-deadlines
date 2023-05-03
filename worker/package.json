@@ -10,12 +10,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "bullmq": "^1.90.1",
-    "split2": "^4.1.0"
+    "bullmq": "^1.91.1",
+    "split2": "^4.2.0"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "@types/split2": "^3.2.1",
-    "typescript": "^4.7.4"
+    "@types/node": "^18.16.3",
+    "@types/split2": "^4.2.0",
+    "typescript": "^5.0.4"
   }
 }

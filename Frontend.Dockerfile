@@ -1,6 +1,6 @@
 FROM node:18 as build_ui
 
-RUN corepack enable && corepack prepare pnpm@7.18.2 --activate && pnpm store path
+RUN corepack enable && corepack prepare pnpm@8.4.0 --activate && pnpm store path
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch
