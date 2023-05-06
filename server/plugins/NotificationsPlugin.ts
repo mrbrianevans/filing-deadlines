@@ -110,13 +110,24 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     reply.status(200).send(JSON.stringify(fastify.publicVapidKey))
   })
 
-  // when a user grants notification permission, the Push Subscription is sent to this endpoint
+  // when a user grants notification permission, the Push Subscription is sent to this endpoint. Or they can click a button to send it again.
   fastify.post<{Body: PushSubscription}>('/subscription', {schema: setSubscriptionSchema}, async (request, reply)=>{
     const subscription = request.body
+    const userAgent = request.headers["user-agent"]
     const origin = new URL(subscription.endpoint).origin
-    request.log.info({origin},'User set notification subscription for Push API')
-    await fastify.redis.set(`user:${request.session.userId}:notifications:subscription`, JSON.stringify(subscription))
+    request.log.info({origin,userAgent},'User set notification subscription for Push API')
+    await fastify.redis.set(`user:${request.session.userId}:notifications:subscription`, JSON.stringify({...subscription,userAgent}))
     reply.status(204).send()
+  })
+
+  // check if current browser is stored for subscriptions. takes a subscription object, returns true or false
+  fastify.put<{Body: PushSubscription}>('/checkSubscription', {schema: setSubscriptionSchema}, async (request, reply)=>{
+    const subscriptionEndpoint = request.body.endpoint
+    const storedSubscription = await fastify.redis.get(`user:${request.session.userId}:notifications:subscription`).then(JSON.parse)
+    const storedEndpoint = storedSubscription?.endpoint
+    const origins = {stored: new URL(storedEndpoint).origin, checked: new URL(subscriptionEndpoint).origin}
+    request.log.info({origins}, 'Checked subscription endpoint, same url=%s', storedEndpoint===subscriptionEndpoint)
+    reply.status(200).send(storedEndpoint===subscriptionEndpoint)
   })
 
   // duplicated from RecentFilingsPlugin
