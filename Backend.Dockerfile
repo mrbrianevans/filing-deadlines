@@ -1,6 +1,6 @@
 FROM node:19 AS builder
 
-RUN corepack enable && corepack prepare pnpm@8.4.0 --activate && pnpm store path
+RUN corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm store path
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch
@@ -24,7 +24,7 @@ RUN pnpm run build
 
 FROM node:19-alpine
 
-RUN corepack enable && corepack prepare pnpm@8.4.0 --activate && pnpm store path
+RUN corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm store path
 WORKDIR /filing-deadlines
 COPY pnpm-*.yaml ./
 RUN pnpm fetch --prod

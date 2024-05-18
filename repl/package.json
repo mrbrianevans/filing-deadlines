@@ -13,7 +13,7 @@
     "bullmq": "^3.12.0"
   },
   "devDependencies": {
-    "@types/node": "^18.16.3",
-    "typescript": "^5.0.4"
+    "@types/node": "^20.12.12",
+    "typescript": "^5.4.5"
   }
 }
