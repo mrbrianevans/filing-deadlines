@@ -1,4 +1,4 @@
-FROM grafana/grafana-oss
+FROM grafana/grafana-oss:10.1.10
 
 
 # Install plugins here or in your own config file
