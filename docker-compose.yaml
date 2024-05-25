@@ -21,7 +21,7 @@ services:
     depends_on:
       - server # server must be running already to allow health check to pass
   redis:
-    image: redis/redis-stack-server
+    image: redis/redis-stack-server:7.2.0-v10
     volumes:
       - redisdata:/data
     logging:

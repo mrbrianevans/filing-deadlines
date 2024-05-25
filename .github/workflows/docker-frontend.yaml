@@ -8,7 +8,7 @@ on:
       - 'client/**'
       - 'fs-shared/**'
       - 'Frontend.Dockerfile'
-      - 'caddy/Caddyfile'
+      - 'caddy/*'
 
 jobs:
   docker:
