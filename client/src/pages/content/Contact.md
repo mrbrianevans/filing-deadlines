@@ -5,16 +5,11 @@
 
 If you would like to enquire about the website, please don't hesitate to get in touch.
 
-You can email the developer directly at brian@filingdeadlines.co.uk for a quick response.
+The best way to get hold of me is to send a message on LinkedIn. You can find my profile here: https://www.linkedin.com/in/brianevanstech/.
 
-You can use this email address for any enquiries such as: 
- - more information
- - experiencing issues with the site
- - questions about the features
- - request for custom quote
- - feedback about site
+If you would like to report an issue with Filing Deadlines, please open an issue ticket on the GitHub repository: https://github.com/mrbrianevans/filing-deadlines/issues.
 
-If you would prefer to speak over the phone, you can phone me on [07722 483366](tel:07722483366) to discuss something.
+You can see more about me and my recent work at my personal website, https://brianevans.tech.
 
 <div use:links>
 
