@@ -3,13 +3,11 @@ import Fastify from 'fastify'
 import { getEnv } from '../backend-shared/utils.js'
 import { getRedisClient } from '../backend-shared/getRedisClient.js'
 import {serverLogTransport} from '../backend-shared/loggers.js'
-import connectRedis from 'connect-redis'
-import fastifySession from '@fastify/session'
+import RedisStore from 'connect-redis'
 const port = parseInt(process.env.PORT??'4004')
 
 const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}})
 
-const RedisStore = connectRedis(fastifySession as any)
 //register any third party plugins here
 {
   await fastify.register(import('@fastify/cookie'))
