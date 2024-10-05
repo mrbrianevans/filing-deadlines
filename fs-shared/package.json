@@ -7,8 +7,7 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "watch": "tsc --build --watch",
-    "start": "node index.js"
+    "watch": "tsc --build --watch"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
