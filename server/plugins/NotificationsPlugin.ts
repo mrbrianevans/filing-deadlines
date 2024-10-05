@@ -82,7 +82,7 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     request.log.info({notificationName, enabled}, 'User updated notification preference')
     if(request.org?.features.webNotifications || !enabled) {
       await fastify.redis.hset(`user:${request.session.userId}:notifications:preferences`, notificationName, JSON.stringify(enabled))
-      reply.status(204).send()
+      return reply.status(204).send()
     }else{
       return reply.wrongPlan('Your subscription plan does not include notifications.')
     }
@@ -101,13 +101,13 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     request.log.info({userAgent, permission},'User updated notification permissions')
     // save user permission with user agent, because permission is specific to user agent (eg device)
     await fastify.redis.hset(`user:${request.session.userId}:notifications:permission`, {userAgent, permission, accurateAt: new Date().toISOString()})
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
   // the client needs the public key to get a subscription
   fastify.get('/vapidKey', async (request, reply)=>{
     // cant just return it, because fastify doesn't serialise it as a JSON string with double quotes
-    reply.status(200).send(JSON.stringify(fastify.publicVapidKey))
+    return reply.status(200).send(JSON.stringify(fastify.publicVapidKey))
   })
 
   // when a user grants notification permission, the Push Subscription is sent to this endpoint. Or they can click a button to send it again.
@@ -117,7 +117,7 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const origin = new URL(subscription.endpoint).origin
     request.log.info({origin,userAgent},'User set notification subscription for Push API')
     await fastify.redis.set(`user:${request.session.userId}:notifications:subscription`, JSON.stringify({...subscription,userAgent}))
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
   // check if current browser is stored for subscriptions. takes a subscription object, returns true or false
@@ -127,7 +127,7 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
     const storedEndpoint = storedSubscription?.endpoint
     const origins = {stored: new URL(storedEndpoint).origin, checked: new URL(subscriptionEndpoint).origin}
     request.log.info({origins}, 'Checked subscription endpoint, same url=%s', storedEndpoint===subscriptionEndpoint)
-    reply.status(200).send(storedEndpoint===subscriptionEndpoint)
+   return reply.status(200).send(storedEndpoint===subscriptionEndpoint)
   })
 
   // duplicated from RecentFilingsPlugin
@@ -155,7 +155,7 @@ const NotificationsPlugin: FastifyPluginAsync = async (fastify: DecoratedFastify
         await sendWebNotification({userId: request.session.userId, notification})
         return {sent: true}
       }catch (e) {
-        reply.sendError({error: 'Failed to send notification', message: e.message, statusCode: 500})
+        return reply.sendError({error: 'Failed to send notification', message: e.message, statusCode: 500})
       }
     }else{
       return reply.sendError({error: 'Permission not granted', message: 'You haven\'t granted permission to show notifications, so you can\'t get a test notification sent', statusCode: 400})

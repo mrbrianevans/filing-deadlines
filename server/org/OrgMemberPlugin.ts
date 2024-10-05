@@ -10,13 +10,13 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
     // check ownership is legitimate
     if (!orgId) {
       request.log.warn({sessionId: request.session.sessionId,orgId}, 'Rejecting request due to user not being an org member')
-      reply.sendError({statusCode: 401, error: 'Not in organisation', message: 'You are not a member of this organisation, but membership is required to access this. If you think this is a mistake, try logging out and signing in again.'})
+      return reply.sendError({statusCode: 401, error: 'Not in organisation', message: 'You are not a member of this organisation, but membership is required to access this. If you think this is a mistake, try logging out and signing in again.'})
       return
     }else{
       const actualOrg = await fastify.redis.get(`user:${userId}:org`)
       if(actualOrg !== orgId){
         request.log.warn({sessionOrgId: orgId, redisOrgId: actualOrg}, 'OrgId in session does not match OrgId in Redis')
-        reply.sendError({statusCode: 401, error: 'Out of sync', message: 'There has been a problem with your membership of this organisation. Please log out and sign in again and retry.'})
+        return reply.sendError({statusCode: 401, error: 'Out of sync', message: 'There has been a problem with your membership of this organisation. Please log out and sign in again and retry.'})
       }
     }
     //could update the session orgPlan, but in most cases this should not be necessary
@@ -41,7 +41,7 @@ const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
   // update the current users session org
   fastify.get('/refreshOrgPlan', async (request, reply)=>{
     request.session.orgPlan = await getOrgPlan(request.session.orgId)
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
 }

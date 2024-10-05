@@ -46,9 +46,9 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.hset(`org:${request.session.orgId}:clients`, companyNumber, JSON.stringify(client))
       // new client, dispatch event to load filing history asynchronously
       await dispatchLoadFilingHistoryForCompany(companyNumber, 100, 'new-client-added')
-      reply.status(201).send()
+      return reply.status(201).send()
     }else{
-      reply.status(204).send({message:'Client was already on your client list'})
+      return reply.status(204).send({message:'Client was already on your client list'})
     }
   })
 
@@ -95,7 +95,7 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.del('company:' + companyNumber + ':profile')
       await fastify.redis.del('company:' + companyNumber + ':filingHistory')
     }
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
   fastify.delete('/', async (request, reply)=>{
@@ -113,14 +113,14 @@ const ClientListPlugin: FastifyPluginAsync = async (fastify, opts) => {
     await fastify.redis.del(`org:${request.session.orgId}:clients`)
     await fastify.redis.del(`org:${request.session.orgId}:clientFilings`)
     request.log.info({countOfDeleted: companies.length}, "Deleted %i companies from client list", companies.length)
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
   fastify.get('/reloadDetails',async (request, reply)=>{
     request.log.info('User requested reload of client list details')
     // waits synchronously for job to finish before return a response to the request. Max timeout of 10 seconds.
     const output = await dispatchReloadClientListDetailsSync(request.session.orgId, 'reloadDetails-endpoint-ClientListPlugin', 10_000)
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 }
 

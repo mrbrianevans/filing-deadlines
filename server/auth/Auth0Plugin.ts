@@ -35,11 +35,11 @@ const Auth0Plugin: FastifyPluginAsync = async (fastify, opts) => {
       const {access_token, id_token,refresh_token} = token
       const accessToken = decodeAuth0AccessToken(access_token)
       const redirectUrl = await doSignIn({accessToken, id_token, refresh_token, request, fastify, provider: 'auth0'})
-      reply.redirect(redirectUrl)
+      return reply.redirect(redirectUrl)
     }catch (e) {
       // this can be triggered by state not matching, in which case, it's better to direct the user to the homepage than show the error.
       request.log.error(e, "Error signing user in with Auth0")
-      reply.redirect('/')
+      return reply.redirect('/')
     }
   })
 

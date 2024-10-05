@@ -57,7 +57,7 @@ const OrgOwnerPlugin: FastifyPluginAsync = async (fastify, opts) => {
         }
         await fastify.redis.hset(`invite:${email}`, invite)
         await fastify.redis.hset(`org:${orgId}:members`, email, OrgMemberStatus.pendingInvite)
-        reply.status(204).send()
+        return reply.status(204).send()
       }else{
         return reply.sendError({message:"This user is already a part of your organisation",error:'Already in organisation', statusCode: 400})
       }

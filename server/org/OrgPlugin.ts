@@ -60,7 +60,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
     await fastify.redis.set(`org:${orgId}:subscriptionActiveUntil`, activeUntil.getTime()/1000)
     await fastify.redis.set(`org:${orgId}:subscriptionStatus`, 'evaluation')
     request.session.orgPlan = SubscriptionPlans.STANDARD
-    reply.status(204).send()
+    return reply.status(204).send()
   })
 
   //  accept invite
@@ -77,9 +77,9 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
       await fastify.redis.set(`user:${userId}:org`, orgIdAccepted)
       await fastify.redis.hset(`org:${orgIdAccepted}:members`, email, OrgMemberStatus.acceptedInvite)
       await fastify.redis.sadd(`org:${orgIdAccepted}:activeMembers`, request.session.userId)
-      reply.status(204).send()
+      return reply.status(204).send()
     }else{
-      reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
+      return reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
     }
   })
 
@@ -93,9 +93,9 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
       request.log.info({orgIdRejected}, 'Rejected org invitation')
       await fastify.redis.del(`invite:${email}`)
       await fastify.redis.hset(`org:${orgIdRejected}:members`, email, OrgMemberStatus.rejectedInvite)
-      reply.status(204).send()
+      return reply.status(204).send()
     }else{
-      reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
+      return reply.sendError({message: 'You\'ve been invited to a different organisation. Refresh the page and try again.', error:'Another invite', statusCode: 400})
     }
   })
 

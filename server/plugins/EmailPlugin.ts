@@ -15,7 +15,7 @@ const EmailPlugin: FastifyPluginAsync = async (fastify, opts) => {
     const {to, from, sender_ip, subject} = request.body
     request.log.info({to, from, sender_ip, subject, contents}, 'Received incoming email from %s', from)
     await fastify.redis.sadd(`incomingEmails`, JSON.stringify(request.body))
-    reply.status(200).send()
+    return reply.status(200).send()
   })
 }
 

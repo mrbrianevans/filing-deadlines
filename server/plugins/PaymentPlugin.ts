@@ -35,7 +35,7 @@ const PaymentPlugin: FastifyPluginAsync = async (fastify, opts) => {
     if(session.url)
       return {portalUrl: session.url}
     else
-      reply.sendError({message: 'Could not get a URL for billing portal', error: 'No billing portal URL', statusCode: 500})
+      return reply.sendError({message: 'Could not get a URL for billing portal', error: 'No billing portal URL', statusCode: 500})
   })
 
   fastify.get<{Querystring: {checkoutSessionId: string}}>('/checkout-session', {schema: getCheckoutSessionSchema},async (request, reply)=> {

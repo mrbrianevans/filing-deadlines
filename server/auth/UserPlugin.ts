@@ -8,14 +8,12 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
     // ensure user is logged in (if userId is set on the session, then they are logged in)
     if (!userId) {
       request.log.warn({sessionId: request.session.sessionId}, 'Rejecting request due to user not logged in')
-      reply.sendError({statusCode: 401, message: 'You need to be logged in to access this', error: 'Not logged in'})
-      return
+      return reply.sendError({statusCode: 401, message: 'You need to be logged in to access this', error: 'Not logged in'})
     }
     const idProfile = await fastify.redis.get(`user:${userId}:idProfile`).then(i=>i ? JSON.parse(i) : null)
     if(!idProfile) {
       request.log.warn('userId exists, but couldn\'t find ID token profile in Redis')
-      reply.sendError({statusCode: 401, error: 'Issue with account', message: 'There is an issue with your account. Try logging out and then sign in again.'})
-      return null
+      return reply.sendError({statusCode: 401, error: 'Issue with account', message: 'There is an issue with your account. Try logging out and then sign in again.'})
     }
     request.user = idProfile
     request.log = request.log.child({userId})
@@ -41,7 +39,7 @@ const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
   fastify.get('/logout', async (request, reply)=>{
     fastify.log.info('User logged out')
     await request.session.destroy()
-    reply.redirect('/')
+    return reply.redirect('/')
   })
 }
 

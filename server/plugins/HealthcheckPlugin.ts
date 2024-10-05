@@ -36,7 +36,7 @@ const HealthcheckPlugin: FastifyPluginAsync = async (fastify, opts) => {
 
   // this only checks that the server is running, immediately returns. used by caddy.
   fastify.get('/serverAlive', async (request, reply) => {
-    reply.status(200)
+    return reply.status(200).send()
   })
 
 }
