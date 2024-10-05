@@ -2,7 +2,7 @@ import type {FastifyPluginAsync, FastifySchema} from "fastify";
 import Stripe from 'stripe';
 import { getEnv } from "../../backend-shared/utils.js";
 import {SubscriptionPlans} from '../../fs-shared/SubscriptionPlans.js'
-import billingPortalConfiguration from '../payments/stripe/billingPortalConfiguration.json' assert {type:'json'}
+// import billingPortalConfiguration from '../payments/stripe/billingPortalConfiguration.json' assert {type:'json'}
 import assert from "assert";
 
 const getCheckoutSessionSchema: FastifySchema = {

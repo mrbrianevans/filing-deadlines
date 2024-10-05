@@ -1,5 +1,5 @@
 import type {FilingHistoryItemResource} from "./getFilingHistoryFromApi.js";
-import filingDescriptions from './filingDescriptions.json' assert {type:'json'}
+import filingDescriptions from './filingDescriptions.json' with {type:'json'}
 import formatString from 'string-template'
 import {sharedLogger} from "../loggers.js";
 

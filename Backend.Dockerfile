@@ -1,4 +1,4 @@
-FROM node:19 AS builder
+FROM node:22 AS builder
 
 RUN corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm store path
 WORKDIR /filing-deadlines
@@ -22,7 +22,7 @@ RUN pnpm run build
 WORKDIR /filing-deadlines/server
 RUN pnpm run build
 
-FROM node:19-alpine
+FROM node:22-alpine
 
 RUN corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm store path
 WORKDIR /filing-deadlines
