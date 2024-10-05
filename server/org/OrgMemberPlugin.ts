@@ -4,6 +4,7 @@ import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
 
 const OrgMemberPlugin: FastifyPluginAsync = async (fastify, opts) => {
+  // @ts-ignore this is checked to not be null in the onRequest hook before its accessed in the handlers
   fastify.decorateRequest('org', null)
   fastify.addHook('onRequest', async (request, reply)=> {
     const {orgId,userId} = request.session

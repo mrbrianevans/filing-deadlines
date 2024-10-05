@@ -2,6 +2,7 @@ import type {FastifyPluginAsync} from "fastify";
 import type { User } from "../../fs-shared/User.js";
 
 const UserPlugin: FastifyPluginAsync = async (fastify, opts) => {
+  // @ts-ignore this is checked to not be null in the onRequest hook before its accessed in the handlers
   fastify.decorateRequest('user', null)
   fastify.addHook('onRequest', async (request, reply)=> {
     const {userId} = request.session
