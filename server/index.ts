@@ -6,7 +6,7 @@ import {serverLogTransport} from '../backend-shared/loggers.js'
 import RedisStore from 'connect-redis'
 const port = parseInt(process.env.PORT??'4004')
 
-const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}})
+const fastify = Fastify({logger: {stream: serverLogTransport, level: 'trace'}, trustProxy: true})
 
 //register any third party plugins here
 {
