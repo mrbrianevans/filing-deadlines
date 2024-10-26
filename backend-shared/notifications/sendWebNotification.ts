@@ -1,5 +1,6 @@
 import {getRedisClient} from "../getRedisClient.js";
-import * as webPush from 'web-push'
+//@ts-ignore
+import webPush from 'web-push';
 import type {PushSubscription} from "web-push";
 import {sharedLogger} from "../loggers.js";
 
