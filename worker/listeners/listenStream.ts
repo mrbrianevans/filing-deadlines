@@ -159,9 +159,10 @@ export async function *streamEventsContinuously<EventType extends {event:{timepo
       await redis.quit()
       signal1?.removeEventListener('abort', abort)
       logger.info({counter, lastTimepoint}, 'End of looping through events')
-      if(signal1?.aborted || !retry) break
-      logger.info('Will restart in 60 seconds from last timepoint')
-      await setTimeout(60_000) // wait a minute before reconnecting
+      if(signal1?.aborted) break
+      const wait = retry ? 180 : 600; // longer wait for auth issues
+      logger.info(`Will restart in ${wait} seconds from last timepoint`)
+      await setTimeout(wait * 1_000) // wait before reconnecting
     }
   } catch (e) {
     // this shouldn't ever be called! It indicates that the worker is NOT listening to events, and won't restart automatically.
