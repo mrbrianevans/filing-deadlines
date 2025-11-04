@@ -3,6 +3,7 @@ import {randomUUID} from "crypto";
 import { OrgMemberStatus} from '../../fs-shared/OrgMemberStatus.js'
 import {addressSchema} from "./RegisteredAddressPlugin.js";
 import { SubscriptionPlans } from "../../fs-shared/SubscriptionPlans.js";
+import {getOrgPlan} from "../payments/stripe/handleSubscriptionUpdated.js";
 
 const createOrgSchema: FastifySchema = {
   body: {
@@ -73,6 +74,7 @@ const OrgPlugin: FastifyPluginAsync = async (fastify, opts) => {
       // accept
       request.log.info({orgIdAccepted},'Accepted org invitation')
       request.session.orgId = orgIdAccepted
+      request.session.orgPlan = await getOrgPlan(request.session.orgId)
       await fastify.redis.del(`invite:${email}`)
       await fastify.redis.set(`user:${userId}:org`, orgIdAccepted)
       await fastify.redis.hset(`org:${orgIdAccepted}:members`, email, OrgMemberStatus.acceptedInvite)

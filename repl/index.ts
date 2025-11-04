@@ -17,7 +17,7 @@ import {backupClientLists} from "./backupClientLists.js";
 import {getFeedback} from "./getFeedback.js";
 import {getUser} from "./getUserAndOrg.js";
 import {setOrgActiveMembers} from "./migrations/setOrgActiveMembers.js";
-import {clearSessions} from "./utils/clearSessions.js";
+import {clearSessions,printSessions} from "./utils/sessions.js";
 import {sendNotification} from "./utils/sendNotification.js";
 
 if(process.argv.slice(1).includes('--help')) console.log("This is a custom repl for managing the database and queues. Try\n\n\t" +
@@ -43,6 +43,7 @@ server.context.backupClientLists = ()=>backupClientLists(redis)
 server.context.getFeedback = ()=>getFeedback(redis)
 server.context.getUser = (userId: string)=>getUser(redis, userId).then(console.log)
 server.context.clearSessions = ()=>clearSessions(redis)
+server.context.printSessions = ()=>printSessions(redis)
 server.context.sendNotification = (userId: string, {title, message})=>sendNotification(redis,userId, {title, message})
 
 server.context.exit = ()=>{shutdown('exit()');return 'exiting...'} // could be a Proxy to allow for simply "exit" rather than "exit()"
