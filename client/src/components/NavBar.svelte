@@ -19,13 +19,25 @@
   import {ChevronDown, ChevronUp, Exit, Gear, Moon, Sun, Table} from "radix-icons-svelte";
   import AnchoredLink from "./AnchoredLink.svelte";
   import SignInButton from "./signin/SignInButton.svelte";
-  import {orgSubscription} from "../lib/stores/org.js";
-  import {onMount} from "svelte";
+  import {orgSubscription, userCanLoadOrgSubscription} from "../lib/stores/org.js";
 
   const {Item: MenuItem, Label: MenuLabel} = Menu
   let userProcessing = user.processing
+  let subscriptionRequestedFor: string | undefined
 
-  onMount(()=>orgSubscription.refresh())
+  // NavBar is mounted on every page, including logged-out ones. Fetch once the user is known to be allowed.
+  $: {
+    const current = $user
+    if (userCanLoadOrgSubscription(current)) {
+      if (subscriptionRequestedFor !== current.id) {
+        subscriptionRequestedFor = current.id
+        orgSubscription.refresh()
+      }
+    } else if (subscriptionRequestedFor !== undefined) {
+      subscriptionRequestedFor = undefined
+      orgSubscription.reset()
+    }
+  }
   const dashboardsMenu = [
     {label: 'Overview dashboard', href: '/secure/dashboard'},
     {label: 'Accounts deadlines', href: '/secure/accounts-dashboard'},
