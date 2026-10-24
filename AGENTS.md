@@ -34,4 +34,4 @@ Both files read these gitignored env files:
 
 The API container exits with `AVV_ERR_PLUGIN_EXEC_TIMEOUT` on `@fastify/redis` when Redis is not accepting connections yet. Start Redis first, then recreate the server container.
 
-systemd is not PID 1 here, and `policy-rc.d` blocks `service docker start`. The boot script starts `containerd` and `dockerd` directly when `sudo docker info` is unhealthy. Use `sudo docker` from the agent.
+systemd is not PID 1 here, and `policy-rc.d` blocks `service docker start`. Login shells run `/usr/local/bin/start-docker-daemon.sh`, which clears a stale socket and starts `containerd` and `dockerd`. The app boot script calls that same helper. Use `sudo docker`.
