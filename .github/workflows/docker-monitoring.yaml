@@ -1,6 +1,7 @@
 name: 'Build and push monitoring docker images'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'master'

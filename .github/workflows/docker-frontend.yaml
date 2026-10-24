@@ -1,6 +1,7 @@
 name: 'Build and push frontend docker image'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'master'
