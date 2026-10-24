@@ -10,6 +10,13 @@ import { workerLogger } from "../../backend-shared/loggers.js";
 import { Readable } from "node:stream";
 import {ReadableStream} from 'node:stream/web'
 
+/** Companies House streaming host. Development can set this to test.companies.stream. */
+export function companiesHouseStreamHost(): string {
+  const configured = process.env.CH_STREAM_HOST?.trim()
+  if (!configured) return 'stream.companieshouse.gov.uk'
+  return configured.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+}
+
 export type StreamPath =
   | "insolvency-cases"
   | "companies"
@@ -38,7 +45,7 @@ export async function listenToStream(streamPath: StreamPath = "companies", start
   const logger = workerLogger.child({workerType:'listener', stream: streamPath, startFromTimepoint})
   const auth = getEnv('CH_STREAM_KEY') + ":"
   const path = "/" + streamPath + (typeof startFromTimepoint === "number" ? `?timepoint=${startFromTimepoint}` : "")
-  const options: RequestOptions = { hostname: "stream.companieshouse.gov.uk", path, auth }
+  const options: RequestOptions = { hostname: companiesHouseStreamHost(), path, auth }
   const response: IncomingMessage = await new Promise(resolve => get(options, im=>resolve(im)).end())
   const emitter = new EventEmitter({})
   response.on("close", () => emitter.emit('end'))
@@ -76,7 +83,7 @@ class StreamError extends Error{
 export async function fetchStream(streamPath: StreamPath = "companies", startFromTimepoint?: number, signal?: AbortSignal): Promise<EventEmitter> {
   const logger = workerLogger.child({workerType:'listener', stream: streamPath, startFromTimepoint,method:'fetch'})
   const path = "/" + streamPath + (typeof startFromTimepoint === "number" ? `?timepoint=${startFromTimepoint}` : "")
-  const url = new URL(path, "https://stream.companieshouse.gov.uk")
+  const url = new URL(path, `https://${companiesHouseStreamHost()}`)
   const headers = new Headers()
   headers.set('Authorization', 'Basic '+Buffer.from(getEnv('CH_STREAM_KEY')+':').toString('base64'))
   const response = await fetch(url, {headers, signal})

@@ -33,6 +33,7 @@ services:
     environment:
       REDIS_URL: redis://redis:6379
       LOKI_URL: "http://loki:3100"
+      CH_STREAM_HOST: ${CH_STREAM_HOST:-stream.companieshouse.gov.uk}
     env_file:
       - .api.env
     logging:
