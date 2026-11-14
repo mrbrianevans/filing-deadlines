@@ -22,7 +22,8 @@ const DashboardDataPlugin: FastifyPluginAsync = async (fastify, opts) => {
     request.log.info({numberOfClients: clientIds.length},'Getting company profiles for accounts dashboard')
     const companyProfiles = await Promise.all(clientIds.map(clientId=>getCompanyProfile(clientId)))
     return convertCompanyProfilesToDashboard(companyProfiles).filter(c=>{
-      const daysUntilDue = (new Date(c.next_due_accounts??0).getTime() - Date.now())/86400_000
+      if(!c.next_due_accounts) return false
+      const daysUntilDue = (new Date(c.next_due_accounts).getTime() - Date.now())/86400_000
       return daysUntilDue < request.org.features.accountsDashboardMaxPeriodMonths * 31
     })
   })
