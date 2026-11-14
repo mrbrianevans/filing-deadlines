@@ -8,12 +8,12 @@ import EditRegisteredAddress from "../components/manageOrg/EditRegisteredAddress
 import ManageOrgMembers from "../components/manageOrg/ManageOrgMembers.svelte";
 import {fetcher} from "../lib/swr.js";
 import {navigate} from "svelte-navigator";
-import {orgSubscription} from "../lib/stores/org.js";
+import {orgSubscription, userCanLoadOrgSubscription} from "../lib/stores/org.js";
 import Stat from "../components/Stat.svelte";
 import {sentenceCase} from "change-case";
 
 let redirecting = false
-$: if($user?.orgPlan && $user?.owner) orgSubscription.refresh()
+$: if(userCanLoadOrgSubscription($user)) orgSubscription.refresh()
 const {processing:subscriptionLoading} = orgSubscription
 </script>
 
